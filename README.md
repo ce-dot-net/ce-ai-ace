@@ -212,15 +212,29 @@ ce-ai-ace/
 │   ├── ace-clear.md             # /ace-clear command
 │   └── ace-force-reflect.md     # /ace-force-reflect command
 ├── hooks/
-│   └── hooks.json               # PostToolUse + SessionEnd hooks
+│   └── hooks.json               # All 5 hooks (AgentStart, AgentEnd, PreToolUse, PostToolUse, SessionEnd)
 ├── scripts/
 │   ├── ace-cycle.py             # Main ACE orchestration
 │   ├── generate-playbook.py     # CLAUDE.md generator
+│   ├── playbook-delta-updater.py # Delta update engine
+│   ├── embeddings_engine.py     # Semantic embeddings
+│   ├── epoch-manager.py         # Multi-epoch training
+│   ├── serena-pattern-detector.py # Hybrid AST+regex detection
+│   ├── inject-playbook.py       # AgentStart hook
+│   ├── analyze-agent-output.py  # AgentEnd hook
+│   ├── validate-patterns.py     # PreToolUse hook
 │   ├── ace-stats.py             # Statistics utility
 │   ├── ace-list-patterns.py     # Pattern listing utility
-│   └── ace-session-end.py       # Session cleanup
+│   ├── ace-session-end.py       # Session cleanup
+│   └── migrate-database.py      # Database migration
 ├── docs/
-│   └── ACE_RESEARCH.md          # Research paper summary
+│   ├── ACE_RESEARCH.md          # Research paper summary
+│   ├── GAP_ANALYSIS.md          # Comprehensive gap analysis
+│   └── PHASES_3_5_COMPLETE.md   # Phase 3-5 implementation details
+├── tests/
+│   ├── test-phase-3-5.py        # Automated test suite
+│   ├── MANUAL_TEST.md           # Manual test guide
+│   └── TEST_PROMPT.md           # Ready-to-use test prompt
 ├── CLAUDE.md                     # Auto-generated playbook (gitignored)
 └── README.md                     # This file
 ```
@@ -283,7 +297,39 @@ This plugin uses Serena MCP for knowledge management:
 
 ### Python script errors?
 - Ensure Python 3.7+ is installed
-- Scripts use only standard library (no pip install needed)
+- Most scripts use only standard library
+- For embeddings: `pip install sentence-transformers` (optional, improves accuracy)
+
+---
+
+## 🆕 Phase 3-5 Features (Latest)
+
+### Phase 3: Delta Updates & Semantic Embeddings ✅
+- **Incremental CLAUDE.md updates**: No more full rewrites! Surgical delta updates prevent context collapse
+- **Semantic embeddings**: Multi-backend system (OpenAI API, local sentence-transformers, enhanced fallback)
+- **Embeddings cache**: Fast lookups with automatic caching (`.ace-memory/embeddings-cache.json`)
+- **Research-compliant similarity**: 85% cosine similarity threshold on sentence embeddings
+
+### Phase 4: Multi-Epoch Training ✅
+- **Offline training mode**: Revisit cached training data across up to 5 epochs
+- **Pattern evolution tracking**: See how patterns improve over time
+- **Epoch management**: `python3 scripts/epoch-manager.py start|complete|stats`
+- **Training cache**: Automatically stores code/patterns for offline learning
+
+### Phase 5: Serena Integration ✅
+- **Hybrid pattern detection**: AST-aware (Serena) + regex (fallback)
+- **Symbol-level analysis**: Uses `find_symbol` for accurate detection
+- **Reference tracking**: Track pattern usage with `find_referencing_symbols`
+- **Serena memories**: Store ACE insights in searchable Serena format
+
+### Complete Hook Lifecycle ✅
+- **AgentStart**: Inject CLAUDE.md into agent contexts automatically
+- **PreToolUse**: Validate patterns before code is written
+- **PostToolUse**: Run ACE cycle after Edit/Write operations
+- **AgentEnd**: Analyze agent output for meta-learning
+- **SessionEnd**: Cleanup and final playbook generation
+
+**Test the new features**: See `tests/TEST_PROMPT.md` for a comprehensive test scenario!
 
 ---
 
@@ -291,10 +337,10 @@ This plugin uses Serena MCP for knowledge management:
 
 Contributions welcome! Areas to improve:
 1. **More patterns**: Add patterns for Go, Rust, C++, etc.
-2. **Better reflection**: Integrate with better LLM reflection mechanisms
-3. **Semantic embeddings**: Replace string similarity with embeddings
-4. **Visualization**: Web UI for pattern analytics
-5. **Team sharing**: Share playbooks across teams
+2. **Better reflection**: Implement full multi-round iterative refinement
+3. **Visualization**: Web UI for pattern analytics
+4. **Team sharing**: Share playbooks across teams
+5. **Advanced Serena integration**: Full symbolic editing and auto-fixes
 
 ---
 
