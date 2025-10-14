@@ -43,7 +43,7 @@ def scan_codebase_for_training(source: str = 'all') -> List[Dict]:
     Scan codebase for training examples.
 
     Args:
-        source: 'all', 'git-history', 'test-files', or path
+        source: 'all', 'git-history', 'test-files', 'specs-history', or path
 
     Returns:
         List of training examples
@@ -107,6 +107,52 @@ def scan_codebase_for_training(source: str = 'all') -> List[Dict]:
                             pass
         except:
             print("⚠️  Git history scan failed", file=sys.stderr)
+
+    if source == 'all' or source == 'specs-history':
+        # Scan git history of specs/ folder for pattern evolution
+        # ACE learns from ACE! (meta-learning)
+        specs_dir = PROJECT_ROOT / 'specs'
+        if specs_dir.exists():
+            try:
+                # Get commits that modified specs/
+                result = subprocess.run(
+                    ['git', 'log', '--pretty=format:%H', '--', 'specs/'],
+                    capture_output=True,
+                    text=True,
+                    cwd=PROJECT_ROOT
+                )
+                commits = result.stdout.strip().split('\n')
+
+                for commit in commits[:30]:  # Last 30 spec changes
+                    # Get changed spec files
+                    result = subprocess.run(
+                        ['git', 'diff-tree', '--no-commit-id', '--name-only', '-r', commit],
+                        capture_output=True,
+                        text=True,
+                        cwd=PROJECT_ROOT
+                    )
+
+                    files = [f for f in result.stdout.strip().split('\n') if f.startswith('specs/')]
+                    for file_rel in files[:3]:  # Max 3 files per commit
+                        if file_rel.endswith('.md'):
+                            try:
+                                result = subprocess.run(
+                                    ['git', 'show', f'{commit}:{file_rel}'],
+                                    capture_output=True,
+                                    text=True,
+                                    cwd=PROJECT_ROOT
+                                )
+                                content = result.stdout
+                                if content and len(content) < 50000:
+                                    training_data.append({
+                                        'file_path': file_rel,
+                                        'code': content,
+                                        'source': f'specs-{commit[:7]}'
+                                    })
+                            except:
+                                pass
+            except:
+                print("⚠️  specs/ history scan failed", file=sys.stderr)
 
     return training_data
 
@@ -317,9 +363,9 @@ def main():
     )
     parser.add_argument(
         '--source',
-        choices=['all', 'git-history', 'test-files'],
+        choices=['all', 'git-history', 'test-files', 'specs-history'],
         default='all',
-        help='Training data source'
+        help='Training data source (specs-history = learn from committed playbooks)'
     )
     parser.add_argument(
         '--quiet',

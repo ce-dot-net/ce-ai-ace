@@ -2,9 +2,16 @@
 node_modules/
 package-lock.json
 
-# ACE Runtime
+# ACE Runtime (local learning state, not committed)
 .ace-memory/
+
+# CLAUDE.md (auto-generated for Claude Code CLI context)
+# This is the playbook that Claude Code CLI reads
 CLAUDE.md
+
+# ACE Playbooks (specs/ IS committed - human-readable patterns)
+# specs/ folder is intentionally NOT in .gitignore
+# This enables version control, team sharing, and git-based training
 
 # Serena MCP Memory (should not be committed)
 .serena/memories/

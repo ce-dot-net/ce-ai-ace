@@ -239,8 +239,40 @@ Start coding, and watch this playbook evolve!
 
 
 if __name__ == '__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Generate ACE playbooks')
+    parser.add_argument('--format',
+                       choices=['legacy', 'speckit', 'both'],
+                       default='both',
+                       help='Playbook format to generate (default: both)')
+
+    args = parser.parse_args()
+
     try:
-        generate_playbook()
+        # Generate legacy CLAUDE.md
+        if args.format in ['legacy', 'both']:
+            generate_playbook()
+
+        # Generate spec-kit structure
+        if args.format in ['speckit', 'both']:
+            try:
+                import importlib.util
+
+                # Import generate-speckit-playbook.py (with hyphen)
+                spec = importlib.util.spec_from_file_location(
+                    "generate_speckit_playbook",
+                    Path(__file__).parent / "generate-speckit-playbook.py"
+                )
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                module.generate_speckit_playbooks()
+            except Exception as e:
+                print(f"⚠️  spec-kit generation failed: {e}", file=sys.stderr)
+                if args.format == 'speckit':
+                    # If only speckit requested, this is an error
+                    raise
+
         sys.exit(0)
     except Exception as e:
         print(f"❌ Failed to generate playbook: {e}", file=sys.stderr)

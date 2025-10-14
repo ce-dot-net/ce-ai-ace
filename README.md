@@ -57,7 +57,7 @@ This implementation covers **all core ACE features** from the research paper (ar
 The plugin works **100% automatically**:
 1. Edit code in Python, JavaScript, or TypeScript
 2. ACE detects patterns and analyzes effectiveness
-3. Check `CLAUDE.md` to see your evolving playbook
+3. Check `specs/playbooks/` to see learned patterns (or `CLAUDE.md` for Claude Code CLI format)
 4. Use `/ace-status` to view learning statistics
 
 ---
@@ -176,13 +176,19 @@ Know when patterns have stabilized:
 - Shows converged, learning, and insufficient-data patterns
 - Helps identify which patterns are ready for production use
 
-### Evolving Playbook
-`CLAUDE.md` automatically updates with:
-- High-confidence patterns (≥70%)
-- Medium-confidence patterns (30-70%)
-- Anti-patterns to avoid
-- Specific, actionable insights
-- Evidence-based recommendations
+### Evolving Playbooks
+ACE generates playbooks in two formats:
+
+**spec-kit format** (`specs/` - committed to git):
+- Human-readable, version-controlled
+- Hierarchical structure per pattern
+- Team-wide synchronization
+- Cross-project sharing
+
+**Claude Code CLI format** (`CLAUDE.md` - auto-generated):
+- Optimized for Claude Code context injection
+- Single-file bulletized format
+- Auto-generated from `specs/`
 
 ---
 
@@ -258,6 +264,40 @@ MIN_OBSERVATIONS = 10        # Minimum observations before pruning
 
 ---
 
+## 🏛️ Architecture: Dual Storage System
+
+ACE uses a **dual storage architecture** for optimal learning and human usability:
+
+### SQLite Database (`.ace-memory/` - gitignored)
+**Purpose**: Learning engine and pattern tracking
+- Pattern observations and confidence scores
+- Insights from Reflector agent
+- Test results and execution feedback
+- Multi-epoch training history
+- Semantic embeddings cache
+
+### spec-kit Playbooks (`specs/` - committed to git)
+**Purpose**: Human-readable, version-controlled documentation
+- `specs/memory/constitution.md` - High-confidence principles (≥70%)
+- `specs/playbooks/NNN-domain/` - Individual pattern directories
+  - `spec.md` - Pattern definition with metadata
+  - `plan.md` - Technical implementation approach
+  - `insights.md` - Reflector analysis history
+
+**Why both?**
+- **SQLite**: Fast queries, statistical analysis, ML operations
+- **spec-kit**: Human-readable, git-friendly, shareable, AI agent compatible
+
+**Benefits**:
+- ✅ Version control pattern evolution
+- ✅ Team-wide synchronization
+- ✅ Cross-project knowledge transfer
+- ✅ Git-based offline training (ACE learns from ACE!)
+- ✅ Human review and understanding
+- ✅ Works with any AI coding agent
+
+---
+
 ## 📁 Project Structure
 
 ```
@@ -268,6 +308,16 @@ ce-ai-ace/
 ├── .serena/
 │   ├── memories/                # Serena MCP knowledge storage (gitignored)
 │   └── project.yml              # Serena project configuration
+├── specs/                        # ⭐ NEW: spec-kit playbooks (committed!)
+│   ├── memory/
+│   │   └── constitution.md      # High-confidence principles
+│   ├── playbooks/
+│   │   ├── 001-python-io/       # Pattern: Use pathlib
+│   │   │   ├── spec.md
+│   │   │   ├── plan.md
+│   │   │   └── insights.md
+│   │   └── 002-python-strings/  # Pattern: Use f-strings
+│   └── README.md                # Playbook documentation
 ├── agents/
 │   ├── reflector.md             # Reflector agent (markdown!)
 │   └── reflector-prompt.md      # Reflector prompt template
@@ -278,44 +328,56 @@ ce-ai-ace/
 │   ├── ace-force-reflect.md     # /ace-force-reflect command
 │   ├── ace-train-offline.md     # /ace-train-offline command ⭐ NEW
 │   ├── ace-export-patterns.md   # /ace-export-patterns command ⭐ NEW
-│   └── ace-import-patterns.md   # /ace-import-patterns command ⭐ NEW
+│   ├── ace-import-patterns.md   # /ace-import-patterns command ⭐ NEW
+│   └── ace-export-speckit.md    # /ace-export-speckit command ⭐ NEW
 ├── hooks/
 │   └── hooks.json               # All 5 hooks (AgentStart, AgentEnd, PreToolUse, PostToolUse, SessionEnd)
 ├── scripts/
 │   ├── ace-cycle.py             # Main ACE orchestration
-│   ├── generate-playbook.py     # CLAUDE.md generator
+│   ├── generate-playbook.py     # Playbook generator (both formats)
+│   ├── generate-speckit-playbook.py # spec-kit format generator ⭐ NEW
 │   ├── playbook-delta-updater.py # Delta update engine
 │   ├── embeddings_engine.py     # Semantic embeddings
 │   ├── epoch-manager.py         # Multi-epoch training
 │   ├── serena-pattern-detector.py # Hybrid AST+regex detection
-│   ├── inject-playbook.py       # AgentStart hook (with dynamic retrieval)
+│   ├── inject-playbook.py       # AgentStart hook (reads specs/)
 │   ├── analyze-agent-output.py  # AgentEnd hook
 │   ├── validate-patterns.py     # PreToolUse hook
 │   ├── ace-stats.py             # Statistics utility
 │   ├── ace-list-patterns.py     # Pattern listing utility
 │   ├── ace-session-end.py       # Session cleanup
 │   ├── migrate-database.py      # Database migration
-│   ├── offline-training.py      # Multi-epoch offline training ⭐ NEW
+│   ├── offline-training.py      # Multi-epoch + git-history ⭐ NEW
 │   ├── pattern-retrieval.py     # Dynamic pattern retrieval ⭐ NEW
 │   ├── pattern-portability.py   # Export/import patterns ⭐ NEW
 │   └── convergence-checker.py   # Pattern convergence detection ⭐ NEW
 ├── docs/
 │   ├── ACE_RESEARCH.md          # Research paper summary
 │   ├── ACE_IMPLEMENTATION_GUIDE.md # Complete implementation guide ⭐ NEW
+│   ├── SPECKIT_MIGRATION.md     # spec-kit integration guide ⭐ NEW
 │   ├── GAP_ANALYSIS.md          # Comprehensive gap analysis
-│   └── PHASES_3_5_COMPLETE.md   # Phase 3-5 implementation details
+│   ├── PHASES_3_5_COMPLETE.md   # Phase 3-5 implementation details
+│   ├── INSTALL.md               # Installation guide
+│   ├── QUICKSTART.md            # Quick start guide
+│   └── DIAGNOSTIC_PROMPT.md     # Diagnostic prompt for testing
 ├── tests/
 │   ├── test-phase-3-5.py        # Automated test suite
 │   ├── MANUAL_TEST.md           # Manual test guide
-│   └── TEST_PROMPT.md           # Ready-to-use test prompt
-├── CLAUDE.md                     # Auto-generated playbook (gitignored)
+│   ├── TEST_PROMPT.md           # Ready-to-use test prompt
+│   ├── TEST_PROMPT_FOR_USER.md  # User test scenarios
+│   └── CONSUMER_TEST_PROMPT.md  # Consumer test prompt
+├── CLAUDE.md                     # Auto-generated (for Claude Code CLI)
 └── README.md                     # This file
 ```
 
 **Important Notes**:
 - No `index.js` or JavaScript exports! Claude Code 2.0 plugins are purely declarative (markdown + JSON + Python scripts)
-- `CLAUDE.md` is auto-generated by the plugin and should not be manually edited
+- `specs/` is **committed to git** for version control and team sharing (⭐ NEW)
+- `.ace-memory/` is **gitignored** (local learning state)
+- `CLAUDE.md` is **auto-generated** for Claude Code CLI context injection
 - `.serena/memories/` stores MCP-based project knowledge (excluded from git)
+
+**New in this release**: spec-kit integration! ACE now generates human-readable, git-friendly playbooks in `specs/` alongside the `CLAUDE.md` format for Claude Code CLI.
 
 ---
 
