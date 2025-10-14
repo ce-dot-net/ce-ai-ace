@@ -288,41 +288,69 @@ def get_pattern(pattern_id: str) -> Optional[Dict]:
 
     return dict(row) if row else None
 
+def generate_bullet_id(domain: str, pattern_id: str) -> str:
+    """
+    Generate bullet ID in ACE format: [domain-NNNNN]
+
+    Examples: [py-00001], [js-00023], [ts-00005]
+    """
+    # Extract domain prefix from pattern_id (e.g., "py-001" -> "py")
+    prefix = pattern_id.split('-')[0] if '-' in pattern_id else domain[:3]
+
+    # Get next number for this domain
+    conn = sqlite3.connect(str(DB_PATH))
+    cursor = conn.cursor()
+    cursor.execute('SELECT COUNT(*) FROM patterns WHERE domain LIKE ?', (f'{prefix}%',))
+    count = cursor.fetchone()[0]
+    conn.close()
+
+    # Format: [prefix-NNNNN]
+    bullet_id = f"[{prefix}-{count+1:05d}]"
+    return bullet_id
+
+
 def store_pattern(pattern: Dict):
-    """Store or update pattern in database."""
+    """Store or update pattern in database with bulletized structure."""
     conn = sqlite3.connect(str(DB_PATH))
     cursor = conn.cursor()
 
     # Check if pattern exists
-    cursor.execute('SELECT id FROM patterns WHERE id = ?', (pattern['id'],))
-    exists = cursor.fetchone() is not None
+    cursor.execute('SELECT id, bullet_id FROM patterns WHERE id = ?', (pattern['id'],))
+    existing_row = cursor.fetchone()
+    exists = existing_row is not None
 
     if exists:
-        # Update existing
+        # Update existing (preserve bullet_id)
+        _, existing_bullet_id = existing_row
         cursor.execute('''
             UPDATE patterns SET
                 name = ?, domain = ?, type = ?, description = ?,
                 language = ?, observations = ?, successes = ?,
-                failures = ?, neutrals = ?, confidence = ?, last_seen = ?
+                failures = ?, neutrals = ?, helpful_count = ?, harmful_count = ?,
+                confidence = ?, last_seen = ?
             WHERE id = ?
         ''', (
             pattern['name'], pattern['domain'], pattern['type'], pattern['description'],
             pattern['language'], pattern['observations'], pattern['successes'],
-            pattern['failures'], pattern['neutrals'], pattern['confidence'],
-            pattern['last_seen'], pattern['id']
+            pattern['failures'], pattern['neutrals'],
+            pattern.get('helpful_count', 0), pattern.get('harmful_count', 0),
+            pattern['confidence'], pattern['last_seen'], pattern['id']
         ))
     else:
-        # Insert new
+        # Insert new - generate bullet_id
+        bullet_id = generate_bullet_id(pattern['domain'], pattern['id'])
         cursor.execute('''
             INSERT INTO patterns (
-                id, name, domain, type, description, language,
+                id, bullet_id, name, domain, type, description, language,
                 observations, successes, failures, neutrals,
+                helpful_count, harmful_count,
                 confidence, last_seen, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
-            pattern['id'], pattern['name'], pattern['domain'], pattern['type'],
+            pattern['id'], bullet_id, pattern['name'], pattern['domain'], pattern['type'],
             pattern['description'], pattern['language'], pattern['observations'],
             pattern['successes'], pattern['failures'], pattern['neutrals'],
+            pattern.get('helpful_count', 0), pattern.get('harmful_count', 0),
             pattern['confidence'], pattern['last_seen'],
             pattern.get('created_at', datetime.now().isoformat())
         ))
