@@ -1,0 +1,3 @@
+project_name: ce-ai-ace
+language: javascript
+description: ACE pattern learning plugin for Claude Code CLI

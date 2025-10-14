@@ -1,0 +1,30 @@
+{
+  "name": "ace-orchestration-plugin",
+  "version": "1.0.0",
+  "description": "ACE pattern learning plugin for Claude Code CLI - Based on Stanford/SambaNova/UC Berkeley research",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "install-mcps": "npm run install:memory && npm run install:thinking",
+    "install:memory": "npx @modelcontextprotocol/create-server memory",
+    "install:thinking": "npx @modelcontextprotocol/create-server sequential-thinking"
+  },
+  "keywords": [
+    "claude-code",
+    "ace",
+    "pattern-learning",
+    "self-improving",
+    "context-engineering"
+  ],
+  "author": "ACE Team",
+  "license": "MIT",
+  "dependencies": {
+    "string-similarity": "^4.0.4"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
