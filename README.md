@@ -17,10 +17,22 @@ Instead of fine-tuning models or manually curating prompts, ACE:
 - **Grows a playbook** that evolves with your codebase
 
 ### Research-Backed Results
-- **+10-17%** accuracy improvement on complex tasks
-- **82-92%** latency reduction vs. traditional approaches
-- **75-84%** cost reduction
+- **+17%** improvement on agent benchmarks (AppWorld: 42.4% → 59.4%)
+- **+8.6%** improvement on domain-specific tasks (Finance)
+- **86.9%** lower adaptation latency vs. existing methods
+- **83.6%** token cost reduction ($17.7 → $2.9)
 - **Prevents context collapse** through incremental delta updates
+
+### ✅ 100% Research Paper Coverage
+This implementation covers **all core ACE features** from the research paper (arXiv:2510.04618):
+- Three-role architecture (Generator/Reflector/Curator)
+- Incremental delta updates with grow-and-refine mechanism
+- Semantic embeddings with 85% similarity threshold
+- Multi-epoch offline training
+- Dynamic pattern retrieval
+- Convergence detection
+- Pattern export/import for cross-project learning
+- Lazy pruning for context management
 
 ---
 
@@ -132,6 +144,38 @@ Research-proven algorithm (NO LLM variance):
 - **10 minimum observations** before pruning
 - Prevents context collapse through incremental updates
 
+### Dynamic Pattern Retrieval ⭐ NEW
+Context-aware playbook injection (ACE paper §3.1):
+- Automatically filters patterns by file type (Python/JS/TS)
+- Domain-aware selection (async, typing, error-handling)
+- Relevance scoring based on confidence and success rate
+- Returns top 5-10 most relevant patterns instead of full playbook
+- Reduces token usage while maintaining effectiveness
+
+### Multi-Epoch Offline Training ⭐ NEW
+Research-validated training mode (ACE paper §4.1):
+- Scan entire codebase for training examples
+- Run 1-5 epochs for pattern stabilization
+- +2.6% improvement from repeated observation (paper Table 3)
+- Supports git history and test file analysis
+- Convergence detection shows when patterns have stabilized
+
+### Pattern Export/Import ⭐ NEW
+Cross-project learning (ACE paper §5):
+- Export patterns to JSON with full metadata
+- Import with smart merging (curator-based)
+- Share patterns across teams and projects
+- Transfer knowledge between codebases
+- Three merge strategies: smart, overwrite, skip-existing
+
+### Convergence Detection ⭐ NEW
+Know when patterns have stabilized:
+- Tracks confidence variance over observations (σ < 0.05)
+- Requires minimum 20 observations for convergence
+- Command: `python3 scripts/convergence-checker.py`
+- Shows converged, learning, and insufficient-data patterns
+- Helps identify which patterns are ready for production use
+
 ### Evolving Playbook
 `CLAUDE.md` automatically updates with:
 - High-confidence patterns (≥70%)
@@ -158,6 +202,27 @@ List learned patterns with optional filtering:
 /ace-patterns python             # Only Python patterns
 /ace-patterns javascript 0.7     # JS patterns with ≥70% confidence
 ```
+
+### `/ace-train-offline` ⭐ NEW
+Run multi-epoch offline training on your entire codebase:
+```bash
+/ace-train-offline              # Run 5 epochs on all code
+```
+This implements the ACE paper's offline training mode for +2.6% improvement. Scans your codebase and runs multiple learning epochs for better pattern stabilization.
+
+### `/ace-export-patterns` ⭐ NEW
+Export learned patterns to JSON for sharing across projects:
+```bash
+/ace-export-patterns --output ./my-patterns.json
+```
+Share your learned patterns with teammates or transfer to another project.
+
+### `/ace-import-patterns` ⭐ NEW
+Import patterns from another project:
+```bash
+/ace-import-patterns --input ./patterns.json --strategy smart
+```
+Merge strategies: `smart` (curator-based), `overwrite`, or `skip-existing`.
 
 ### `/ace-force-reflect [file]`
 Manually trigger reflection on a file:
@@ -210,7 +275,10 @@ ce-ai-ace/
 │   ├── ace-status.md            # /ace-status command
 │   ├── ace-patterns.md          # /ace-patterns command
 │   ├── ace-clear.md             # /ace-clear command
-│   └── ace-force-reflect.md     # /ace-force-reflect command
+│   ├── ace-force-reflect.md     # /ace-force-reflect command
+│   ├── ace-train-offline.md     # /ace-train-offline command ⭐ NEW
+│   ├── ace-export-patterns.md   # /ace-export-patterns command ⭐ NEW
+│   └── ace-import-patterns.md   # /ace-import-patterns command ⭐ NEW
 ├── hooks/
 │   └── hooks.json               # All 5 hooks (AgentStart, AgentEnd, PreToolUse, PostToolUse, SessionEnd)
 ├── scripts/
@@ -220,15 +288,20 @@ ce-ai-ace/
 │   ├── embeddings_engine.py     # Semantic embeddings
 │   ├── epoch-manager.py         # Multi-epoch training
 │   ├── serena-pattern-detector.py # Hybrid AST+regex detection
-│   ├── inject-playbook.py       # AgentStart hook
+│   ├── inject-playbook.py       # AgentStart hook (with dynamic retrieval)
 │   ├── analyze-agent-output.py  # AgentEnd hook
 │   ├── validate-patterns.py     # PreToolUse hook
 │   ├── ace-stats.py             # Statistics utility
 │   ├── ace-list-patterns.py     # Pattern listing utility
 │   ├── ace-session-end.py       # Session cleanup
-│   └── migrate-database.py      # Database migration
+│   ├── migrate-database.py      # Database migration
+│   ├── offline-training.py      # Multi-epoch offline training ⭐ NEW
+│   ├── pattern-retrieval.py     # Dynamic pattern retrieval ⭐ NEW
+│   ├── pattern-portability.py   # Export/import patterns ⭐ NEW
+│   └── convergence-checker.py   # Pattern convergence detection ⭐ NEW
 ├── docs/
 │   ├── ACE_RESEARCH.md          # Research paper summary
+│   ├── ACE_IMPLEMENTATION_GUIDE.md # Complete implementation guide ⭐ NEW
 │   ├── GAP_ANALYSIS.md          # Comprehensive gap analysis
 │   └── PHASES_3_5_COMPLETE.md   # Phase 3-5 implementation details
 ├── tests/
@@ -352,6 +425,7 @@ MIT License - See LICENSE file for details
 
 ## 📚 Learn More
 
+- **📖 ACE Implementation Guide**: [docs/ACE_IMPLEMENTATION_GUIDE.md](docs/ACE_IMPLEMENTATION_GUIDE.md) - Complete guide with 100% research paper coverage
 - **Research Paper**: https://arxiv.org/abs/2510.04618
 - **ACE Research Summary**: [docs/ACE_RESEARCH.md](docs/ACE_RESEARCH.md)
 - **Claude Code Docs**: https://docs.claude.com/en/docs/claude-code
