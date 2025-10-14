@@ -1,35 +1,12 @@
 # ACE Plugin - Installation Guide
 
-## 🚀 Quick Install (Recommended)
+## 🚀 Quick Install
 
-### Option 1: Install from GitHub (After Push)
+### Install from GitHub Marketplace
 
-1. **Push this repo to GitHub first**:
+1. **Add the marketplace in Claude Code**:
 ```bash
-git remote add origin https://github.com/YOUR_USERNAME/ce-ai-ace.git
-git branch -M main
-git push -u origin main
-```
-
-2. **Add the marketplace in Claude Code**:
-```bash
-/plugin marketplace add YOUR_USERNAME/ce-ai-ace
-```
-
-3. **Install the plugin**:
-```bash
-/plugin install ace-orchestration@ace-plugin-marketplace
-```
-
-4. **Restart Claude Code** to activate!
-
----
-
-### Option 2: Install Locally (For Testing)
-
-1. **Add local marketplace**:
-```bash
-/plugin marketplace add file:///Users/ptsafaridis/repos/github_com/ce-dot-net/ce-ai-ace
+/plugin marketplace add ce-dot-net/ce-ai-ace
 ```
 
 2. **Install the plugin**:
@@ -37,17 +14,18 @@ git push -u origin main
 /plugin install ace-orchestration@ace-plugin-marketplace
 ```
 
-3. **Restart Claude Code**
+3. **Restart Claude Code** to activate!
 
 ---
 
 ## ✅ Verify Installation
 
-After restart, check if hooks are loaded:
+After restart, check if the plugin is loaded:
 ```bash
-# Plugin should be active
 /plugin
 ```
+
+You should see `ace-orchestration` listed as active.
 
 The ACE plugin runs **automatically** - no manual commands needed!
 
@@ -72,16 +50,11 @@ Every time you edit code in Claude Code:
   - Uses only standard library - no `pip install` needed!
 - **Claude Code CLI 2.0+**
 
-### Optional (for development):
-- **Node.js** (only if you want to run old tests)
-
 That's it! The plugin is **self-contained**:
 - ✅ SQLite database (Python standard library)
 - ✅ Pattern detection (pure regex)
 - ✅ Deterministic curation (string similarity)
 - ✅ No external dependencies
-
-**For users**: Just install via `/plugin` command - that's all you need!
 
 ---
 
@@ -104,10 +77,9 @@ That's it! The plugin is **self-contained**:
    /plugin
    ```
 
-2. Verify structure:
+2. Verify marketplace was added:
    ```bash
-   ls -la .claude-plugin/
-   # Should see: plugin.json, marketplace.json
+   /plugin marketplace list
    ```
 
 3. Restart Claude Code
@@ -121,16 +93,17 @@ That's it! The plugin is **self-contained**:
 ### CLAUDE.md Not Updating?
 
 - Check `.ace-memory/` directory exists
-- Run in plugin folder: `npm test` to verify functionality
+- Run `/ace-status` to verify patterns are being learned
+- Check for errors in Claude Code console
 
 ---
 
 ## 📖 Learn More
 
 - **README.md** - Full documentation
-- **QUICKSTART.md** - Detailed usage
+- **QUICKSTART.md** - Detailed usage guide
 - **docs/ACE_RESEARCH.md** - Research background
 
 ---
 
-**That's it! No npm install needed in your projects - the plugin just works! 🎉**
+**That's it! Just install and the plugin works automatically! 🎉**
