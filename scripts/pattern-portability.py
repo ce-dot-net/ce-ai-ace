@@ -75,9 +75,11 @@ def import_patterns(input_path: str, merge_strategy: str = 'smart'):
 
     if not DB_PATH.exists():
         # Initialize database
-        sys.path.insert(0, str(Path(__file__).parent))
-        from ace_cycle import init_database
-        init_database()
+        import importlib.util
+        _spec = importlib.util.spec_from_file_location("ace_cycle", Path(__file__).parent / "ace-cycle.py")
+        _ace_cycle = importlib.util.module_from_spec(_spec)
+        _spec.loader.exec_module(_ace_cycle)
+        _ace_cycle.init_database()
 
     conn = sqlite3.connect(str(DB_PATH))
     cursor = conn.cursor()

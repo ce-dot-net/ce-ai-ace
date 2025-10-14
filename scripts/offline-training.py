@@ -21,10 +21,18 @@ from typing import List, Dict, Optional
 # Add scripts to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from epoch_manager import (
-    start_epoch, complete_epoch, track_pattern_evolution,
-    cache_training_data, get_training_data_for_epoch, MAX_EPOCHS
-)
+# Import epoch-manager.py (with hyphen in filename)
+import importlib.util
+_spec = importlib.util.spec_from_file_location("epoch_manager", Path(__file__).parent / "epoch-manager.py")
+_epoch_manager = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_epoch_manager)
+
+start_epoch = _epoch_manager.start_epoch
+complete_epoch = _epoch_manager.complete_epoch
+track_pattern_evolution = _epoch_manager.track_pattern_evolution
+cache_training_data = _epoch_manager.cache_training_data
+get_training_data_for_epoch = _epoch_manager.get_training_data_for_epoch
+MAX_EPOCHS = _epoch_manager.MAX_EPOCHS
 
 PROJECT_ROOT = Path.cwd()
 DB_PATH = PROJECT_ROOT / '.ace-memory' / 'patterns.db'
@@ -148,13 +156,22 @@ def run_offline_training(epochs: int = MAX_EPOCHS, source: str = 'all', verbose:
         patterns_processed = 0
         patterns_refined = 0
 
+        # Import ace-cycle.py functions
+        _ace_spec = importlib.util.spec_from_file_location("ace_cycle", Path(__file__).parent / "ace-cycle.py")
+        _ace_cycle = importlib.util.module_from_spec(_ace_spec)
+        _ace_spec.loader.exec_module(_ace_cycle)
+
+        detect_patterns = _ace_cycle.detect_patterns
+        gather_evidence = _ace_cycle.gather_evidence
+        reflect = _ace_cycle.reflect
+        curate = _ace_cycle.curate
+        merge_patterns = _ace_cycle.merge_patterns
+        store_pattern = _ace_cycle.store_pattern
+
         # Process each training example
         for idx, example in enumerate(training_data):
             if verbose and (idx + 1) % 10 == 0:
                 print(f"  Processing {idx + 1}/{len(training_data)}...", file=sys.stderr)
-
-            # Detect patterns in code
-            from ace_cycle import detect_patterns, gather_evidence, reflect, curate, merge_patterns, store_pattern
 
             detected = detect_patterns(example['code'], example['file_path'])
             if not detected:
