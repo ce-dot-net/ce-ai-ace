@@ -56,7 +56,7 @@ The plugin works **100% automatically**:
 
 ```
 ┌─────────────┐
-│  You Code   │ (Generator)
+│  You Code   │ (Generator: You + Claude Code)
 └──────┬──────┘
        │
        ▼
@@ -70,26 +70,42 @@ The plugin works **100% automatically**:
 └──────┬──────────┘
        │
        ▼
-┌─────────────────┐
-│   Reflect 🤔    │ (Sequential-thinking MCP)
-└──────┬──────────┘
+┌─────────────────────────────┐
+│   Reflect 🤔                │
+│ (LLM-based Reflector Agent) │
+│ • Analyze pattern effectiveness
+│ • Extract specific insights
+│ • Iterative refinement (max 5 rounds)
+└──────┬──────────────────────┘
        │
        ▼
 ┌─────────────────┐
-│   Curate 🔀     │ (Deterministic merging)
+│   Curate 🔀     │
+│ • Deterministic merging (85% similarity)
+│ • Generate bullet IDs: [py-00001]
+│ • Track helpful/harmful counts
 └──────┬──────────┘
        │
        ▼
-┌─────────────────┐
-│ Update Playbook │ (CLAUDE.md)
-└─────────────────┘
+┌─────────────────────────────┐
+│ Update Playbook (CLAUDE.md) │
+│ • Bulletized structure
+│ • ACE sections (STRATEGIES, CODE SNIPPETS, etc.)
+│ • Incremental delta updates
+└─────────────────────────────┘
 ```
 
-### Three Roles
+### Three Roles (ACE Framework)
 
 1. **Generator** - You + Claude Code (existing workflow)
-2. **Reflector** - LLM via `sequential-thinking` MCP
+2. **Reflector** - Dedicated LLM agent that analyzes patterns for effectiveness
+   - Structured JSON input/output
+   - Iterative refinement support (max 5 rounds)
+   - Evidence-based insights with specific recommendations
 3. **Curator** - Deterministic algorithm (85% similarity threshold)
+   - Bulletized structure with IDs: `[domain-NNNNN]`
+   - Incremental delta updates (append, update, prune)
+   - Tracks helpful/harmful counts per pattern
 
 ---
 
