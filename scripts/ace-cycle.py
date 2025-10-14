@@ -1,0 +1,710 @@
+#!/usr/bin/env python3
+"""
+ACE Cycle - Main orchestration script
+
+Orchestrates the complete ACE cycle:
+1. Pattern Detection (regex-based)
+2. Evidence Gathering (test results)
+3. Reflection (via reflector agent using Task tool)
+4. Curation (deterministic algorithm)
+5. Playbook Update (CLAUDE.md generation)
+
+Called by PostToolUse hook after Edit/Write operations.
+"""
+
+import json
+import sys
+import os
+import re
+import sqlite3
+import subprocess
+from pathlib import Path
+from datetime import datetime
+from typing import Dict, List, Any, Optional
+
+# ============================================================================
+# Configuration
+# ============================================================================
+
+SIMILARITY_THRESHOLD = 0.85  # 85% similarity for merging (from research)
+PRUNE_THRESHOLD = 0.30      # 30% confidence threshold (from research)
+MIN_OBSERVATIONS = 10        # Minimum observations before pruning
+
+# Plugin root directory
+PLUGIN_ROOT = Path(os.environ.get('CLAUDE_PLUGIN_ROOT', Path(__file__).parent.parent))
+PROJECT_ROOT = Path.cwd()
+DB_PATH = PROJECT_ROOT / '.ace-memory' / 'patterns.db'
+
+# ============================================================================
+# Pattern Definitions (from config/patterns.js)
+# ============================================================================
+
+PATTERNS = [
+    # Python Patterns
+    {
+        'id': 'py-001',
+        'name': 'Use TypedDict for configs',
+        'regex': r'class\s+\w*[Cc]onfig\w*\(TypedDict\)',
+        'domain': 'python-typing',
+        'type': 'helpful',
+        'language': 'python',
+        'description': 'Define configuration with TypedDict for type safety and IDE support'
+    },
+    {
+        'id': 'py-002',
+        'name': 'Use dataclasses for data structures',
+        'regex': r'@dataclass\s+class\s+\w+',
+        'domain': 'python-datastructures',
+        'type': 'helpful',
+        'language': 'python',
+        'description': 'Use @dataclass decorator for simple data containers'
+    },
+    {
+        'id': 'py-003',
+        'name': 'Avoid bare except',
+        'regex': r'except\s*:',
+        'domain': 'python-error-handling',
+        'type': 'harmful',
+        'language': 'python',
+        'description': 'Bare except catches all exceptions including KeyboardInterrupt'
+    },
+    {
+        'id': 'py-004',
+        'name': 'Use context managers for file operations',
+        'regex': r'with\s+open\(',
+        'domain': 'python-io',
+        'type': 'helpful',
+        'language': 'python',
+        'description': 'with statement ensures files are properly closed'
+    },
+    {
+        'id': 'py-005',
+        'name': 'Use f-strings for formatting',
+        'regex': r'f["\']',
+        'domain': 'python-strings',
+        'type': 'helpful',
+        'language': 'python',
+        'description': 'f-strings are faster and more readable than .format() or %'
+    },
+    {
+        'id': 'py-006',
+        'name': 'Use list comprehensions',
+        'regex': r'\[[^\]]+\s+for\s+\w+\s+in\s+',
+        'domain': 'python-idioms',
+        'type': 'helpful',
+        'language': 'python',
+        'description': 'List comprehensions are more Pythonic and often faster'
+    },
+    {
+        'id': 'py-007',
+        'name': 'Use pathlib over os.path',
+        'regex': r'from pathlib import Path',
+        'domain': 'python-io',
+        'type': 'helpful',
+        'language': 'python',
+        'description': 'pathlib provides object-oriented path operations'
+    },
+    {
+        'id': 'py-008',
+        'name': 'Avoid mutable default arguments',
+        'regex': r'def\s+\w+\([^)]*=\s*\[\]',
+        'domain': 'python-gotchas',
+        'type': 'harmful',
+        'language': 'python',
+        'description': 'Mutable defaults are shared across function calls'
+    },
+
+    # JavaScript Patterns
+    {
+        'id': 'js-001',
+        'name': 'Use const for constants',
+        'regex': r'const\s+[A-Z_]+\s*=',
+        'domain': 'javascript-conventions',
+        'type': 'helpful',
+        'language': 'javascript',
+        'description': 'const prevents reassignment and signals intent'
+    },
+    {
+        'id': 'js-002',
+        'name': 'Use custom hooks for data fetching',
+        'regex': r'function\s+use[A-Z]\w*\(',
+        'domain': 'react-hooks',
+        'type': 'helpful',
+        'language': 'javascript',
+        'description': 'Custom hooks encapsulate reusable stateful logic'
+    },
+    {
+        'id': 'js-003',
+        'name': 'Avoid var keyword',
+        'regex': r'\bvar\s+\w+\s*=',
+        'domain': 'javascript-scope',
+        'type': 'harmful',
+        'language': 'javascript',
+        'description': 'var has function scope and hoisting issues'
+    },
+    {
+        'id': 'js-004',
+        'name': 'Use async/await over promises',
+        'regex': r'async\s+function|\basync\s*\(',
+        'domain': 'javascript-async',
+        'type': 'helpful',
+        'language': 'javascript',
+        'description': 'async/await makes asynchronous code more readable'
+    },
+    {
+        'id': 'js-005',
+        'name': 'Use arrow functions for callbacks',
+        'regex': r'\([^)]*\)\s*=>',
+        'domain': 'javascript-functions',
+        'type': 'helpful',
+        'language': 'javascript',
+        'description': 'Arrow functions have lexical this binding'
+    },
+    {
+        'id': 'js-006',
+        'name': 'Use destructuring for props',
+        'regex': r'const\s+{[^}]+}\s*=\s*props',
+        'domain': 'react-patterns',
+        'type': 'helpful',
+        'language': 'javascript',
+        'description': 'Destructuring makes prop usage more explicit'
+    },
+
+    # TypeScript Patterns
+    {
+        'id': 'ts-001',
+        'name': 'Define interface for object types',
+        'regex': r'interface\s+\w+\s*{',
+        'domain': 'typescript-types',
+        'type': 'helpful',
+        'language': 'typescript',
+        'description': 'Interfaces provide type safety and documentation'
+    },
+    {
+        'id': 'ts-002',
+        'name': 'Use type guards for narrowing',
+        'regex': r'function\s+is\w+\([^)]+\):\s*\w+\s+is\s+\w+',
+        'domain': 'typescript-guards',
+        'type': 'helpful',
+        'language': 'typescript',
+        'description': 'Type guards enable safe type narrowing'
+    },
+    {
+        'id': 'ts-003',
+        'name': 'Avoid any type',
+        'regex': r':\s*any\b',
+        'domain': 'typescript-types',
+        'type': 'harmful',
+        'language': 'typescript',
+        'description': 'any defeats the purpose of TypeScript'
+    },
+    {
+        'id': 'ts-004',
+        'name': 'Use union types',
+        'regex': r':\s*\w+\s*\|\s*\w+',
+        'domain': 'typescript-types',
+        'type': 'helpful',
+        'language': 'typescript',
+        'description': 'Union types express multiple possible types'
+    }
+]
+
+# ============================================================================
+# Database Functions
+# ============================================================================
+
+def init_database():
+    """Initialize SQLite database with ACE schema."""
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+    conn = sqlite3.connect(str(DB_PATH))
+    cursor = conn.cursor()
+
+    # Patterns table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS patterns (
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            domain TEXT NOT NULL,
+            type TEXT NOT NULL,
+            description TEXT NOT NULL,
+            language TEXT NOT NULL,
+            observations INTEGER DEFAULT 0,
+            successes INTEGER DEFAULT 0,
+            failures INTEGER DEFAULT 0,
+            neutrals INTEGER DEFAULT 0,
+            confidence REAL DEFAULT 0.0,
+            last_seen TEXT,
+            created_at TEXT
+        )
+    ''')
+
+    # Insights table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS insights (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            pattern_id TEXT NOT NULL,
+            timestamp TEXT NOT NULL,
+            insight TEXT NOT NULL,
+            recommendation TEXT NOT NULL,
+            confidence REAL NOT NULL,
+            applied_correctly INTEGER NOT NULL,
+            FOREIGN KEY (pattern_id) REFERENCES patterns(id)
+        )
+    ''')
+
+    # Observations table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS observations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            pattern_id TEXT NOT NULL,
+            timestamp TEXT NOT NULL,
+            outcome TEXT NOT NULL,
+            test_status TEXT,
+            error_logs TEXT,
+            file_path TEXT,
+            FOREIGN KEY (pattern_id) REFERENCES patterns(id)
+        )
+    ''')
+
+    conn.commit()
+    conn.close()
+
+def get_pattern(pattern_id: str) -> Optional[Dict]:
+    """Retrieve pattern from database."""
+    if not DB_PATH.exists():
+        return None
+
+    conn = sqlite3.connect(str(DB_PATH))
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT * FROM patterns WHERE id = ?', (pattern_id,))
+    row = cursor.fetchone()
+    conn.close()
+
+    return dict(row) if row else None
+
+def store_pattern(pattern: Dict):
+    """Store or update pattern in database."""
+    conn = sqlite3.connect(str(DB_PATH))
+    cursor = conn.cursor()
+
+    # Check if pattern exists
+    cursor.execute('SELECT id FROM patterns WHERE id = ?', (pattern['id'],))
+    exists = cursor.fetchone() is not None
+
+    if exists:
+        # Update existing
+        cursor.execute('''
+            UPDATE patterns SET
+                name = ?, domain = ?, type = ?, description = ?,
+                language = ?, observations = ?, successes = ?,
+                failures = ?, neutrals = ?, confidence = ?, last_seen = ?
+            WHERE id = ?
+        ''', (
+            pattern['name'], pattern['domain'], pattern['type'], pattern['description'],
+            pattern['language'], pattern['observations'], pattern['successes'],
+            pattern['failures'], pattern['neutrals'], pattern['confidence'],
+            pattern['last_seen'], pattern['id']
+        ))
+    else:
+        # Insert new
+        cursor.execute('''
+            INSERT INTO patterns (
+                id, name, domain, type, description, language,
+                observations, successes, failures, neutrals,
+                confidence, last_seen, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            pattern['id'], pattern['name'], pattern['domain'], pattern['type'],
+            pattern['description'], pattern['language'], pattern['observations'],
+            pattern['successes'], pattern['failures'], pattern['neutrals'],
+            pattern['confidence'], pattern['last_seen'],
+            pattern.get('created_at', datetime.now().isoformat())
+        ))
+
+    conn.commit()
+    conn.close()
+
+def store_insight(pattern_id: str, insight: Dict):
+    """Store pattern insight in database."""
+    conn = sqlite3.connect(str(DB_PATH))
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        INSERT INTO insights (
+            pattern_id, timestamp, insight, recommendation,
+            confidence, applied_correctly
+        ) VALUES (?, ?, ?, ?, ?, ?)
+    ''', (
+        pattern_id, insight['timestamp'], insight['insight'],
+        insight['recommendation'], insight['confidence'],
+        1 if insight['applied_correctly'] else 0
+    ))
+
+    conn.commit()
+    conn.close()
+
+def store_observation(pattern_id: str, observation: Dict):
+    """Store pattern observation in database."""
+    conn = sqlite3.connect(str(DB_PATH))
+    cursor = conn.cursor()
+
+    cursor.execute('''
+        INSERT INTO observations (
+            pattern_id, timestamp, outcome, test_status, error_logs, file_path
+        ) VALUES (?, ?, ?, ?, ?, ?)
+    ''', (
+        pattern_id, observation['timestamp'], observation['outcome'],
+        observation.get('test_status'), observation.get('error_logs'),
+        observation.get('file_path')
+    ))
+
+    conn.commit()
+    conn.close()
+
+def list_patterns() -> List[Dict]:
+    """List all patterns from database."""
+    if not DB_PATH.exists():
+        return []
+
+    conn = sqlite3.connect(str(DB_PATH))
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT * FROM patterns ORDER BY confidence DESC')
+    rows = cursor.fetchall()
+    conn.close()
+
+    return [dict(row) for row in rows]
+
+# ============================================================================
+# Pattern Detection
+# ============================================================================
+
+def detect_patterns(code: str, file_path: str) -> List[Dict]:
+    """Detect patterns in code using regex."""
+    detected = []
+
+    # Determine language from file extension
+    ext = Path(file_path).suffix
+    lang_map = {
+        '.py': 'python',
+        '.js': 'javascript',
+        '.jsx': 'javascript',
+        '.ts': 'typescript',
+        '.tsx': 'typescript'
+    }
+
+    language = lang_map.get(ext)
+    if not language:
+        return []
+
+    # Check each pattern
+    for pattern in PATTERNS:
+        if pattern['language'] != language:
+            continue
+
+        if re.search(pattern['regex'], code):
+            detected.append(pattern.copy())
+
+    return detected
+
+# ============================================================================
+# Evidence Gathering
+# ============================================================================
+
+def gather_evidence() -> Dict:
+    """Gather execution feedback (test results)."""
+    try:
+        # Try to run tests
+        result = subprocess.run(
+            ['npm', 'test'],
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+
+        return {
+            'test_status': 'passed' if result.returncode == 0 else 'failed',
+            'error_logs': result.stderr[-500:] if result.stderr else '',
+            'output': result.stdout[-300:] if result.stdout else '',
+            'has_tests': True
+        }
+    except subprocess.TimeoutExpired:
+        return {
+            'test_status': 'timeout',
+            'error_logs': 'Tests timed out after 10 seconds',
+            'output': '',
+            'has_tests': True
+        }
+    except FileNotFoundError:
+        # No npm/tests
+        return {
+            'test_status': 'none',
+            'error_logs': '',
+            'output': '',
+            'has_tests': False
+        }
+
+# ============================================================================
+# Reflection (via Task tool)
+# ============================================================================
+
+def reflect(code: str, patterns: List[Dict], evidence: Dict, file_path: str) -> Dict:
+    """Invoke reflector agent via Task tool.
+
+    Since we're in a hook (not in Claude's main context), we can't directly
+    use the Task tool. Instead, we'll create a structured request for Claude
+    to process later, or use a simpler heuristic approach.
+
+    For now, we'll use a heuristic fallback based on test results.
+    """
+    # Heuristic reflection based on test results
+    test_passed = evidence.get('test_status') == 'passed'
+
+    patterns_analyzed = []
+    for pattern in patterns:
+        # Simple heuristic: if tests passed, pattern likely helped
+        contributed_to = 'success' if test_passed else 'neutral'
+        confidence = 0.7 if test_passed else 0.5
+
+        patterns_analyzed.append({
+            'pattern_id': pattern['id'],
+            'applied_correctly': True,  # Assume correct if detected
+            'contributed_to': contributed_to,
+            'confidence': confidence,
+            'insight': f"Pattern '{pattern['name']}' detected. Tests {evidence.get('test_status', 'unknown')}.",
+            'recommendation': pattern['description']
+        })
+
+    return {
+        'patterns_analyzed': patterns_analyzed,
+        'meta_insights': [
+            f"Automatic analysis based on test results: {evidence.get('test_status', 'unknown')}"
+        ]
+    }
+
+# ============================================================================
+# Curator (Deterministic Algorithm)
+# ============================================================================
+
+def calculate_similarity(pattern1: Dict, pattern2: Dict) -> float:
+    """Calculate similarity between two patterns (simple string-based)."""
+    name1 = pattern1.get('name', '').lower()
+    name2 = pattern2.get('name', '').lower()
+    desc1 = pattern1.get('description', '').lower()
+    desc2 = pattern2.get('description', '').lower()
+
+    # Simple Jaccard similarity on words
+    def jaccard(s1: str, s2: str) -> float:
+        words1 = set(s1.split())
+        words2 = set(s2.split())
+        if not words1 or not words2:
+            return 0.0
+        intersection = words1 & words2
+        union = words1 | words2
+        return len(intersection) / len(union)
+
+    name_sim = jaccard(name1, name2)
+    desc_sim = jaccard(desc1, desc2)
+
+    # Weighted: name 60%, description 40%
+    return (name_sim * 0.6) + (desc_sim * 0.4)
+
+def curate(new_pattern: Dict, existing_patterns: List[Dict]) -> Dict:
+    """Determine whether to merge, create, or prune pattern."""
+    # Find most similar pattern in same domain and type
+    best_match = None
+    best_similarity = 0.0
+
+    for existing in existing_patterns:
+        if existing['domain'] != new_pattern['domain']:
+            continue
+        if existing['type'] != new_pattern['type']:
+            continue
+
+        similarity = calculate_similarity(new_pattern, existing)
+        if similarity > best_similarity:
+            best_similarity = similarity
+            best_match = existing
+
+    # MERGE if >= 85% similar
+    if best_match and best_similarity >= SIMILARITY_THRESHOLD:
+        return {
+            'action': 'merge',
+            'target_id': best_match['id'],
+            'similarity': best_similarity
+        }
+
+    # PRUNE if low confidence after enough observations
+    if new_pattern.get('observations', 0) >= MIN_OBSERVATIONS:
+        confidence = new_pattern.get('confidence', 0)
+        if confidence < PRUNE_THRESHOLD:
+            return {
+                'action': 'prune',
+                'reason': f"Low confidence ({confidence:.0%}) after {new_pattern['observations']} observations"
+            }
+
+    # CREATE new pattern
+    return {
+        'action': 'create'
+    }
+
+def merge_patterns(target: Dict, source: Dict) -> Dict:
+    """Merge two patterns deterministically."""
+    return {
+        **target,
+        'observations': target.get('observations', 0) + source.get('observations', 0),
+        'successes': target.get('successes', 0) + source.get('successes', 0),
+        'failures': target.get('failures', 0) + source.get('failures', 0),
+        'neutrals': target.get('neutrals', 0) + source.get('neutrals', 0),
+        'last_seen': source.get('last_seen', datetime.now().isoformat())
+    }
+
+# ============================================================================
+# Main ACE Cycle
+# ============================================================================
+
+def main():
+    """Main ACE cycle orchestration."""
+    try:
+        # Read hook input from stdin
+        input_data = json.load(sys.stdin)
+        tool_input = input_data.get('tool_input', {})
+        file_path = tool_input.get('file_path', '')
+
+        if not file_path:
+            # No file path, skip
+            sys.exit(0)
+
+        # Only process supported file types
+        ext = Path(file_path).suffix
+        if ext not in ['.py', '.js', '.jsx', '.ts', '.tsx']:
+            sys.exit(0)
+
+        print(f"🔄 ACE: Starting reflection cycle for {file_path}", file=sys.stderr)
+
+        # Initialize database
+        init_database()
+
+        # Read file content
+        try:
+            with open(file_path, 'r') as f:
+                code = f.read()
+        except Exception as e:
+            print(f"❌ Failed to read file: {e}", file=sys.stderr)
+            sys.exit(0)
+
+        # STEP 1: Detect patterns
+        detected = detect_patterns(code, file_path)
+        if not detected:
+            print("⏭️  No patterns detected", file=sys.stderr)
+            sys.exit(0)
+
+        print(f"🔍 Detected {len(detected)} pattern(s): {', '.join(p['id'] for p in detected)}", file=sys.stderr)
+
+        # STEP 2: Gather evidence
+        evidence = gather_evidence()
+        print(f"🧪 Evidence: {evidence['test_status']}", file=sys.stderr)
+
+        # STEP 3: Reflect
+        reflection = reflect(code, detected, evidence, file_path)
+        print("💡 Reflection complete", file=sys.stderr)
+
+        # STEP 4: Curate each pattern
+        patterns_processed = 0
+        existing_patterns = list_patterns()
+
+        for analysis in reflection['patterns_analyzed']:
+            pattern_id = analysis['pattern_id']
+            pattern_def = next((p for p in detected if p['id'] == pattern_id), None)
+            if not pattern_def:
+                continue
+
+            # Prepare new pattern record
+            new_pattern = {
+                'id': pattern_def['id'],
+                'name': pattern_def['name'],
+                'domain': pattern_def['domain'],
+                'type': pattern_def['type'],
+                'description': pattern_def['description'],
+                'language': pattern_def['language'],
+                'observations': 1,
+                'successes': 1 if analysis['contributed_to'] == 'success' else 0,
+                'failures': 1 if analysis['contributed_to'] == 'failure' else 0,
+                'neutrals': 1 if analysis['contributed_to'] == 'neutral' else 0,
+                'confidence': 0.0,
+                'last_seen': datetime.now().isoformat()
+            }
+
+            # Get existing pattern
+            existing = get_pattern(pattern_id)
+
+            # Curate decision
+            decision = curate(new_pattern, existing_patterns)
+
+            if decision['action'] == 'merge':
+                # Merge with existing
+                if existing:
+                    merged = merge_patterns(existing, new_pattern)
+                    # Recalculate confidence
+                    merged['confidence'] = merged['successes'] / max(merged['observations'], 1)
+                    store_pattern(merged)
+                    print(f"🔀 Merged: {merged['name']} ({decision['similarity']:.0%} similar)", file=sys.stderr)
+                    patterns_processed += 1
+
+            elif decision['action'] == 'create':
+                # Create new pattern
+                new_pattern['confidence'] = new_pattern['successes'] / max(new_pattern['observations'], 1)
+                new_pattern['created_at'] = datetime.now().isoformat()
+                store_pattern(new_pattern)
+                print(f"✨ Created: {new_pattern['name']}", file=sys.stderr)
+                patterns_processed += 1
+
+            elif decision['action'] == 'prune':
+                print(f"🗑️  Pruned: {pattern_id} ({decision['reason']})", file=sys.stderr)
+
+            # Store insight
+            store_insight(pattern_id, {
+                'timestamp': datetime.now().isoformat(),
+                'insight': analysis['insight'],
+                'recommendation': analysis['recommendation'],
+                'confidence': analysis['confidence'],
+                'applied_correctly': analysis['applied_correctly']
+            })
+
+            # Store observation
+            store_observation(pattern_id, {
+                'timestamp': datetime.now().isoformat(),
+                'outcome': analysis['contributed_to'],
+                'test_status': evidence.get('test_status'),
+                'error_logs': evidence.get('error_logs'),
+                'file_path': file_path
+            })
+
+        # STEP 5: Update playbook
+        if patterns_processed > 0:
+            subprocess.run([
+                'python3',
+                str(PLUGIN_ROOT / 'scripts' / 'generate-playbook.py')
+            ], check=False)
+            print(f"✅ ACE cycle complete ({patterns_processed} patterns processed)", file=sys.stderr)
+        else:
+            print("⏭️  No patterns updated", file=sys.stderr)
+
+        # Output success to Claude Code
+        print(json.dumps({'continue': True}))
+        sys.exit(0)
+
+    except Exception as e:
+        print(f"❌ ACE cycle failed: {e}", file=sys.stderr)
+        import traceback
+        traceback.print_exc(file=sys.stderr)
+        # Continue anyway (don't block user's workflow)
+        print(json.dumps({'continue': True}))
+        sys.exit(0)
+
+if __name__ == '__main__':
+    main()

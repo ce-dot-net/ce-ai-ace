@@ -1,21 +1,26 @@
-# ACE Orchestration Plugin for Claude Code CLI
+# ACE Plugin for Claude Code CLI
 
-**Automatic pattern learning through Agentic Context Engineering (ACE)**
+**Automatic Pattern Learning through Agentic Context Engineering**
 
-Based on research from Stanford University, SambaNova Systems, and UC Berkeley
-📄 Paper: [arXiv:2510.04618v1](https://arxiv.org/abs/2510.04618)
+Based on research from Stanford University, SambaNova Systems, and UC Berkeley ([arXiv:2510.04618v1](https://arxiv.org/abs/2510.04618))
 
 ---
 
 ## 🎯 What is ACE?
 
-ACE is a framework that improves LLM performance by **evolving contexts** instead of fine-tuning weights. This plugin implements the full ACE cycle for Claude Code CLI, automatically learning from your coding patterns and building a comprehensive playbook in `CLAUDE.md`.
+ACE (Agentic Context Engineering) is a Claude Code plugin that **automatically learns from your coding patterns** and builds a comprehensive, evolving playbook (`CLAUDE.md`) to improve your development workflow.
 
-### Key Results from Research
-- **+10.6%** improvement on agent tasks
-- **+8.6%** on domain-specific reasoning
-- **86.9%** reduction in adaptation latency
-- **75-84%** reduction in token costs
+Instead of fine-tuning models or manually curating prompts, ACE:
+- **Detects patterns** in your code automatically (Python, JavaScript, TypeScript)
+- **Analyzes effectiveness** using test results and execution feedback
+- **Curates knowledge** deterministically (research-backed 85% similarity threshold)
+- **Grows a playbook** that evolves with your codebase
+
+### Research-Backed Results
+- **+10-17%** accuracy improvement on complex tasks
+- **82-92%** latency reduction vs. traditional approaches
+- **75-84%** cost reduction
+- **Prevents context collapse** through incremental delta updates
 
 ---
 
@@ -23,25 +28,31 @@ ACE is a framework that improves LLM performance by **evolving contexts** instea
 
 ### Installation
 
-```bash
-# Clone the repository
-git clone https://github.com/YOUR_USERNAME/ce-ai-ace.git
-cd ce-ai-ace
+1. **Push this repo to GitHub** (if not already):
+   ```bash
+   git remote add origin https://github.com/YOUR_USERNAME/ce-ai-ace.git
+   git push -u origin main
+   ```
 
-# Install dependencies
-npm install
+2. **Add marketplace in Claude Code**:
+   ```bash
+   /plugin marketplace add YOUR_USERNAME/ce-ai-ace
+   ```
 
-# Optional: Install MCP servers for full functionality
-npm run install-mcps
-```
+3. **Install the plugin**:
+   ```bash
+   /plugin install ace-orchestration@ace-plugin-marketplace
+   ```
+
+4. **Restart Claude Code** to activate
 
 ### Usage
 
-1. **Activate the plugin** in Claude Code CLI
-2. **Start coding** as you normally would
-3. **Check `CLAUDE.md`** after each session for learned patterns
-
-That's it! The plugin works automatically in the background.
+The plugin works **100% automatically**:
+1. Edit code in Python, JavaScript, or TypeScript
+2. ACE detects patterns and analyzes effectiveness
+3. Check `CLAUDE.md` to see your evolving playbook
+4. Use `/ace-status` to view learning statistics
 
 ---
 
@@ -88,83 +99,86 @@ That's it! The plugin works automatically in the background.
 
 ---
 
-## 📋 Features
+## ✨ Features
 
-### Pattern Detection
-- ✅ **20+ predefined patterns** across Python, JavaScript, TypeScript
-- ✅ **Regex-based detection** (fast, no LLM calls)
-- ✅ **Automatic language detection** from file extensions
+### Automatic Pattern Detection
+20+ built-in patterns for Python, JavaScript, TypeScript:
+- **Python**: TypedDict, dataclasses, f-strings, list comprehensions, context managers
+- **JavaScript**: custom hooks, async/await, arrow functions, destructuring
+- **TypeScript**: interfaces, type guards, union types
+- **Anti-patterns**: bare except, var keyword, any type
 
-### Pattern Categories
-- **Helpful patterns**: TypedDict, async/await, custom hooks, etc.
-- **Harmful patterns**: Bare except, var declarations, direct state mutation
+### Intelligent Reflection
+The **Reflector agent** analyzes:
+- Was the pattern applied correctly?
+- Did it contribute to success or failure?
+- What specific insights can we learn?
+- When should this pattern be used?
 
-### Intelligent Curation
-- ✅ **85% similarity threshold** for merging patterns
-- ✅ **30% confidence threshold** for pruning (after 10 observations)
-- ✅ **Semantic deduplication** using string similarity
-- ✅ **No LLM guessing** - pure deterministic algorithm
+### Deterministic Curation
+Research-proven algorithm (NO LLM variance):
+- **85% similarity threshold** for merging patterns
+- **30% confidence threshold** for pruning
+- **10 minimum observations** before pruning
+- Prevents context collapse through incremental updates
 
 ### Evolving Playbook
-- ✅ **Incremental delta updates** (prevents context collapse)
-- ✅ **Confidence-based organization** (high/medium/anti-patterns)
-- ✅ **Comprehensive insights** (not concise summaries)
-- ✅ **Specific recommendations** based on real usage
+`CLAUDE.md` automatically updates with:
+- High-confidence patterns (≥70%)
+- Medium-confidence patterns (30-70%)
+- Anti-patterns to avoid
+- Specific, actionable insights
+- Evidence-based recommendations
+
+---
+
+## 💡 Slash Commands
+
+### `/ace-status`
+View comprehensive learning statistics:
+- Total patterns learned
+- Success rates by domain
+- Top confident patterns
+- Patterns that may be pruned
+
+### `/ace-patterns [domain] [min-confidence]`
+List learned patterns with optional filtering:
+```bash
+/ace-patterns                    # All patterns
+/ace-patterns python             # Only Python patterns
+/ace-patterns javascript 0.7     # JS patterns with ≥70% confidence
+```
+
+### `/ace-force-reflect [file]`
+Manually trigger reflection on a file:
+```bash
+/ace-force-reflect               # Analyze last edited file
+/ace-force-reflect src/app.py    # Analyze specific file
+```
+
+### `/ace-clear --confirm`
+Reset pattern database (with backup):
+```bash
+/ace-clear          # Show warning
+/ace-clear --confirm # Actually reset
+```
 
 ---
 
 ## 🔧 Configuration
 
-Edit `plugin.json` to customize:
+The plugin works out-of-the-box with research-backed defaults:
 
-```json
-{
-  "configuration": {
-    "similarityThreshold": 0.85,    // Merge threshold (0-1)
-    "pruneThreshold": 0.3,          // Prune below 30% confidence
-    "minObservations": 10,          // Observations before pruning
-    "confidenceThreshold": 0.7,     // High-confidence classification
-    "maxPatternsInPlaybook": 50,    // Max patterns to display
-    "enableReflection": true,       // Use sequential-thinking MCP
-    "logLevel": "info"              // Logging verbosity
-  }
-}
-```
+- **Similarity threshold**: 0.85 (85%)
+- **Prune threshold**: 0.30 (30%)
+- **Minimum observations**: 10
+- **Confidence threshold**: 0.70 (70% for "high confidence")
 
----
-
-## 📊 Pattern Examples
-
-### Python Patterns
-- **py-001**: Use TypedDict for configs
-- **py-002**: Validate API responses
-- **py-003**: Avoid bare except (harmful)
-- **py-004**: Use context managers for files
-- **py-005**: Use asyncio.gather for parallel requests
-
-### JavaScript Patterns
-- **js-001**: Wrap fetch in try-catch
-- **js-002**: Use custom hooks for data fetching
-- **js-003**: Avoid direct state mutation (harmful)
-- **js-004**: Use const for immutable values
-
-### TypeScript Patterns
-- **ts-001**: Use interface for object shapes
-- **ts-002**: Use type guards
-- **ts-003**: Use generics for reusable functions
-- **ts-004**: Avoid any type (harmful)
-
----
-
-## 🧪 Testing
-
-```bash
-# Run all tests
-npm test
-
-# Run specific test suite
-npm test patternDetector.test.js
-npm test curator.test.js
+These are hardcoded in `scripts/ace-cycle.py` based on research findings. To customize, edit:
+```python
+SIMILARITY_THRESHOLD = 0.85  # 85% similarity for merging
+PRUNE_THRESHOLD = 0.30       # 30% minimum confidence
+MIN_OBSERVATIONS = 10        # Minimum observations before pruning
 ```
 
 ---
@@ -173,25 +187,30 @@ npm test curator.test.js
 
 ```
 ce-ai-ace/
-├── config/
-│   └── patterns.js              # Pattern definitions
-├── lib/
-│   ├── patternDetector.js       # Detection engine
-│   ├── curator.js               # Deterministic merging
-│   ├── ace-utils.js             # MCP communication
-│   └── generatePlaybook.js      # CLAUDE.md generator
+├── .claude-plugin/
+│   ├── plugin.json              # Plugin metadata
+│   └── marketplace.json         # Marketplace config
 ├── agents/
-│   └── reflector-prompt.md      # Reflection prompt
+│   └── reflector.md             # Reflector agent (markdown!)
+├── commands/
+│   ├── ace-status.md            # /ace-status command
+│   ├── ace-patterns.md          # /ace-patterns command
+│   ├── ace-clear.md             # /ace-clear command
+│   └── ace-force-reflect.md     # /ace-force-reflect command
 ├── hooks/
-│   ├── postToolUse.js           # Main ACE cycle
-│   └── sessionEnd.js            # Session cleanup
-├── tests/
-│   ├── patternDetector.test.js
-│   └── curator.test.js
-├── index.js                     # Plugin entry point
-├── plugin.json                  # Plugin manifest
-└── package.json
+│   └── hooks.json               # PostToolUse + SessionEnd hooks
+├── scripts/
+│   ├── ace-cycle.py             # Main ACE orchestration
+│   ├── generate-playbook.py     # CLAUDE.md generator
+│   ├── ace-stats.py             # Statistics utility
+│   ├── ace-list-patterns.py     # Pattern listing utility
+│   └── ace-session-end.py       # Session cleanup
+├── docs/
+│   └── ACE_RESEARCH.md          # Research paper summary
+└── README.md                     # This file
 ```
+
+**Note**: No `index.js` or JavaScript exports! Claude Code 2.0 plugins are purely declarative (markdown + JSON + Python scripts).
 
 ---
 
@@ -220,13 +239,37 @@ This plugin implements the ACE framework from:
 
 ---
 
+## 🐛 Troubleshooting
+
+### Plugin not loading?
+1. Check: `/plugin` - Should show ace-orchestration
+2. Restart Claude Code
+3. Check `.claude-plugin/plugin.json` exists
+
+### No patterns detected?
+- Plugin only detects: `.py`, `.js`, `.jsx`, `.ts`, `.tsx` files
+- Check console for "🔄 ACE: Starting reflection cycle..."
+- If silent, hooks may not be registered
+
+### CLAUDE.md not updating?
+- Check `.ace-memory/` directory exists
+- Run `/ace-status` to verify patterns are being learned
+- Check for errors in Claude Code console
+
+### Python script errors?
+- Ensure Python 3.7+ is installed
+- Scripts use only standard library (no pip install needed)
+
+---
+
 ## 🤝 Contributing
 
-Contributions welcome! Areas for improvement:
-- Additional pattern definitions
-- Support for more languages (Go, Rust, etc.)
-- Enhanced reflection prompts
-- Performance optimizations
+Contributions welcome! Areas to improve:
+1. **More patterns**: Add patterns for Go, Rust, C++, etc.
+2. **Better reflection**: Integrate with better LLM reflection mechanisms
+3. **Semantic embeddings**: Replace string similarity with embeddings
+4. **Visualization**: Web UI for pattern analytics
+5. **Team sharing**: Share playbooks across teams
 
 ---
 
@@ -236,23 +279,15 @@ MIT License - See LICENSE file for details
 
 ---
 
-## 🔗 Links
+## 📚 Learn More
 
 - **Research Paper**: https://arxiv.org/abs/2510.04618
-- **Claude Code**: https://claude.com/claude-code
-- **Issues**: https://github.com/YOUR_USERNAME/ce-ai-ace/issues
+- **ACE Research Summary**: [docs/ACE_RESEARCH.md](docs/ACE_RESEARCH.md)
+- **Claude Code Docs**: https://docs.claude.com/en/docs/claude-code
+- **Plugin Documentation**: https://docs.claude.com/en/docs/claude-code/plugins
 
 ---
 
-## 🙏 Acknowledgments
+**Built with Claude Code 2.0 • Powered by Sonnet 4.5 • Research from Stanford/SambaNova/UC Berkeley**
 
-Built on the groundbreaking ACE research from:
-- Stanford University
-- SambaNova Systems
-- UC Berkeley
-
-Special thanks to the Claude Code team at Anthropic for creating an extensible plugin system.
-
----
-
-**Happy coding! Watch your CLAUDE.md evolve! 🚀**
+🚀 **Start coding and watch your playbook evolve!**

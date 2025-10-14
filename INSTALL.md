@@ -65,36 +65,23 @@ Every time you edit code in Claude Code:
 
 ---
 
-## 🔧 Dependencies (Optional)
+## 🔧 Dependencies
 
-The plugin works without these, but for full functionality:
+### Required:
+- **Python 3.7+** (for pattern detection scripts)
+  - Uses only standard library - no `pip install` needed!
+- **Claude Code CLI 2.0+**
 
-### Install MCP Servers
+### Optional (for development):
+- **Node.js** (only if you want to run old tests)
 
-```bash
-cd /Users/ptsafaridis/repos/github_com/ce-dot-net/ce-ai-ace
-npm install
-npm run install-mcps
-```
+That's it! The plugin is **self-contained**:
+- ✅ SQLite database (Python standard library)
+- ✅ Pattern detection (pure regex)
+- ✅ Deterministic curation (string similarity)
+- ✅ No external dependencies
 
-This installs:
-- `@modelcontextprotocol/server-memory` - Pattern storage
-- `@modelcontextprotocol/server-sequential-thinking` - Reflection
-
-**Without MCPs**: Plugin still works, uses test results only (no deep reflection)
-
----
-
-## 🎯 Why npm install?
-
-You DON'T need `npm install` in Claude Code projects!
-
-`npm install` is only needed **in the plugin folder itself** if you want to:
-- Run tests: `npm test`
-- Install MCP servers: `npm run install-mcps`
-- Develop the plugin further
-
-**For users**: Just install via `/plugin` command - that's it!
+**For users**: Just install via `/plugin` command - that's all you need!
 
 ---
 
