@@ -35,9 +35,16 @@ Normally, ACE runs automatically after code changes. Use this command to:
    - Check file is supported (.py, .js, .jsx, .ts, .tsx)
    - Show error if invalid
 
-3. **Trigger ACE cycle**:
+3. **Trigger ACE cycle** (find script path dynamically):
    ```bash
-   python3 ${CLAUDE_PLUGIN_ROOT}/scripts/ace-cycle.py "$file" --force
+   PLUGIN_DIR=$(find ~/.claude/plugins/marketplaces -name "ce-ai-ace*" -o -name "*ace-orchestration*" 2>/dev/null | head -1)
+
+   if [ -z "$PLUGIN_DIR" ]; then
+     echo "❌ ACE plugin directory not found. Cannot trigger reflection."
+     exit 1
+   fi
+
+   python3 "$PLUGIN_DIR/scripts/ace-cycle.py" "$file" --force
    ```
 
 4. **Show progress**:

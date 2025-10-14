@@ -19,9 +19,15 @@ Display learned patterns with optional filtering.
    - $1 = domain filter (optional): python, javascript, typescript, etc.
    - $2 = minimum confidence (optional): 0.0-1.0
 
-2. **Query database**:
+2. **Query database** (find script path dynamically):
    ```bash
-   python3 ${CLAUDE_PLUGIN_ROOT}/scripts/ace-list-patterns.py "$1" "$2"
+   PLUGIN_DIR=$(find ~/.claude/plugins/marketplaces -name "ce-ai-ace*" -o -name "*ace-orchestration*" 2>/dev/null | head -1)
+
+   if [ -z "$PLUGIN_DIR" ]; then
+     echo "⚠️  ACE plugin directory not found. Using direct database query..."
+   else
+     python3 "$PLUGIN_DIR/scripts/ace-list-patterns.py" "$1" "$2"
+   fi
    ```
 
 3. **Display results** grouped by confidence:

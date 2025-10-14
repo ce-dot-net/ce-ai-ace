@@ -14,9 +14,17 @@ Display comprehensive statistics about the ACE pattern learning system.
    - Look for `.ace-memory/patterns.db`
    - If missing, report that ACE hasn't learned patterns yet
 
-2. **Query pattern statistics** (run Python script):
+2. **Query pattern statistics** (find script path dynamically):
    ```bash
-   python3 ${CLAUDE_PLUGIN_ROOT}/scripts/ace-stats.py
+   # Find the plugin installation directory
+   PLUGIN_DIR=$(find ~/.claude/plugins/marketplaces -name "ce-ai-ace*" -o -name "*ace-orchestration*" 2>/dev/null | head -1)
+
+   if [ -z "$PLUGIN_DIR" ]; then
+     echo "⚠️  ACE plugin directory not found. Database exists but can't find stats script."
+     echo "Querying database directly..."
+   else
+     python3 "$PLUGIN_DIR/scripts/ace-stats.py"
+   fi
    ```
 
 3. **Display results** in this format:
