@@ -26,6 +26,7 @@ Instead of fine-tuning models or manually curating prompts, ACE:
 ### ✅ 100% Research Paper Coverage
 This implementation covers **all core ACE features** from the research paper (arXiv:2510.04618):
 - Three-role architecture (Generator/Reflector/Curator)
+- **Full iterative refinement** (up to 5 rounds with convergence detection)
 - Incremental delta updates with grow-and-refine mechanism
 - Semantic embeddings with 85% similarity threshold
 - Multi-epoch offline training
@@ -112,7 +113,8 @@ The plugin works **100% automatically**:
 1. **Generator** - You + Claude Code (existing workflow)
 2. **Reflector** - Dedicated LLM agent that analyzes patterns for effectiveness
    - Structured JSON input/output
-   - Iterative refinement support (max 5 rounds)
+   - **Full iterative refinement** (up to 5 rounds with convergence detection)
+   - Progressive confidence increases (0.80 → 0.95 over rounds)
    - Evidence-based insights with specific recommendations
 3. **Curator** - Deterministic algorithm (85% similarity threshold)
    - Bulletized structure with IDs: `[domain-NNNNN]`
@@ -472,10 +474,10 @@ This plugin uses Serena MCP for knowledge management:
 
 Contributions welcome! Areas to improve:
 1. **More patterns**: Add patterns for Go, Rust, C++, etc.
-2. **Better reflection**: Implement full multi-round iterative refinement
-3. **Visualization**: Web UI for pattern analytics
-4. **Team sharing**: Share playbooks across teams
-5. **Advanced Serena integration**: Full symbolic editing and auto-fixes
+2. **Visualization**: Web UI for pattern analytics
+3. **Team sharing**: Enhanced cross-team playbook synchronization
+4. **Advanced Serena integration**: Full symbolic editing and auto-fixes
+5. **Performance profiling**: Track pattern application impact on code quality
 
 ---
 

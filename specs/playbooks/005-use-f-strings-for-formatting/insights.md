@@ -2,7 +2,7 @@
 pattern_id: py-005
 type: reflector_insights
 insight_count: 38
-updated: 2025-10-14T22:24:00.089321
+updated: 2025-10-14T22:34:17.361375
 ---
 # Insights: Use f-strings for formatting
 

@@ -1,7 +1,7 @@
 ---
 pattern_id: py-004
 type: technical_plan
-updated: 2025-10-14T22:24:00.088876
+updated: 2025-10-14T22:34:17.360921
 ---
 # Technical Plan: Use context managers for file operations
 

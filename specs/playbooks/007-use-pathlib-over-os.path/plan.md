@@ -1,7 +1,7 @@
 ---
 pattern_id: py-007
 type: technical_plan
-updated: 2025-10-14T22:24:00.089572
+updated: 2025-10-14T22:34:17.361610
 ---
 # Technical Plan: Use pathlib over os.path
 
