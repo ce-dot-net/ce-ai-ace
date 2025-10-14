@@ -6,8 +6,12 @@ Orchestrates the complete ACE cycle:
 1. Pattern Detection (regex-based)
 2. Evidence Gathering (test results)
 3. Reflection (via reflector agent using Task tool)
-4. Curation (deterministic algorithm)
-5. Playbook Update (CLAUDE.md generation)
+4. Curation (deterministic algorithm with semantic embeddings)
+5. Playbook Update (CLAUDE.md generation with delta updates)
+
+ACE Phase 3 Enhancements:
+- Semantic embeddings for pattern similarity (replaces Jaccard)
+- Delta-based CLAUDE.md updates (prevents context collapse)
 
 Called by PostToolUse hook after Edit/Write operations.
 """
@@ -704,27 +708,48 @@ def invoke_reflector_agent_with_feedback(
 # ============================================================================
 
 def calculate_similarity(pattern1: Dict, pattern2: Dict) -> float:
-    """Calculate similarity between two patterns (simple string-based)."""
-    name1 = pattern1.get('name', '').lower()
-    name2 = pattern2.get('name', '').lower()
-    desc1 = pattern1.get('description', '').lower()
-    desc2 = pattern2.get('description', '').lower()
+    """
+    Calculate similarity between two patterns using semantic embeddings.
 
-    # Simple Jaccard similarity on words
-    def jaccard(s1: str, s2: str) -> float:
-        words1 = set(s1.split())
-        words2 = set(s2.split())
-        if not words1 or not words2:
-            return 0.0
-        intersection = words1 & words2
-        union = words1 | words2
-        return len(intersection) / len(union)
+    ACE Phase 3: Uses semantic embeddings instead of string matching.
+    """
+    try:
+        # Import embeddings engine
+        sys.path.insert(0, str(Path(__file__).parent))
+        from embeddings_engine import calculate_semantic_similarity
 
-    name_sim = jaccard(name1, name2)
-    desc_sim = jaccard(desc1, desc2)
+        # Combine name and description for richer semantic comparison
+        text1 = f"{pattern1.get('name', '')}. {pattern1.get('description', '')}"
+        text2 = f"{pattern2.get('name', '')}. {pattern2.get('description', '')}"
 
-    # Weighted: name 60%, description 40%
-    return (name_sim * 0.6) + (desc_sim * 0.4)
+        # Use semantic similarity
+        similarity = calculate_semantic_similarity(text1, text2)
+        return similarity
+
+    except Exception as e:
+        # Fallback to Jaccard if embeddings fail
+        print(f"⚠️  Embeddings failed, using Jaccard fallback: {e}", file=sys.stderr)
+
+        name1 = pattern1.get('name', '').lower()
+        name2 = pattern2.get('name', '').lower()
+        desc1 = pattern1.get('description', '').lower()
+        desc2 = pattern2.get('description', '').lower()
+
+        # Simple Jaccard similarity on words
+        def jaccard(s1: str, s2: str) -> float:
+            words1 = set(s1.split())
+            words2 = set(s2.split())
+            if not words1 or not words2:
+                return 0.0
+            intersection = words1 & words2
+            union = words1 | words2
+            return len(intersection) / len(union)
+
+        name_sim = jaccard(name1, name2)
+        desc_sim = jaccard(desc1, desc2)
+
+        # Weighted: name 60%, description 40%
+        return (name_sim * 0.6) + (desc_sim * 0.4)
 
 def curate(new_pattern: Dict, existing_patterns: List[Dict]) -> Dict:
     """Determine whether to merge, create, or prune pattern."""

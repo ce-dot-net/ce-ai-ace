@@ -9,6 +9,8 @@ Implements ACE paper's bulletized structure with proper sections:
 - APIS TO USE FOR SPECIFIC INFORMATION
 - VERIFICATION CHECKLIST
 
+ACE Phase 3: Uses delta updates instead of full rewrites to prevent context collapse.
+
 Reads patterns from SQLite database and generates comprehensive
 markdown playbook organized by ACE sections and confidence levels.
 """
@@ -209,9 +211,31 @@ Start coding, and watch this playbook evolve!
 *Based on research: [Agentic Context Engineering](https://arxiv.org/abs/2510.04618) by Stanford/SambaNova/UC Berkeley*
 """
 
-    # Write playbook
-    PLAYBOOK_PATH.write_text(content)
-    print(f"✅ Playbook updated: {len(patterns)} patterns", file=sys.stderr)
+    # Apply delta update (ACE Phase 3: incremental updates only)
+    try:
+        # Import delta updater
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent))
+        from playbook_delta_updater import update_playbook_with_delta
+
+        # Use delta update instead of full rewrite
+        success = update_playbook_with_delta(content)
+
+        if success:
+            print(f"✅ Playbook updated (delta): {len(patterns)} patterns", file=sys.stderr)
+        else:
+            # Fallback to full write only on first run
+            if not PLAYBOOK_PATH.exists():
+                PLAYBOOK_PATH.write_text(content)
+                print(f"✅ Playbook created: {len(patterns)} patterns", file=sys.stderr)
+            else:
+                print(f"ℹ️  No changes to apply", file=sys.stderr)
+
+    except Exception as e:
+        # Fallback to full write on error (safety)
+        print(f"⚠️  Delta update failed ({e}), falling back to full write", file=sys.stderr)
+        PLAYBOOK_PATH.write_text(content)
+        print(f"✅ Playbook updated: {len(patterns)} patterns", file=sys.stderr)
 
 
 if __name__ == '__main__':
