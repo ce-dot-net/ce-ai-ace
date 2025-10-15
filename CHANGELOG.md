@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.1] - 2025-10-15
+
+### Added
+- **Slash commands directory** (`.claude-plugin/commands/`)
+  - All 8 ACE commands now properly registered in plugin
+  - `/ace-orchestration:ace-train-offline` command now available
+  - Updated offline training command to use uvx dependencies
+
+### Changed
+- **ace-train-offline.md** updated with uvx dependency sharing commands
+  - Ensures offline training has access to chromadb and embeddings
+  - Consistent with all other hooks using uvx
+
 ## [2.1.0] - 2025-10-15
 
 ### Added
@@ -208,6 +221,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
+- **v2.1.1** (2025-10-15): Added slash commands directory and offline training command
 - **v2.1.0** (2025-10-15): Zero-setup dependency management with uvx + critical bug fixes
 - **v2.0.0** (2025-10-15): Complete research implementation + comprehensive usage guide
 - **v2.0.0-rc.1** (2025-10-14): Serena MCP integration with intelligent fallback
@@ -253,7 +267,8 @@ When adding entries to this changelog:
 
 ---
 
-[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.1...HEAD
+[2.1.1]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.0.0-rc.1...v2.0.0
 [2.0.0-rc.1]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.0.0-beta.3...v2.0.0-rc.1
