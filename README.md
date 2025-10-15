@@ -55,11 +55,32 @@ This implementation covers **all core ACE features** from the research paper (ar
 
 ### Usage
 
+**📖 NEW: [Complete Usage Guide](docs/USAGE_GUIDE.md)** - Learn when and how to use ACE on new vs existing projects!
+
+#### Quick Setup (Choose One)
+
+**Existing Codebase** (Recommended):
+```bash
+/ace-train-offline  # Scans entire codebase, runs 5 epochs (~2-5 min)
+```
+
+**New Project** (Start from scratch):
+- Just start coding! ACE learns automatically as you write code.
+
+**Team Patterns** (Import from another project):
+```bash
+/ace-import-patterns --input ./patterns.json --strategy smart
+```
+
+#### After Setup
+
 The plugin works **100% automatically**:
 1. Edit code in Python, JavaScript, or TypeScript
 2. ACE detects patterns and analyzes effectiveness
 3. Check `specs/playbooks/` to see learned patterns (or `CLAUDE.md` for Claude Code CLI format)
 4. Use `/ace-status` to view learning statistics
+
+**Read the [Usage Guide](docs/USAGE_GUIDE.md) for best practices, performance expectations, and troubleshooting!**
 
 ---
 
