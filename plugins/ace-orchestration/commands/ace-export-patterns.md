@@ -14,7 +14,7 @@ if [ -z "$PLUGIN_PATH" ]; then
 fi
 
 # Export patterns
-python3 "$PLUGIN_PATH/scripts/pattern-portability.py" export --output ./my-patterns.json
+python3 "$PLUGIN_PATH/plugins/ace-orchestration/scripts/pattern-portability.py" export --output ./my-patterns.json
 ```
 
 Exported patterns include:

@@ -14,7 +14,7 @@ if [ -z "$PLUGIN_PATH" ]; then
 fi
 
 # Import patterns
-python3 "$PLUGIN_PATH/scripts/pattern-portability.py" import --input ./patterns.json
+python3 "$PLUGIN_PATH/plugins/ace-orchestration/scripts/pattern-portability.py" import --input ./patterns.json
 ```
 
 Imported patterns will be merged with existing ones using ACE's deterministic curation algorithm.

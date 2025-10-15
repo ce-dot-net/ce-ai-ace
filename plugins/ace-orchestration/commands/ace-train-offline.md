@@ -14,7 +14,7 @@ if [ -z "$PLUGIN_PATH" ]; then
 fi
 
 # Run 5 epochs on all available code (default)
-uvx --from chroma-mcp --with chromadb --with sentence-transformers --with scikit-learn python3 "$PLUGIN_PATH/scripts/offline-training.py"
+uvx --from chroma-mcp --with chromadb --with sentence-transformers --with scikit-learn python3 "$PLUGIN_PATH/plugins/ace-orchestration/scripts/offline-training.py"
 ```
 
 This implements the ACE research paper's multi-epoch training (Section 4.1, Table 3).
