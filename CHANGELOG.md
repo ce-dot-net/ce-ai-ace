@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.1] - 2025-10-15
+
+### Changed
+- **Completed marketplace restructure** - All plugin files now in proper location
+  - Scripts, specs, tests moved to plugins/ace-orchestration/
+  - Clean separation between marketplace and plugin
+  - Ready for multi-plugin expansion
+
 ## [2.2.0] - 2025-10-15
 
 ### Changed
@@ -257,6 +265,7 @@ For existing users:
 
 ## Version History Summary
 
+- **v2.2.1** (2025-10-15): Completed marketplace restructure with all files moved
 - **v2.2.0** (2025-10-15): Restructured as multi-plugin marketplace (BREAKING: requires reinstall)
 - **v2.1.3** (2025-10-15): Fixed marketplace.json version sync
 - **v2.1.2** (2025-10-15): Fixed slash command path resolution for marketplace installations
@@ -306,7 +315,8 @@ When adding entries to this changelog:
 
 ---
 
-[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.0...HEAD
+[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.1...HEAD
+[2.2.1]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.3...v2.2.0
 [2.1.3]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.2...v2.1.3
 [2.1.2]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.1...v2.1.2
