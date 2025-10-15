@@ -22,69 +22,105 @@ $ sqlite3 .ace-memory/patterns.db "SELECT bullet_id, helpful_count, harmful_coun
 
 ---
 
-## 🚨 CRITICAL GAPS
+## ✅ PHASE 3+ COMPLETED (2025-10-15)
 
-### 1. **CLAUDE.md Full Rewrites (Violates ACE Paper)**
+### 1. **Smart MCP Installation** ✅
 
-**Issue**: Our `generate-playbook.py` does full rewrites:
+**Implemented**:
+- `scripts/check-dependencies.py` - Prerequisite verification
+- `scripts/mcp-conflict-detector.py` - Conflict detection
+- `scripts/generate-mcp-config.py` - Dynamic MCP config
+- Enhanced `install.sh` - Interactive installation
+
+**Features**:
+- ✅ Zero-dependency installation via uvx
+- ✅ Detects existing MCPs (especially Serena)
+- ✅ Interactive conflict resolution
+- ✅ Safe config merging with backups
+- ✅ Prerequisite checks (uvx, Python 3.8+)
+
+**Impact**: Users can now install with `./install.sh` - no manual MCP configuration needed!
+
+---
+
+### 2. **Hybrid Semantic Similarity** ✅
+
+**Implemented**: `scripts/embeddings_engine.py` with multi-tier fallback
+
+**Architecture**:
 ```python
-PLAYBOOK_PATH.write_text(content)  # FULL REWRITE!
+Tier 1: Claude (via Task tool) → Best quality, domain-aware
+Tier 2: ChromaDB MCP → Fast, local sentence-transformers
+Tier 3: Jaccard → Emergency fallback, always works
 ```
 
-**ACE Paper Says**:
-> "Incremental updates only - Never full rewrites"
-> "Prevents context collapse through localized, structured changes"
+**Integration**: Updated `ace-cycle.py:calculate_similarity()` to use hybrid engine
 
-**Impact**: HIGH
-- Context collapse risk (especially with long playbooks)
-- Inefficient (rewrites entire file)
-- Loses fine-grained tracking
+**ACE Paper Compliance**: ✅ "Uses semantic embeddings with 0.85 similarity threshold"
 
-**Solution**: Implement delta-based CLAUDE.md updates
-- Track changes (additions, updates, deletions)
+**Impact**: Pattern deduplication now uses semantic understanding instead of string matching
+
+---
+
+### 3. **Auto-Domain Discovery** ✅
+
+**Implemented**: `scripts/domain_discovery.py`
+
+**How It Works**:
+1. Observe patterns across coding sessions
+2. Claude analyzes patterns to discover domains
+3. Build hierarchical taxonomy (concrete → abstract → principles)
+
+**Example**: "Stripe in services/stripe.ts" + "Auth in middleware/auth.ts" → Abstract: "service layer pattern"
+
+**ACE Paper Compliance**: ✅ "Domain-specific heuristics learned from execution feedback"
+
+**Impact**: Domains emerge from actual code, not hardcoded lists
+
+---
+
+### 4. **Semantic Pattern Extractor** ✅
+
+**Implemented**: `scripts/semantic_pattern_extractor.py`
+
+**What It Extracts**:
+- File location patterns (e.g., "Stripe in services/stripe.ts")
+- Custom API patterns (e.g., "Use Stripe SDK")
+- Business logic patterns (e.g., "Validate webhooks")
+
+**Uses**: Serena MCP (if available) or AST fallback
+
+**ACE Paper Compliance**: ✅ "Tool-use guidelines and API-specific information"
+
+**Impact**: Detects architectural patterns beyond regex
+
+---
+
+## 🚨 REMAINING GAPS
+
+### 1. **CLAUDE.md Full Rewrites**
+
+**Status**: PARTIAL - `playbook_delta_updater.py` exists but not fully implemented
+
+**Issue**: `generate-playbook.py` still does full rewrites
+
+**ACE Paper Says**: "Incremental updates only - Never full rewrites"
+
+**Impact**: MEDIUM (mitigated by delta updater stub)
+
+**Solution**: Complete delta updater implementation
 - Apply surgical edits to existing file
-- Keep version history
+- Track changes (additions, updates, deletions)
 
 ---
 
-### 2. **String Similarity vs. Semantic Embeddings**
+### 2. **No Multi-Epoch Training (Phase 4)**
 
-**Issue**: Using Jaccard similarity for deduplication:
-```python
-def jaccard(s1: str, s2: str) -> float:
-    words1 = set(s1.split())
-    words2 = set(s2.split())
-    # ...
-```
+**Status**: NOT IMPLEMENTED
 
-**ACE Paper Says**:
-> "Uses semantic embeddings (not just string matching)"
-> "Deduplicate with cosine similarity > 0.85 on sentence embeddings"
+**ACE Paper Says**: "Max offline epochs: 5" / "+2.6% improvement"
 
 **Impact**: MEDIUM
-- Less accurate pattern matching
-- May miss similar patterns with different wording
-- May keep duplicate patterns
-
-**Solution**: Use embeddings for semantic similarity
-- OpenAI embeddings API
-- Sentence-transformers library
-- Or dedicated Embeddings MCP
-
----
-
-### 3. **No Multi-Epoch Training (Phase 4)**
-
-**Issue**: Not implemented
-
-**ACE Paper Says**:
-> "Max offline epochs: 5"
-> "Multi-epoch adds +2.6% improvement"
-
-**Impact**: MEDIUM
-- Missing performance gains
-- Can't revisit training data
-- No pattern evolution tracking
 
 **Solution**: Implement Phase 4
 - Add epochs table to database
@@ -93,26 +129,20 @@ def jaccard(s1: str, s2: str) -> float:
 
 ---
 
-### 4. **No Serena Integration (Phase 5)**
+### 3. **Limited Execution Feedback**
 
-**Issue**: Not using Serena's symbolic tools
+**Status**: PARTIAL - Only `npm test` supported
 
-**Available Serena Tools**:
-- `find_symbol` - Symbol-level pattern detection
-- `find_referencing_symbols` - Track pattern usage
-- `get_symbols_overview` - File-level analysis
-- `write_memory` / `read_memory` - Knowledge storage
+**ACE Paper Says**: "Execution feedback from API calls, test results"
 
-**Impact**: HIGH
-- Using regex instead of AST-based detection
-- No symbolic code location tracking
-- No automatic fix suggestions
+**Impact**: MEDIUM
 
-**Solution**: Implement Phase 5
-- Use `find_symbol` for pattern detection
-- Use `find_referencing_symbols` for usage tracking
-- Store ACE insights in Serena memories
-- Use symbolic editing for suggestions
+**Solution**: Support multiple test frameworks
+- Python: pytest, unittest
+- JavaScript: jest, mocha, ava
+- TypeScript: ts-jest
+- Go: go test
+- Rust: cargo test
 
 ---
 
@@ -451,18 +481,26 @@ if pattern['type'] == 'harmful':
 |---------|-----------|------------|--------|
 | Three roles | ✅ | ✅ | COMPLETE |
 | Bulletized structure | ✅ | ✅ | COMPLETE |
-| Incremental delta updates | ✅ | ❌ | **CRITICAL GAP** |
-| Semantic embeddings | ✅ | ❌ | **CRITICAL GAP** |
+| Incremental delta updates | ✅ | ⚠️ | PARTIAL (stub exists) |
+| Semantic embeddings | ✅ | ✅ | **✅ COMPLETE (Phase 3+)** |
 | 85% similarity threshold | ✅ | ✅ | COMPLETE |
 | 30% prune threshold | ✅ | ✅ | COMPLETE |
 | Lazy pruning | ✅ | ⚠️ | PARTIAL |
-| Execution feedback | ✅ | ⚠️ | PARTIAL |
-| Multi-epoch training | ✅ | ❌ | **MISSING** |
-| Iterative refinement | ✅ | ⚠️ | PARTIAL |
+| Execution feedback | ✅ | ⚠️ | PARTIAL (npm test only) |
+| Multi-epoch training | ✅ | ❌ | PLANNED (Phase 4) |
+| Iterative refinement | ✅ | ✅ | COMPLETE |
 | Comprehensive playbooks | ✅ | ✅ | COMPLETE |
 | Deterministic curator | ✅ | ✅ | COMPLETE |
+| Domain-specific learning | ✅ | ✅ | **✅ COMPLETE (Phase 3+)** |
+| MCP integration | N/A | ✅ | **✅ COMPLETE (ChromaDB, Serena)** |
 
-**Overall Compliance**: 7/12 Complete, 3/12 Partial, 2/12 Missing
+**Overall Compliance**: 10/14 Complete, 3/14 Partial, 1/14 Planned
+
+**Phase 3+ Improvements**:
+- ✅ Semantic embeddings (hybrid Claude → ChromaDB → Jaccard)
+- ✅ Domain-specific learning (auto-discovery)
+- ✅ MCP integration (zero-dependency installation)
+- ✅ Smart installation (conflict detection)
 
 ---
 

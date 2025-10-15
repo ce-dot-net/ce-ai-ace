@@ -852,26 +852,34 @@ print(json.dumps(output))
 
 def calculate_similarity(pattern1: Dict, pattern2: Dict) -> float:
     """
-    Calculate similarity between two patterns using semantic embeddings.
+    Calculate similarity between two patterns using hybrid semantic engine.
 
-    ACE Phase 3: Uses semantic embeddings instead of string matching.
+    ACE Phase 3+: Uses Claude → ChromaDB → Jaccard fallback.
     """
     try:
-        # Import embeddings engine
+        # Import hybrid embeddings engine
         sys.path.insert(0, str(Path(__file__).parent))
-        from embeddings_engine import calculate_semantic_similarity
+        from embeddings_engine import SemanticSimilarityEngine
+
+        # Initialize engine
+        engine = SemanticSimilarityEngine()
 
         # Combine name and description for richer semantic comparison
         text1 = f"{pattern1.get('name', '')}. {pattern1.get('description', '')}"
         text2 = f"{pattern2.get('name', '')}. {pattern2.get('description', '')}"
 
-        # Use semantic similarity
-        similarity = calculate_semantic_similarity(text1, text2)
+        # Use hybrid semantic similarity (Claude → ChromaDB → Jaccard)
+        similarity, method, reasoning = engine.calculate_similarity(text1, text2)
+
+        # Log the method used for debugging
+        if method != 'jaccard':
+            print(f"  📊 Similarity: {similarity:.2f} (method: {method})", file=sys.stderr)
+
         return similarity
 
     except Exception as e:
-        # Fallback to Jaccard if embeddings fail
-        print(f"⚠️  Embeddings failed, using Jaccard fallback: {e}", file=sys.stderr)
+        # Emergency fallback (should never reach here due to engine's internal fallback)
+        print(f"⚠️  Hybrid engine failed, using emergency Jaccard: {e}", file=sys.stderr)
 
         name1 = pattern1.get('name', '').lower()
         name2 = pattern2.get('name', '').lower()

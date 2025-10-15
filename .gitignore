@@ -1,3 +1,6 @@
+# Obsolete files backup (development only - not committed)
+.obsolete-backup/
+
 # Dependencies
 node_modules/
 package-lock.json

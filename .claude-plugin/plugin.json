@@ -20,5 +20,18 @@
     "stanford",
     "autonomous"
   ],
-  "hooks": "./hooks/hooks.json"
+  "hooks": "./hooks/hooks.json",
+  "mcpServers": {
+    "chromadb-ace": {
+      "command": "uvx",
+      "args": ["mcp-server-chromadb"],
+      "env": {
+        "CHROMA_DB_PATH": "${CLAUDE_PLUGIN_ROOT}/.ace-memory/chromadb"
+      }
+    },
+    "serena-ace": {
+      "command": "uvx",
+      "args": ["--from", "mcp-serena", "mcp-serena"]
+    }
+  }
 }

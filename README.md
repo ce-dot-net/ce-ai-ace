@@ -55,6 +55,14 @@ This implementation covers **all core ACE features** from the research paper (ar
 
 3. **Restart Claude Code** to activate
 
+**That's it!** The plugin automatically:
+- ✅ Installs required MCPs (ChromaDB, Serena) via uvx
+- ✅ Sets up hooks (all 5 lifecycle hooks)
+- ✅ Creates `.ace-memory/` directory
+- ✅ Initializes pattern database
+
+**No manual `install.sh` required!** MCPs are defined in `plugin.json` and auto-install when the plugin loads.
+
 ### Usage
 
 **📖 NEW: [Complete Usage Guide](docs/USAGE_GUIDE.md)** - Learn when and how to use ACE on new vs existing projects!
@@ -328,7 +336,7 @@ ACE uses a **dual storage architecture** for optimal learning and human usabilit
 ```
 ce-ai-ace/
 ├── .claude-plugin/
-│   ├── plugin.json              # Plugin metadata
+│   ├── plugin.json              # Plugin metadata + MCP config (auto-installs!)
 │   └── marketplace.json         # Marketplace config
 ├── .serena/
 │   ├── memories/                # Serena MCP knowledge storage (gitignored)
