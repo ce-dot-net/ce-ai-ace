@@ -31,7 +31,11 @@
     },
     "serena-ace": {
       "command": "uvx",
-      "args": ["--from", "mcp-serena", "mcp-serena"]
+      "args": ["--from", "mcp-serena", "mcp-serena"],
+      "env": {
+        "SERENA_PROJECT_ROOT": "${CLAUDE_PLUGIN_ROOT}/../..",
+        "SERENA_CONFIG_PATH": "${CLAUDE_PLUGIN_ROOT}/../../.serena/project.yml"
+      }
     }
   }
 }
