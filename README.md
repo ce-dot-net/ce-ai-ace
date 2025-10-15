@@ -1,5 +1,7 @@
 # ACE Plugin for Claude Code CLI
 
+![Version](https://img.shields.io/badge/version-2.0.0-blue) ![License](https://img.shields.io/badge/license-MIT-green) [![Research](https://img.shields.io/badge/arXiv-2510.04618-red)](https://arxiv.org/abs/2510.04618)
+
 **Automatic Pattern Learning through Agentic Context Engineering**
 
 Based on research from Stanford University, SambaNova Systems, and UC Berkeley ([arXiv:2510.04618v1](https://arxiv.org/abs/2510.04618))
@@ -510,11 +512,27 @@ MIT License - See LICENSE file for details
 
 ## 📚 Learn More
 
+- **📖 Usage Guide**: [docs/USAGE_GUIDE.md](docs/USAGE_GUIDE.md) - When and how to use ACE on your projects
 - **📖 ACE Implementation Guide**: [docs/ACE_IMPLEMENTATION_GUIDE.md](docs/ACE_IMPLEMENTATION_GUIDE.md) - Complete guide with 100% research paper coverage
 - **Research Paper**: https://arxiv.org/abs/2510.04618
 - **ACE Research Summary**: [docs/ACE_RESEARCH.md](docs/ACE_RESEARCH.md)
 - **Claude Code Docs**: https://docs.claude.com/en/docs/claude-code
 - **Plugin Documentation**: https://docs.claude.com/en/docs/claude-code/plugins
+
+---
+
+## 📦 Releases
+
+View the [full changelog](CHANGELOG.md) for detailed version history.
+
+**Latest Release**: [v2.0.0](https://github.com/ce-dot-net/ce-ai-ace/releases/tag/v2.0.0) (October 2025)
+- Complete ACE research paper implementation (100% coverage)
+- Serena MCP integration with intelligent fallback
+- spec-kit integration for human-readable playbooks
+- Multi-epoch offline training
+- Comprehensive usage guide with before/after examples
+
+**Previous Releases**: [GitHub Releases](https://github.com/ce-dot-net/ce-ai-ace/releases)
 
 ---
 
