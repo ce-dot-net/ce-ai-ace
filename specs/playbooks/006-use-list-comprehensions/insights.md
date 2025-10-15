@@ -2,7 +2,7 @@
 pattern_id: py-006
 type: reflector_insights
 insight_count: 22
-updated: 2025-10-14T22:34:17.361947
+updated: 2025-10-15T20:02:23.234459
 ---
 # Insights: Use list comprehensions
 

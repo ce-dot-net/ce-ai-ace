@@ -2,7 +2,7 @@
 pattern_id: py-003
 type: reflector_insights
 insight_count: 1
-updated: 2025-10-14T22:34:17.362200
+updated: 2025-10-15T20:02:23.233228
 ---
 # Insights: Avoid bare except
 

@@ -4,10 +4,10 @@ name: Use pathlib over os.path
 domain: python-io
 language: python
 type: helpful
-confidence: 0.018867924528301886
-observations: 159
+confidence: 0.35802469135802467
+observations: 243
 created_at: 2025-10-14T13:42:22.099443
-last_updated: 2025-10-14T21:54:41.134082
+last_updated: 2025-10-15T20:02:23.197378
 ---
 # Use pathlib over os.path
 
@@ -16,7 +16,7 @@ last_updated: 2025-10-14T21:54:41.134082
 **Domain**: python-io
 **Language**: python
 **Type**: ✅ Helpful
-**Confidence**: 1.9% (159 observations)
+**Confidence**: 35.8% (243 observations)
 
 ## Description
 
@@ -24,13 +24,13 @@ pathlib provides object-oriented path operations
 
 ## Statistics
 
-- **Total Observations**: 159
-- **Successes**: 3
+- **Total Observations**: 243
+- **Successes**: 87
 - **Failures**: 0
 - **Neutrals**: 156
-- **Confidence Score**: 1.9%
+- **Confidence Score**: 35.8%
 - **First Seen**: 2025-10-14T13:42:22.099443
-- **Last Updated**: 2025-10-14T21:54:41.134082
+- **Last Updated**: 2025-10-15T20:02:23.197378
 
 ## Pattern ID
 

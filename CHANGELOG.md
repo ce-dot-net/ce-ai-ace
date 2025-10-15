@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2025-10-15
+
+### Changed
+- **[BREAKING] Restructured repository as proper multi-plugin marketplace**
+  - Plugin files moved from root to `plugins/ace-orchestration/` directory
+  - Marketplace now supports multiple plugins (scalable architecture)
+  - Follows community best practices (Anthropic, wshobson, AgiFlow patterns)
+  - Eliminates version confusion between marketplace and plugin
+  - **Users must uninstall old version and reinstall**: `/plugin uninstall ace-orchestration` then `/plugin install` or `/plugin marketplace update ace-plugin-marketplace`
+- Updated marketplace.json source path from `"./"` to `"./plugins/ace-orchestration"`
+- Repository structure now clearly separates marketplace from plugin implementation
+
+### Migration Guide
+For existing users:
+1. Uninstall current version: `/plugin uninstall ace-orchestration`
+2. Update marketplace: `/plugin marketplace update ace-plugin-marketplace`
+3. Reinstall plugin: Enable it from plugin list
+4. All patterns and settings preserved in `.ace-memory/`
+
 ## [2.1.3] - 2025-10-15
 
 ### Fixed
@@ -238,6 +257,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
+- **v2.2.0** (2025-10-15): Restructured as multi-plugin marketplace (BREAKING: requires reinstall)
 - **v2.1.3** (2025-10-15): Fixed marketplace.json version sync
 - **v2.1.2** (2025-10-15): Fixed slash command path resolution for marketplace installations
 - **v2.1.1** (2025-10-15): Added slash commands directory and offline training command
@@ -286,7 +306,8 @@ When adding entries to this changelog:
 
 ---
 
-[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.3...HEAD
+[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.3...v2.2.0
 [2.1.3]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.2...v2.1.3
 [2.1.2]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.1...v2.1.2
 [2.1.1]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.0...v2.1.1

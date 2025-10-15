@@ -1,7 +1,7 @@
 ---
 pattern_id: py-005
 type: technical_plan
-updated: 2025-10-14T22:34:17.361296
+updated: 2025-10-15T20:02:23.233780
 ---
 # Technical Plan: Use f-strings for formatting
 
@@ -14,7 +14,7 @@ This plan describes how to apply the **Use f-strings for formatting** pattern in
 - **Language**: python
 - **Domain**: python-strings
 - **Pattern Type**: helpful
-- **Confidence**: 2.4%
+- **Confidence**: 41.8%
 
 ## Implementation Approach
 

@@ -1,7 +1,7 @@
 ---
 pattern_id: py-007
 type: technical_plan
-updated: 2025-10-14T22:34:17.361610
+updated: 2025-10-15T20:02:23.234089
 ---
 # Technical Plan: Use pathlib over os.path
 
@@ -14,7 +14,7 @@ This plan describes how to apply the **Use pathlib over os.path** pattern in pyt
 - **Language**: python
 - **Domain**: python-io
 - **Pattern Type**: helpful
-- **Confidence**: 1.9%
+- **Confidence**: 35.8%
 
 ## Implementation Approach
 

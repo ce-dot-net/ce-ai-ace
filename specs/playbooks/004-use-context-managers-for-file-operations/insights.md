@@ -2,7 +2,7 @@
 pattern_id: py-004
 type: reflector_insights
 insight_count: 22
-updated: 2025-10-14T22:34:17.361018
+updated: 2025-10-15T20:02:23.233546
 ---
 # Insights: Use context managers for file operations
 

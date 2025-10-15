@@ -1,7 +1,7 @@
 ---
 pattern_id: py-006
 type: technical_plan
-updated: 2025-10-14T22:34:17.361882
+updated: 2025-10-15T20:02:23.234378
 ---
 # Technical Plan: Use list comprehensions
 
@@ -14,7 +14,7 @@ This plan describes how to apply the **Use list comprehensions** pattern in pyth
 - **Language**: python
 - **Domain**: python-idioms
 - **Pattern Type**: helpful
-- **Confidence**: 0.0%
+- **Confidence**: 30.2%
 
 ## Implementation Approach
 

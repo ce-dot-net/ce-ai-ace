@@ -1,7 +1,7 @@
 ---
 pattern_id: py-004
 type: technical_plan
-updated: 2025-10-14T22:34:17.360921
+updated: 2025-10-15T20:02:23.233472
 ---
 # Technical Plan: Use context managers for file operations
 
@@ -14,7 +14,7 @@ This plan describes how to apply the **Use context managers for file operations*
 - **Language**: python
 - **Domain**: python-io
 - **Pattern Type**: helpful
-- **Confidence**: 5.1%
+- **Confidence**: 55.2%
 
 ## Implementation Approach
 

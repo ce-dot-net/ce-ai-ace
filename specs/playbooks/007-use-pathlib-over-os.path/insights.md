@@ -2,7 +2,7 @@
 pattern_id: py-007
 type: reflector_insights
 insight_count: 40
-updated: 2025-10-14T22:34:17.361679
+updated: 2025-10-15T20:02:23.234160
 ---
 # Insights: Use pathlib over os.path
 

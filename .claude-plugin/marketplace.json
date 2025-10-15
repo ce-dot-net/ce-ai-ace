@@ -7,9 +7,9 @@
   "plugins": [
     {
       "name": "ace-orchestration",
-      "source": "./",
+      "source": "./plugins/ace-orchestration",
       "description": "Automatic pattern learning through ACE cycle - Based on Stanford/SambaNova/UC Berkeley research",
-      "version": "2.1.3"
+      "version": "2.2.0"
     }
   ]
 }

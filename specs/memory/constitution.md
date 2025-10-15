@@ -1,8 +1,8 @@
 # ACE Constitution - Coding Principles
 
 *Auto-generated from high-confidence patterns (≥70%)*
-*Last updated: 2025-10-14T22:34:17.362279*
-*Total principles: 0*
+*Last updated: 2025-10-15T20:02:23.234543*
+*Total principles: 1*
 
 ---
 
@@ -11,6 +11,19 @@
 This constitution documents the coding principles learned by ACE from analyzing your codebase. These patterns have achieved ≥70% confidence through repeated observation and validation.
 
 ## Core Principles
+
+### Python Error Handling
+
+#### ❌ Avoid bare except
+
+**Confidence**: 80.0% (20 observations)
+**Language**: python
+
+Bare except catches all exceptions including KeyboardInterrupt
+
+**Playbook**: [`py-003`](../playbooks/003-avoid-bare-except/spec.md)
+
+---
 
 ## How to Use This Constitution
 

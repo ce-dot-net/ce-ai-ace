@@ -4,10 +4,10 @@ name: Use f-strings for formatting
 domain: python-strings
 language: python
 type: helpful
-confidence: 0.023622047244094488
-observations: 127
+confidence: 0.41784037558685444
+observations: 213
 created_at: 2025-10-14T13:42:22.096661
-last_updated: 2025-10-14T21:54:41.132327
+last_updated: 2025-10-15T20:02:23.194021
 ---
 # Use f-strings for formatting
 
@@ -16,7 +16,7 @@ last_updated: 2025-10-14T21:54:41.132327
 **Domain**: python-strings
 **Language**: python
 **Type**: ✅ Helpful
-**Confidence**: 2.4% (127 observations)
+**Confidence**: 41.8% (213 observations)
 
 ## Description
 
@@ -24,13 +24,13 @@ f-strings are faster and more readable than .format() or %
 
 ## Statistics
 
-- **Total Observations**: 127
-- **Successes**: 3
+- **Total Observations**: 213
+- **Successes**: 89
 - **Failures**: 0
 - **Neutrals**: 124
-- **Confidence Score**: 2.4%
+- **Confidence Score**: 41.8%
 - **First Seen**: 2025-10-14T13:42:22.096661
-- **Last Updated**: 2025-10-14T21:54:41.132327
+- **Last Updated**: 2025-10-15T20:02:23.194021
 
 ## Pattern ID
 

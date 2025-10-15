@@ -4,10 +4,10 @@ name: Avoid bare except
 domain: python-error-handling
 language: python
 type: harmful
-confidence: 0.0
-observations: 4
+confidence: 0.8
+observations: 20
 created_at: 2025-10-14T13:58:48.018025
-last_updated: 2025-10-14T13:58:48.017625
+last_updated: 2025-10-15T20:02:22.991730
 ---
 # Avoid bare except
 
@@ -16,7 +16,7 @@ last_updated: 2025-10-14T13:58:48.017625
 **Domain**: python-error-handling
 **Language**: python
 **Type**: ❌ Anti-pattern
-**Confidence**: 0.0% (4 observations)
+**Confidence**: 80.0% (20 observations)
 
 ## Description
 
@@ -24,13 +24,13 @@ Bare except catches all exceptions including KeyboardInterrupt
 
 ## Statistics
 
-- **Total Observations**: 4
-- **Successes**: 0
+- **Total Observations**: 20
+- **Successes**: 16
 - **Failures**: 0
 - **Neutrals**: 4
-- **Confidence Score**: 0.0%
+- **Confidence Score**: 80.0%
 - **First Seen**: 2025-10-14T13:58:48.018025
-- **Last Updated**: 2025-10-14T13:58:48.017625
+- **Last Updated**: 2025-10-15T20:02:22.991730
 
 ## Pattern ID
 
