@@ -389,39 +389,6 @@ ce-ai-ace/
 │   │   │   └── insights.md
 │   │   └── 002-python-strings/  # Pattern: Use f-strings
 │   └── README.md                # Playbook documentation
-├── agents/
-│   ├── reflector.md             # Reflector agent (markdown!)
-│   └── reflector-prompt.md      # Reflector prompt template
-├── commands/
-│   ├── ace-status.md            # /ace-status command
-│   ├── ace-patterns.md          # /ace-patterns command
-│   ├── ace-clear.md             # /ace-clear command
-│   ├── ace-force-reflect.md     # /ace-force-reflect command
-│   ├── ace-train-offline.md     # /ace-train-offline command ⭐ NEW
-│   ├── ace-export-patterns.md   # /ace-export-patterns command ⭐ NEW
-│   ├── ace-import-patterns.md   # /ace-import-patterns command ⭐ NEW
-│   └── ace-export-speckit.md    # /ace-export-speckit command ⭐ NEW
-├── hooks/
-│   └── hooks.json               # All 5 hooks (AgentStart, AgentEnd, PreToolUse, PostToolUse, SessionEnd)
-├── scripts/
-│   ├── ace-cycle.py             # Main ACE orchestration
-│   ├── generate-playbook.py     # Playbook generator (both formats)
-│   ├── generate-speckit-playbook.py # spec-kit format generator ⭐ NEW
-│   ├── playbook-delta-updater.py # Delta update engine
-│   ├── embeddings_engine.py     # Semantic embeddings
-│   ├── epoch-manager.py         # Multi-epoch training
-│   ├── serena-pattern-detector.py # Hybrid AST+regex detection
-│   ├── inject-playbook.py       # AgentStart hook (reads specs/)
-│   ├── analyze-agent-output.py  # AgentEnd hook
-│   ├── validate-patterns.py     # PreToolUse hook
-│   ├── ace-stats.py             # Statistics utility
-│   ├── ace-list-patterns.py     # Pattern listing utility
-│   ├── ace-session-end.py       # Session cleanup
-│   ├── migrate-database.py      # Database migration
-│   ├── offline-training.py      # Multi-epoch + git-history ⭐ NEW
-│   ├── pattern-retrieval.py     # Dynamic pattern retrieval ⭐ NEW
-│   ├── pattern-portability.py   # Export/import patterns ⭐ NEW
-│   └── convergence-checker.py   # Pattern convergence detection ⭐ NEW
 ├── docs/
 │   ├── ACE_RESEARCH.md          # Research paper summary
 │   ├── ACE_IMPLEMENTATION_GUIDE.md # Complete implementation guide ⭐ NEW
@@ -485,7 +452,7 @@ This plugin implements the ACE framework from:
 ### Plugin not loading?
 1. Check: `/plugin` - Should show ace-orchestration
 2. Restart Claude Code
-3. Check `.claude-plugin/plugin.json` exists
+3. Check plugin installed at `~/.claude/plugins/marketplaces/ace-plugin-marketplace/`
 
 ### No patterns detected?
 - Plugin only detects: `.py`, `.js`, `.jsx`, `.ts`, `.tsx` files
