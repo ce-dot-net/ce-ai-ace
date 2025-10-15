@@ -37,14 +37,14 @@ Normally, ACE runs automatically after code changes. Use this command to:
 
 3. **Trigger ACE cycle** (find script path dynamically):
    ```bash
-   PLUGIN_DIR=$(find ~/.claude/plugins/marketplaces -name "ce-ai-ace*" -o -name "*ace-orchestration*" 2>/dev/null | head -1)
+   PLUGIN_PATH=$(find ~/.claude/plugins/marketplaces -name "ace-plugin-marketplace" -type d 2>/dev/null | head -1)
 
-   if [ -z "$PLUGIN_DIR" ]; then
-     echo "❌ ACE plugin directory not found. Cannot trigger reflection."
+   if [ -z "$PLUGIN_PATH" ]; then
+     echo "❌ ACE plugin not found. Please install via: /plugin install ace-orchestration@ace-plugin-marketplace"
      exit 1
    fi
 
-   python3 "$PLUGIN_DIR/scripts/ace-cycle.py" "$file" --force
+   python3 "$PLUGIN_PATH/plugins/ace-orchestration/scripts/ace-cycle.py" "$file" --force
    ```
 
 4. **Show progress**:
