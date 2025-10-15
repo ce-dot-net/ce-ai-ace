@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2025-10-15
+
+### Added
+- **Zero-Setup Dependency Management** with uvx
+  - All Python dependencies (chromadb, sentence-transformers, scikit-learn) auto-managed by uvx
+  - Scripts run via uvx with dependency sharing: `uvx --from chroma-mcp --with chromadb --with sentence-transformers`
+  - First run downloads ~400MB (one-time), subsequent runs use cache (instant)
+- **Comprehensive Dependency Documentation** (docs/DEPENDENCIES.md)
+  - Complete explanation of uvx dependency sharing approach
+  - Performance characteristics and troubleshooting guide
+  - How we discovered the solution (breakthrough moment story)
+- **Enhanced Embeddings Documentation**
+  - docs/EMBEDDINGS_ARCHITECTURE.md - Technical architecture with ChromaDB caching
+  - docs/EMBEDDINGS_REVIEW.md - Research paper compliance analysis
+  - docs/DOMAIN_DISCOVERY_REVIEW.md - Bottom-up domain taxonomy vs paper
+
+### Changed
+- **All hooks updated** to use uvx dependency sharing for chromadb/embeddings access
+  - AgentStart: `uvx --from chroma-mcp --with chromadb python3 script.py`
+  - PostToolUse/AgentEnd: Full stack with sentence-transformers and scikit-learn
+- **README.md Prerequisites** section added with uvx installation instructions
+- **Embeddings cache checking** improved to avoid numpy array truth value warnings
+- **Plugin.json MCP configuration** fixed to use correct `chroma-mcp` package name
+
+### Removed
+- **install.sh** - Deprecated development script (no longer needed, scripts auto-create directories)
+
+### Fixed
+- **Critical dependency accessibility bug**: chromadb wasn't accessible to plugin scripts
+  - Root cause: uvx installs MCPs in isolated environment, scripts ran in system Python
+  - Solution: Run all scripts via uvx with same dependency environment
+- **Embeddings cache lookup bug**: Fixed numpy array truth value error in cache checking
+- **Plugin marketplace compatibility**: Plugin now works when installed via marketplace (zero manual setup!)
+
 ## [2.0.0] - 2025-10-15
 
 ### Added
@@ -174,6 +208,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
+- **v2.1.0** (2025-10-15): Zero-setup dependency management with uvx + critical bug fixes
 - **v2.0.0** (2025-10-15): Complete research implementation + comprehensive usage guide
 - **v2.0.0-rc.1** (2025-10-14): Serena MCP integration with intelligent fallback
 - **v2.0.0-beta.3** (2025-10-14): Iterative refinement + spec-kit integration
@@ -218,7 +253,8 @@ When adding entries to this changelog:
 
 ---
 
-[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.0.0-rc.1...v2.0.0
 [2.0.0-rc.1]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.0.0-beta.3...v2.0.0-rc.1
 [2.0.0-beta.3]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.0.0-beta.2...v2.0.0-beta.3
