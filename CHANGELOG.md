@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.2] - 2025-10-15
+
+### Fixed
+- **Slash command paths** - Fixed paths for marketplace installation structure
+  - `/ace-train-offline` now uses `$PLUGIN_PATH/plugins/ace-orchestration/scripts/`
+  - `/ace-export-patterns` now uses correct plugin structure path
+  - `/ace-import-patterns` now uses correct plugin structure path
+  - All commands work correctly when installed via marketplace
+
+### Changed
+- **README.md** - Updated to reflect v2.2.2 and new marketplace structure
+
 ## [2.2.1] - 2025-10-15
 
 ### Changed
@@ -265,6 +277,7 @@ For existing users:
 
 ## Version History Summary
 
+- **v2.2.2** (2025-10-15): Fixed slash command paths for marketplace installation
 - **v2.2.1** (2025-10-15): Completed marketplace restructure with all files moved
 - **v2.2.0** (2025-10-15): Restructured as multi-plugin marketplace (BREAKING: requires reinstall)
 - **v2.1.3** (2025-10-15): Fixed marketplace.json version sync
@@ -315,7 +328,8 @@ When adding entries to this changelog:
 
 ---
 
-[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.1...HEAD
+[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.2...HEAD
+[2.2.2]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.1...v2.2.2
 [2.2.1]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.3...v2.2.0
 [2.1.3]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.2...v2.1.3

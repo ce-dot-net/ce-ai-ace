@@ -1,6 +1,6 @@
 # ACE Plugin for Claude Code CLI
 
-![Version](https://img.shields.io/badge/version-2.0.0-blue) ![License](https://img.shields.io/badge/license-MIT-green) [![Research](https://img.shields.io/badge/arXiv-2510.04618-red)](https://arxiv.org/abs/2510.04618)
+![Version](https://img.shields.io/badge/version-2.2.2-blue) ![License](https://img.shields.io/badge/license-MIT-green) [![Research](https://img.shields.io/badge/arXiv-2510.04618-red)](https://arxiv.org/abs/2510.04618)
 
 **Automatic Pattern Learning through Agentic Context Engineering**
 
@@ -366,8 +366,16 @@ ACE uses a **dual storage architecture** for optimal learning and human usabilit
 ```
 ce-ai-ace/
 ├── .claude-plugin/
-│   ├── plugin.json              # Plugin metadata + MCP config (auto-installs!)
 │   └── marketplace.json         # Marketplace config
+├── plugins/
+│   └── ace-orchestration/       # ⭐ Plugin implementation
+│       ├── plugin.json          # Plugin metadata + MCP config (auto-installs!)
+│       ├── commands/            # Slash commands
+│       ├── hooks/               # Lifecycle hooks
+│       ├── agents/              # Reflector agent
+│       ├── scripts/             # Python scripts
+│       ├── specs/               # Playbook specs
+│       └── tests/               # Test files
 ├── .serena/
 │   ├── memories/                # Serena MCP knowledge storage (gitignored)
 │   └── project.yml              # Serena project configuration
@@ -579,12 +587,12 @@ MIT License - See LICENSE file for details
 
 View the [full changelog](CHANGELOG.md) for detailed version history.
 
-**Latest Release**: [v2.0.0](https://github.com/ce-dot-net/ce-ai-ace/releases/tag/v2.0.0) (October 2025)
-- Complete ACE research paper implementation (100% coverage)
-- Serena MCP integration with intelligent fallback
-- spec-kit integration for human-readable playbooks
-- Multi-epoch offline training
-- Comprehensive usage guide with before/after examples
+**Latest Release**: [v2.2.2](https://github.com/ce-dot-net/ce-ai-ace/releases/tag/v2.2.2) (October 2025)
+- Restructured as proper multi-plugin marketplace
+- Fixed slash command paths for marketplace installation
+- Clean separation: marketplace vs plugin implementation
+- Ready for future plugin additions
+- All paths use `${CLAUDE_PLUGIN_ROOT}` for correct resolution
 
 **Previous Releases**: [GitHub Releases](https://github.com/ce-dot-net/ce-ai-ace/releases)
 
