@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.3] - 2025-10-15
+
+### Fixed
+- **marketplace.json version sync** - Updated marketplace.json to reflect correct plugin version
+  - marketplace.json was not updated in v2.1.2 release, causing version mismatch
+  - Plugin now correctly reports v2.1.3 across all distribution channels
+
 ## [2.1.2] - 2025-10-15
 
 ### Fixed
@@ -231,6 +238,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
+- **v2.1.3** (2025-10-15): Fixed marketplace.json version sync
 - **v2.1.2** (2025-10-15): Fixed slash command path resolution for marketplace installations
 - **v2.1.1** (2025-10-15): Added slash commands directory and offline training command
 - **v2.1.0** (2025-10-15): Zero-setup dependency management with uvx + critical bug fixes
@@ -278,7 +286,8 @@ When adding entries to this changelog:
 
 ---
 
-[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.2...HEAD
+[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.3...HEAD
+[2.1.3]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.2...v2.1.3
 [2.1.2]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.1...v2.1.2
 [2.1.1]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.0.0...v2.1.0
