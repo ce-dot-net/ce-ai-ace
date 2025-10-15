@@ -66,7 +66,7 @@ For existing users:
 ## [2.1.1] - 2025-10-15
 
 ### Added
-- **Slash commands directory** (`.claude-plugin/commands/`)
+- **Slash commands directory** (`plugins/ace-orchestration/commands/`)
   - All 8 ACE commands now properly registered in plugin
   - `/ace-orchestration:ace-train-offline` command now available
   - Updated offline training command to use uvx dependencies

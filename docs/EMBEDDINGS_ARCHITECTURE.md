@@ -136,7 +136,7 @@ embedding = get_embedding(text_again, use_cache=True)
 
 ## ChromaDB Integration
 
-### Plugin Configuration (`.claude-plugin/plugin.json`)
+### Plugin Configuration (`plugins/ace-orchestration/plugin.json`)
 
 ```json
 {

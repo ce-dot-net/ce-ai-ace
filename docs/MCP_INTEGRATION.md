@@ -32,9 +32,9 @@
 
 **Claude Code Plugin** (ACE):
 - Extends Claude Code with custom commands and hooks
-- Defined in `.claude-plugin/plugin.json`
+- Defined in `plugins/ace-orchestration/plugin.json`
 - Runs Python scripts in response to events
-- Lives in your project or `~/.claude-code/plugins/`
+- Lives in `~/.claude/plugins/marketplaces/ace-plugin-marketplace/`
 
 **MCP Server** (Serena):
 - Provides tools that Claude can use

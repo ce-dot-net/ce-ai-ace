@@ -300,7 +300,7 @@ your-project/
 
 ### Plugin Configuration
 
-Edit `.claude-plugin/plugin.json`:
+Edit `plugins/ace-orchestration/plugin.json`:
 
 ```json
 {
