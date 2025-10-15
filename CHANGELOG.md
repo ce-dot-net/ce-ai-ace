@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.3] - 2025-10-15
+
+### Changed
+- **Documentation updates** - Synchronized all documentation with marketplace structure
+  - Fixed CHANGELOG.md path references (`.claude-plugin/commands/` → `plugins/ace-orchestration/commands/`)
+  - Updated MCP_INTEGRATION.md plugin location paths
+  - Updated ACE_IMPLEMENTATION_GUIDE.md plugin.json path references
+  - Updated EMBEDDINGS_ARCHITECTURE.md plugin configuration section
+  - Fixed README.md project structure diagram (removed duplicate root-level directories)
+  - Updated README.md troubleshooting section with correct plugin installation path
+
 ## [2.2.2] - 2025-10-15
 
 ### Fixed
@@ -277,6 +288,7 @@ For existing users:
 
 ## Version History Summary
 
+- **v2.2.3** (2025-10-15): Documentation updates for marketplace structure
 - **v2.2.2** (2025-10-15): Fixed slash command paths for marketplace installation
 - **v2.2.1** (2025-10-15): Completed marketplace restructure with all files moved
 - **v2.2.0** (2025-10-15): Restructured as multi-plugin marketplace (BREAKING: requires reinstall)
@@ -328,7 +340,8 @@ When adding entries to this changelog:
 
 ---
 
-[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.2...HEAD
+[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.3...HEAD
+[2.2.3]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.2...v2.2.3
 [2.2.2]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.1...v2.2.2
 [2.2.1]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.3...v2.2.0

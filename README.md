@@ -1,6 +1,6 @@
 # ACE Plugin for Claude Code CLI
 
-![Version](https://img.shields.io/badge/version-2.2.2-blue) ![License](https://img.shields.io/badge/license-MIT-green) [![Research](https://img.shields.io/badge/arXiv-2510.04618-red)](https://arxiv.org/abs/2510.04618)
+![Version](https://img.shields.io/badge/version-2.2.3-blue) ![License](https://img.shields.io/badge/license-MIT-green) [![Research](https://img.shields.io/badge/arXiv-2510.04618-red)](https://arxiv.org/abs/2510.04618)
 
 **Automatic Pattern Learning through Agentic Context Engineering**
 
@@ -554,12 +554,11 @@ MIT License - See LICENSE file for details
 
 View the [full changelog](CHANGELOG.md) for detailed version history.
 
-**Latest Release**: [v2.2.2](https://github.com/ce-dot-net/ce-ai-ace/releases/tag/v2.2.2) (October 2025)
-- Restructured as proper multi-plugin marketplace
-- Fixed slash command paths for marketplace installation
-- Clean separation: marketplace vs plugin implementation
-- Ready for future plugin additions
-- All paths use `${CLAUDE_PLUGIN_ROOT}` for correct resolution
+**Latest Release**: [v2.2.3](https://github.com/ce-dot-net/ce-ai-ace/releases/tag/v2.2.3) (October 2025)
+- Documentation fully synchronized with marketplace structure
+- All path references updated across docs
+- README project structure diagram corrected
+- Complete marketplace restructure (v2.2.0-v2.2.3)
 
 **Previous Releases**: [GitHub Releases](https://github.com/ce-dot-net/ce-ai-ace/releases)
 
