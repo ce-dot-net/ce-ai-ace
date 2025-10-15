@@ -1,6 +1,6 @@
 {
   "name": "ace-orchestration",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "ACE (Agentic Context Engineering) - Automatic pattern learning through reflection and deterministic curation. Based on Stanford/SambaNova/UC Berkeley research (arXiv:2510.04618v1)",
   "author": {
     "name": "ACE Team",

@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.2] - 2025-10-15
+
+### Fixed
+- **Slash command path resolution bug** - Commands now work when installed via marketplace
+  - Fixed `/ace-train-offline`, `/ace-export-patterns`, and `/ace-import-patterns` commands
+  - Root cause: `${CLAUDE_PLUGIN_ROOT}` environment variable not set in slash command contexts
+  - Solution: Commands now dynamically find plugin installation path at `~/.claude/plugins/marketplaces/ace-plugin-marketplace/`
+  - All commands show helpful error if plugin not installed
+  - Ensures commands work for all users, not just in development repo
+
 ## [2.1.1] - 2025-10-15
 
 ### Added
@@ -221,6 +231,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
+- **v2.1.2** (2025-10-15): Fixed slash command path resolution for marketplace installations
 - **v2.1.1** (2025-10-15): Added slash commands directory and offline training command
 - **v2.1.0** (2025-10-15): Zero-setup dependency management with uvx + critical bug fixes
 - **v2.0.0** (2025-10-15): Complete research implementation + comprehensive usage guide
@@ -267,7 +278,8 @@ When adding entries to this changelog:
 
 ---
 
-[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.1...HEAD
+[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.2...HEAD
+[2.1.2]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.1...v2.1.2
 [2.1.1]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.0.0-rc.1...v2.0.0
