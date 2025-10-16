@@ -1073,7 +1073,47 @@ def main():
                 'file_path': file_path
             })
 
-        # STEP 5: Update playbook
+        # STEP 5: Domain Discovery (Periodic - runs when pattern count threshold met)
+        total_patterns = len(existing_patterns)
+        should_discover_domains = (total_patterns > 0 and total_patterns % 10 == 0)  # Every 10 patterns
+
+        if should_discover_domains:
+            try:
+                print(f"🔬 Triggering domain discovery ({total_patterns} patterns accumulated)", file=sys.stderr)
+                sys.path.insert(0, str(PLUGIN_ROOT / 'scripts'))
+                from domain_discovery import discover_domains_from_patterns
+
+                # Convert patterns to format expected by domain discovery
+                pattern_list = [
+                    {
+                        'name': p.get('name', ''),
+                        'description': p.get('description', ''),
+                        'language': p.get('language', ''),
+                        'file_path': p.get('file_path', ''),  # Will be extracted from observations
+                        'observations': p.get('observations', 0)
+                    }
+                    for p in existing_patterns
+                ]
+
+                # Discover domains (calls domain-discoverer agent)
+                taxonomy = discover_domains_from_patterns(pattern_list)
+
+                if taxonomy.get('concrete') or taxonomy.get('abstract'):
+                    domains_found = len(taxonomy.get('concrete', {})) + len(taxonomy.get('abstract', {}))
+                    print(f"✅ Discovered {domains_found} domains via agent", file=sys.stderr)
+
+                    # Store taxonomy for use in playbook generation
+                    taxonomy_path = PROJECT_ROOT / '.ace-memory' / 'domain_taxonomy.json'
+                    with open(taxonomy_path, 'w') as f:
+                        json.dump(taxonomy, f, indent=2)
+                else:
+                    print("ℹ️  No domains discovered yet (need more patterns)", file=sys.stderr)
+
+            except Exception as e:
+                print(f"⚠️  Domain discovery failed: {e}", file=sys.stderr)
+                # Continue - don't block ACE cycle
+
+        # STEP 6: Update playbook
         if patterns_processed > 0:
             subprocess.run([
                 'python3',

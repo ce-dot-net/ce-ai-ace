@@ -4,10 +4,10 @@ name: Use context managers for file operations
 domain: python-io
 language: python
 type: helpful
-confidence: 0.5725190839694656
-observations: 131
+confidence: 0.5555555555555556
+observations: 135
 created_at: 2025-10-14T13:42:22.094486
-last_updated: 2025-10-15T21:37:36.918753
+last_updated: 2025-10-16T14:52:15.597441
 ---
 # Use context managers for file operations
 
@@ -16,7 +16,7 @@ last_updated: 2025-10-15T21:37:36.918753
 **Domain**: python-io
 **Language**: python
 **Type**: ✅ Helpful
-**Confidence**: 57.3% (131 observations)
+**Confidence**: 55.6% (135 observations)
 
 ## Description
 
@@ -24,13 +24,13 @@ with statement ensures files are properly closed
 
 ## Statistics
 
-- **Total Observations**: 131
+- **Total Observations**: 135
 - **Successes**: 75
-- **Failures**: 0
+- **Failures**: 4
 - **Neutrals**: 56
-- **Confidence Score**: 57.3%
+- **Confidence Score**: 55.6%
 - **First Seen**: 2025-10-14T13:42:22.094486
-- **Last Updated**: 2025-10-15T21:37:36.918753
+- **Last Updated**: 2025-10-16T14:52:15.597441
 
 ## Pattern ID
 

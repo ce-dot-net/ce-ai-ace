@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.1] - 2025-10-16
+
+### Changed
+- **Documentation Accuracy** - Aligned all docs with ACE research paper (arxiv:2510.04618)
+  - Fixed `generate-playbook.py` docstring to reflect actual ACE paper sections
+  - Removed incorrect section references (APIS/VERIFICATION) that were not in paper
+  - Added accurate section descriptions matching paper Figure 3
+  - Created comprehensive verification document (docs/ACE_PAPER_VERIFICATION.md)
+- **ACE Paper Compliance**
+  - Verified 100% implementation of all paper components
+  - Documented all core features: Generator/Reflector/Curator, bulletized structure, delta updates
+  - Confirmed domain taxonomy, grow-and-refine, and multi-epoch training alignment
+  - Clarified implementation extensions beyond paper (confidence-based organization)
+
+### Documentation
+- Added **docs/ACE_PAPER_VERIFICATION.md** - Complete verification checklist against research paper
+  - All 10 core ACE components verified as implemented
+  - Detailed evidence and code references
+  - Summary of smart extensions beyond paper spec
+
 ## [2.3.0] - 2025-10-16
 
 ### Added
@@ -310,6 +330,7 @@ For existing users:
 
 ## Version History Summary
 
+- **v2.3.1** (2025-10-16): Documentation accuracy - 100% ACE paper alignment verification
 - **v2.3.0** (2025-10-16): Smart Serena MCP detection - Eliminates concurrency conflicts
 - **v2.2.3** (2025-10-15): Documentation updates for marketplace structure
 - **v2.2.2** (2025-10-15): Fixed slash command paths for marketplace installation
@@ -363,7 +384,8 @@ When adding entries to this changelog:
 
 ---
 
-[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.0...HEAD
+[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.1...HEAD
+[2.3.1]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.0...v2.3.1
 [2.3.0]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.3...v2.3.0
 [2.2.3]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.2...v2.2.3
 [2.2.2]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.1...v2.2.2

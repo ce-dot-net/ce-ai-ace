@@ -2,14 +2,14 @@
 """
 Generate CLAUDE.md playbook from learned patterns
 
-Implements ACE paper's bulletized structure with proper sections:
-- STRATEGIES AND HARD RULES
-- USEFUL CODE SNIPPETS AND TEMPLATES
-- TROUBLESHOOTING AND PITFALLS
-- APIS TO USE FOR SPECIFIC INFORMATION
-- VERIFICATION CHECKLIST
+Implements ACE paper's bulletized structure (arxiv:2510.04618):
+- DOMAIN TAXONOMY (auto-discovered from patterns)
+- STRATEGIES AND HARD RULES (high-confidence patterns ≥70%)
+- USEFUL CODE SNIPPETS AND TEMPLATES (code-focused patterns)
+- TROUBLESHOOTING AND PITFALLS (anti-patterns and failures)
 
 ACE Phase 3: Uses delta updates instead of full rewrites to prevent context collapse.
+Bulletized format: [bullet-id] helpful=X harmful=Y :: content
 
 Reads patterns from SQLite database and generates comprehensive
 markdown playbook organized by ACE sections and confidence levels.
@@ -17,13 +17,15 @@ markdown playbook organized by ACE sections and confidence levels.
 
 import sqlite3
 import sys
+import json
 from pathlib import Path
 from datetime import datetime
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 PROJECT_ROOT = Path.cwd()
 DB_PATH = PROJECT_ROOT / '.ace-memory' / 'patterns.db'
 PLAYBOOK_PATH = PROJECT_ROOT / 'CLAUDE.md'
+TAXONOMY_PATH = PROJECT_ROOT / '.ace-memory' / 'domain_taxonomy.json'
 
 CONFIDENCE_HIGH = 0.7  # 70%
 CONFIDENCE_MEDIUM = 0.3   # 30%
@@ -53,6 +55,20 @@ def get_patterns_with_insights() -> List[Dict]:
 
     conn.close()
     return patterns
+
+
+def load_domain_taxonomy() -> Optional[Dict]:
+    """Load discovered domain taxonomy from JSON file."""
+    if not TAXONOMY_PATH.exists():
+        return None
+
+    try:
+        with open(TAXONOMY_PATH, 'r') as f:
+            taxonomy = json.load(f)
+        return taxonomy
+    except Exception as e:
+        print(f"⚠️  Failed to load domain taxonomy: {e}", file=sys.stderr)
+        return None
 
 
 def generate_playbook():
@@ -102,6 +118,18 @@ Start coding, and watch this playbook evolve!
     low = [p for p in patterns if p['confidence'] < CONFIDENCE_MEDIUM]
     anti_patterns = [p for p in patterns if p['type'] == 'harmful' and p['confidence'] >= CONFIDENCE_HIGH]
 
+    # Load domain taxonomy
+    taxonomy = load_domain_taxonomy()
+
+    # Count discovered domains
+    domains_discovered = 0
+    if taxonomy:
+        domains_discovered = (
+            len(taxonomy.get('concrete', {})) +
+            len(taxonomy.get('abstract', {})) +
+            len(taxonomy.get('principles', {}))
+        )
+
     # Generate markdown with ACE sections
     content = f"""# ACE Playbook
 
@@ -117,10 +145,91 @@ Start coding, and watch this playbook evolve!
 - **Medium Confidence Patterns**: {len(medium)} (30-70%)
 - **Low Confidence Patterns**: {len(low)} (<30%)
 - **Anti-Patterns Identified**: {len(anti_patterns)}
+- **Domains Discovered**: {domains_discovered}
 
 ---
 
 """
+
+    # SECTION 0: DOMAIN TAXONOMY (if discovered)
+    if taxonomy and domains_discovered > 0:
+        content += "## 🗺️ DOMAIN TAXONOMY\n\n"
+        content += "*Auto-discovered domain structure organized from concrete to abstract levels.*\n\n"
+
+        # Concrete Domains
+        concrete = taxonomy.get('concrete', {})
+        if concrete:
+            content += "### 📍 Concrete Domains\n\n"
+            content += "*File-location and library-specific domains discovered from actual code patterns.*\n\n"
+
+            for domain_id, domain_info in sorted(concrete.items(),
+                                                   key=lambda x: x[1].get('confidence', 0),
+                                                   reverse=True):
+                confidence = domain_info.get('confidence', 0)
+                description = domain_info.get('description', 'No description')
+                evidence = domain_info.get('evidence', [])
+                patterns_list = domain_info.get('patterns', [])
+
+                content += f"**{domain_id}** (confidence: {confidence:.1%})\n"
+                content += f"- *Description*: {description}\n"
+                if evidence:
+                    content += f"- *Evidence*: {', '.join(evidence[:3])}"
+                    if len(evidence) > 3:
+                        content += f" (+{len(evidence)-3} more)"
+                    content += "\n"
+                if patterns_list:
+                    content += f"- *Patterns*: {len(patterns_list)} patterns in this domain\n"
+                content += "\n"
+
+        # Abstract Patterns
+        abstract = taxonomy.get('abstract', {})
+        if abstract:
+            content += "### 🔄 Abstract Patterns\n\n"
+            content += "*Architectural patterns and design approaches that recur across concrete domains.*\n\n"
+
+            for pattern_id, pattern_info in sorted(abstract.items(),
+                                                     key=lambda x: x[1].get('confidence', 0),
+                                                     reverse=True):
+                confidence = pattern_info.get('confidence', 0)
+                description = pattern_info.get('description', 'No description')
+                instances = pattern_info.get('instances', [])
+
+                content += f"**{pattern_id}** (confidence: {confidence:.1%})\n"
+                content += f"- *Description*: {description}\n"
+                if instances:
+                    content += f"- *Applied in*: {', '.join(instances)}\n"
+                content += "\n"
+
+        # Principles
+        principles = taxonomy.get('principles', {})
+        if principles:
+            content += "### 🎯 Principles\n\n"
+            content += "*General coding principles and best practices identified across all patterns.*\n\n"
+
+            for principle_id, principle_info in sorted(principles.items(),
+                                                        key=lambda x: x[1].get('confidence', 0),
+                                                        reverse=True):
+                confidence = principle_info.get('confidence', 0)
+                description = principle_info.get('description', 'No description')
+                applied_in = principle_info.get('applied_in', [])
+
+                content += f"**{principle_id}** (confidence: {confidence:.1%})\n"
+                content += f"- *Description*: {description}\n"
+                if applied_in:
+                    content += f"- *Applied through*: {', '.join(applied_in)}\n"
+                content += "\n"
+
+        # Metadata
+        metadata = taxonomy.get('metadata', {})
+        if metadata:
+            total_analyzed = metadata.get('total_patterns_analyzed', 0)
+            method = metadata.get('discovery_method', 'unknown')
+            discovered_at = metadata.get('discovered_at', 'unknown')
+
+            content += f"*Taxonomy discovered from {total_analyzed} patterns using {method}*\n"
+            content += f"*Last discovery: {discovered_at}*\n\n"
+
+        content += "---\n\n"
 
     # SECTION 1: STRATEGIES AND HARD RULES
     if high:
@@ -211,31 +320,48 @@ Start coding, and watch this playbook evolve!
 *Based on research: [Agentic Context Engineering](https://arxiv.org/abs/2510.04618) by Stanford/SambaNova/UC Berkeley*
 """
 
+    # Check if we need full rewrite (for structural changes like domain taxonomy)
+    needs_full_rewrite = False
+    if PLAYBOOK_PATH.exists():
+        existing_content = PLAYBOOK_PATH.read_text()
+        # Check if domain taxonomy section exists in current playbook
+        has_taxonomy_section = "DOMAIN TAXONOMY" in existing_content
+        should_have_taxonomy = taxonomy and domains_discovered > 0
+
+        # Need full rewrite if taxonomy status changed
+        if has_taxonomy_section != should_have_taxonomy:
+            needs_full_rewrite = True
+            print("🔄 Domain taxonomy section changed - full rewrite needed", file=sys.stderr)
+
     # Apply delta update (ACE Phase 3: incremental updates only)
-    try:
-        # Import delta updater
-        import sys
-        sys.path.insert(0, str(Path(__file__).parent))
-        from playbook_delta_updater import update_playbook_with_delta
-
-        # Use delta update instead of full rewrite
-        success = update_playbook_with_delta(content)
-
-        if success:
-            print(f"✅ Playbook updated (delta): {len(patterns)} patterns", file=sys.stderr)
-        else:
-            # Fallback to full write only on first run
-            if not PLAYBOOK_PATH.exists():
-                PLAYBOOK_PATH.write_text(content)
-                print(f"✅ Playbook created: {len(patterns)} patterns", file=sys.stderr)
-            else:
-                print(f"ℹ️  No changes to apply", file=sys.stderr)
-
-    except Exception as e:
-        # Fallback to full write on error (safety)
-        print(f"⚠️  Delta update failed ({e}), falling back to full write", file=sys.stderr)
+    # BUT use full rewrite for structural changes
+    if needs_full_rewrite:
         PLAYBOOK_PATH.write_text(content)
-        print(f"✅ Playbook updated: {len(patterns)} patterns", file=sys.stderr)
+        print(f"✅ Playbook updated (full rewrite): {len(patterns)} patterns", file=sys.stderr)
+    else:
+        try:
+            # Import delta updater
+            sys.path.insert(0, str(Path(__file__).parent))
+            from playbook_delta_updater import update_playbook_with_delta
+
+            # Use delta update instead of full rewrite
+            success = update_playbook_with_delta(content)
+
+            if success:
+                print(f"✅ Playbook updated (delta): {len(patterns)} patterns", file=sys.stderr)
+            else:
+                # Fallback to full write only on first run
+                if not PLAYBOOK_PATH.exists():
+                    PLAYBOOK_PATH.write_text(content)
+                    print(f"✅ Playbook created: {len(patterns)} patterns", file=sys.stderr)
+                else:
+                    print(f"ℹ️  No changes to apply", file=sys.stderr)
+
+        except Exception as e:
+            # Fallback to full write on error (safety)
+            print(f"⚠️  Delta update failed ({e}), falling back to full write", file=sys.stderr)
+            PLAYBOOK_PATH.write_text(content)
+            print(f"✅ Playbook updated: {len(patterns)} patterns", file=sys.stderr)
 
 
 if __name__ == '__main__':

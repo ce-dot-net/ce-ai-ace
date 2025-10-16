@@ -4,10 +4,10 @@ name: Use list comprehensions
 domain: python-idioms
 language: python
 type: helpful
-confidence: 0.3178294573643411
-observations: 129
+confidence: 0.3082706766917293
+observations: 133
 created_at: 2025-10-14T13:42:22.098158
-last_updated: 2025-10-15T21:37:37.059185
+last_updated: 2025-10-16T14:52:54.424747
 ---
 # Use list comprehensions
 
@@ -16,7 +16,7 @@ last_updated: 2025-10-15T21:37:37.059185
 **Domain**: python-idioms
 **Language**: python
 **Type**: ✅ Helpful
-**Confidence**: 31.8% (129 observations)
+**Confidence**: 30.8% (133 observations)
 
 ## Description
 
@@ -24,13 +24,13 @@ List comprehensions are more Pythonic and often faster
 
 ## Statistics
 
-- **Total Observations**: 129
+- **Total Observations**: 133
 - **Successes**: 41
-- **Failures**: 0
+- **Failures**: 4
 - **Neutrals**: 88
-- **Confidence Score**: 31.8%
+- **Confidence Score**: 30.8%
 - **First Seen**: 2025-10-14T13:42:22.098158
-- **Last Updated**: 2025-10-15T21:37:37.059185
+- **Last Updated**: 2025-10-16T14:52:54.424747
 
 ## Pattern ID
 
