@@ -1,20 +1,25 @@
 ---
 description: Export learned patterns to share across projects
+allowed-tools: Bash
 ---
 
 Export your learned patterns to a JSON file for backup or cross-project sharing.
 
 ```bash
-# Find plugin installation path
-PLUGIN_PATH=$(find ~/.claude/plugins/marketplaces -name "ace-plugin-marketplace" -type d 2>/dev/null | head -1)
+# Locate ACE plugin
+if [ -n "$CLAUDE_PLUGIN_ROOT" ]; then
+  PLUGIN_PATH="$CLAUDE_PLUGIN_ROOT"
+else
+  PLUGIN_PATH=$(find ~/.claude/plugins/marketplaces -type d -name "ace-orchestration" 2>/dev/null | head -1)
+fi
 
 if [ -z "$PLUGIN_PATH" ]; then
-  echo "❌ ACE plugin not found. Please install via: /plugin install ace-orchestration@ace-plugin-marketplace"
+  echo "❌ ACE plugin not found"
   exit 1
 fi
 
 # Export patterns
-python3 "$PLUGIN_PATH/plugins/ace-orchestration/scripts/pattern-portability.py" export --output ./my-patterns.json
+python3 "$PLUGIN_PATH/scripts/pattern-portability.py" export --output ./my-patterns.json
 ```
 
 Exported patterns include:

@@ -35,16 +35,20 @@ Normally, ACE runs automatically after code changes. Use this command to:
    - Check file is supported (.py, .js, .jsx, .ts, .tsx)
    - Show error if invalid
 
-3. **Trigger ACE cycle** (find script path dynamically):
+3. **Locate ACE plugin and trigger cycle**:
    ```bash
-   PLUGIN_PATH=$(find ~/.claude/plugins/marketplaces -name "ace-plugin-marketplace" -type d 2>/dev/null | head -1)
+   if [ -n "$CLAUDE_PLUGIN_ROOT" ]; then
+     PLUGIN_PATH="$CLAUDE_PLUGIN_ROOT"
+   else
+     PLUGIN_PATH=$(find ~/.claude/plugins/marketplaces -type d -name "ace-orchestration" 2>/dev/null | head -1)
+   fi
 
    if [ -z "$PLUGIN_PATH" ]; then
-     echo "❌ ACE plugin not found. Please install via: /plugin install ace-orchestration@ace-plugin-marketplace"
+     echo "❌ ACE plugin not found"
      exit 1
    fi
 
-   uvx --from chroma-mcp --with chromadb --with sentence-transformers --with scikit-learn python3 "$PLUGIN_PATH/plugins/ace-orchestration/scripts/ace-cycle.py" "$file" --force
+   uvx --from chroma-mcp --with chromadb --with sentence-transformers --with scikit-learn python3 "$PLUGIN_PATH/scripts/ace-cycle.py" "$file" --force
    ```
 
 4. **Show progress**:

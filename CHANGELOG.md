@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.2] - 2025-10-16
+
+### Fixed
+- **Command Registration** - Added missing `"commands": "./commands"` field to plugin.json
+  - All 8 slash commands now properly registered and discoverable in Claude Code CLI
+  - Commands: /ace-status, /ace-patterns, /ace-force-reflect, /ace-clear, /ace-train-offline, /ace-export-patterns, /ace-import-patterns, /ace-export-speckit
+- **Script Path Resolution** - Fixed all command files to use robust path detection
+  - Prefer `$CLAUDE_PLUGIN_ROOT` environment variable when available (hooks context)
+  - Fallback to dynamic `find` command for marketplace installations (slash command context)
+  - Updated: ace-train-offline.md, ace-force-reflect.md, ace-export-patterns.md, ace-import-patterns.md
+- **Script Naming** - Corrected ace-train-offline.md to reference correct script name (offline-training.py)
+- **File Permissions** - Made missing scripts executable: offline-training.py, pattern-portability.py, convergence-checker.py
+- **Command Metadata** - Added `allowed-tools: Bash` frontmatter to command files for proper tool access
+
+### Changed
+- All command files now use defensive dual-mode path resolution for marketplace compatibility
+- Improved error messages when ACE plugin installation cannot be located
+
 ## [2.3.1] - 2025-10-16
 
 ### Changed
