@@ -8,6 +8,9 @@ package-lock.json
 # ACE Runtime (local learning state, not committed)
 .ace-memory/
 
+# ACE Plugin Config (generated based on detected MCP servers)
+plugins/ace-orchestration/.ace-config
+
 # CLAUDE.md (auto-generated for Claude Code CLI context)
 # This is the playbook that Claude Code CLI reads
 CLAUDE.md

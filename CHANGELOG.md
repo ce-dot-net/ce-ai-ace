@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.0] - 2025-10-16
+
+### Added
+- **Smart Serena MCP Detection** - Intelligent handling of global vs plugin-bundled Serena
+  - Auto-detects if global `serena` MCP is installed
+  - Prefers global Serena if available (no duplicate conflicts)
+  - Falls back to bundled `serena-ace` if no global installation
+  - Creates `.ace-config` to signal which Serena to use
+  - Eliminates API Error 400 (tool use concurrency issues)
+  - Zero manual configuration required for users
+
+### Changed
+- **check-mcp-conflicts.py** renamed to smart Serena manager
+  - Now manages Serena strategy selection automatically
+  - Outputs clear messages about which Serena is being used
+  - Supports both use cases: global Serena users and fresh installs
+- **SessionStart hook** now handles Serena detection and configuration
+
+### Fixed
+- **MCP concurrency conflicts** - Eliminated 400 errors when both Serena instances exist
+- **Tool use conflicts** - No more duplicate tool registration from multiple Serena servers
+
 ## [2.2.3] - 2025-10-15
 
 ### Changed
@@ -288,6 +310,7 @@ For existing users:
 
 ## Version History Summary
 
+- **v2.3.0** (2025-10-16): Smart Serena MCP detection - Eliminates concurrency conflicts
 - **v2.2.3** (2025-10-15): Documentation updates for marketplace structure
 - **v2.2.2** (2025-10-15): Fixed slash command paths for marketplace installation
 - **v2.2.1** (2025-10-15): Completed marketplace restructure with all files moved
@@ -340,7 +363,8 @@ When adding entries to this changelog:
 
 ---
 
-[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.3...HEAD
+[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.0...HEAD
+[2.3.0]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.3...v2.3.0
 [2.2.3]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.2...v2.2.3
 [2.2.2]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.1...v2.2.2
 [2.2.1]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.0...v2.2.1

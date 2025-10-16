@@ -44,7 +44,7 @@ Normally, ACE runs automatically after code changes. Use this command to:
      exit 1
    fi
 
-   python3 "$PLUGIN_PATH/plugins/ace-orchestration/scripts/ace-cycle.py" "$file" --force
+   uvx --from chroma-mcp --with chromadb --with sentence-transformers --with scikit-learn python3 "$PLUGIN_PATH/plugins/ace-orchestration/scripts/ace-cycle.py" "$file" --force
    ```
 
 4. **Show progress**:

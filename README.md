@@ -1,6 +1,6 @@
 # ACE Plugin for Claude Code CLI
 
-![Version](https://img.shields.io/badge/version-2.2.3-blue) ![License](https://img.shields.io/badge/license-MIT-green) [![Research](https://img.shields.io/badge/arXiv-2510.04618-red)](https://arxiv.org/abs/2510.04618)
+![Version](https://img.shields.io/badge/version-2.3.0-blue) ![License](https://img.shields.io/badge/license-MIT-green) [![Research](https://img.shields.io/badge/arXiv-2510.04618-red)](https://arxiv.org/abs/2510.04618)
 
 **Automatic Pattern Learning through Agentic Context Engineering**
 
@@ -74,12 +74,20 @@ powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
 
 **That's it!** The plugin automatically:
 - ✅ Installs required MCPs (ChromaDB, Serena) via uvx
+- ✅ **Smart Serena detection** - Uses global Serena if installed, otherwise uses bundled version
 - ✅ Installs all Python dependencies (chromadb, sentence-transformers, scikit-learn)
 - ✅ Sets up hooks (all 5 lifecycle hooks)
 - ✅ Creates `.ace-memory/` directory
 - ✅ Initializes pattern database
 
 **No manual `install.sh` required!** MCPs and all dependencies are auto-managed via uvx.
+
+**🔧 Smart Serena Detection (NEW in v2.3.0)**
+ACE intelligently handles Serena MCP:
+- If you have global `serena` MCP → ACE uses it (no conflicts!)
+- If no global Serena → ACE uses bundled `serena-ace`
+- Zero configuration required - works automatically
+- Eliminates tool use concurrency errors (API Error 400)
 
 ### 📦 Dependencies (Auto-Managed by uvx)
 
@@ -478,45 +486,6 @@ This plugin uses Serena MCP for knowledge management:
 
 ---
 
-## 🆕 Phase 3-5 Features (Latest)
-
-### Phase 3: Delta Updates & Semantic Embeddings ✅
-- **Incremental CLAUDE.md updates**: No more full rewrites! Surgical delta updates prevent context collapse
-- **🌟 Semantic embeddings with ChromaDB caching**: Research-compliant, 10x faster
-  - **sentence-transformers** - all-MiniLM-L6-v2 (384-dim embeddings, same as ChromaDB)
-  - **ChromaDB persistent cache** - `.ace-memory/chromadb/` (don't recompute embeddings!)
-  - **Auto-installed via uvx** - Plugin installs `chroma-mcp` → chromadb available
-  - **Performance**: First cycle ~50ms per encoding, cached ~5ms (10x faster!)
-  - **Quality**: 0.89 similarity for "Use TypedDict" vs "TypedDict for configs"
-  - **Storage**: ~1.5 KB per pattern (100 patterns = 150 KB)
-- **Bottom-up domain discovery**: 3-level taxonomy (Concrete → Abstract → Principles) emerges from code
-- **Research-compliant**: 85% similarity threshold (ACE paper page 5, section 3.2)
-- **📖 See [EMBEDDINGS_ARCHITECTURE.md](docs/EMBEDDINGS_ARCHITECTURE.md)** for complete technical architecture
-- **📖 See [EMBEDDINGS_REVIEW.md](docs/EMBEDDINGS_REVIEW.md)** for research paper compliance analysis
-
-### Phase 4: Multi-Epoch Training ✅
-- **Offline training mode**: Revisit cached training data across up to 5 epochs
-- **Pattern evolution tracking**: See how patterns improve over time
-- **Epoch management**: `python3 scripts/epoch-manager.py start|complete|stats`
-- **Training cache**: Automatically stores code/patterns for offline learning
-
-### Phase 5: Serena Integration ✅
-- **Hybrid pattern detection**: AST-aware (Serena) + regex (fallback)
-- **Symbol-level analysis**: Uses `find_symbol` for accurate detection
-- **Reference tracking**: Track pattern usage with `find_referencing_symbols`
-- **Serena memories**: Store ACE insights in searchable Serena format
-
-### Complete Hook Lifecycle ✅
-- **AgentStart**: Inject CLAUDE.md into agent contexts automatically
-- **PreToolUse**: Validate patterns before code is written
-- **PostToolUse**: Run ACE cycle after Edit/Write operations
-- **AgentEnd**: Analyze agent output for meta-learning
-- **SessionEnd**: Cleanup and final playbook generation
-
-**Test the new features**: See `tests/TEST_PROMPT.md` for a comprehensive test scenario!
-
----
-
 ## 🤝 Contributing
 
 Contributions welcome! Areas to improve:
@@ -554,11 +523,11 @@ MIT License - See LICENSE file for details
 
 View the [full changelog](CHANGELOG.md) for detailed version history.
 
-**Latest Release**: [v2.2.3](https://github.com/ce-dot-net/ce-ai-ace/releases/tag/v2.2.3) (October 2025)
-- Documentation fully synchronized with marketplace structure
-- All path references updated across docs
-- README project structure diagram corrected
-- Complete marketplace restructure (v2.2.0-v2.2.3)
+**Latest Release**: [v2.3.0](https://github.com/ce-dot-net/ce-ai-ace/releases/tag/v2.3.0) (October 2025)
+- Smart Serena MCP detection - Auto-detects global vs bundled Serena
+- Eliminates tool use concurrency conflicts (API Error 400)
+- Zero manual configuration - works automatically for all users
+- Prefers global Serena if installed, falls back to bundled version
 
 **Previous Releases**: [GitHub Releases](https://github.com/ce-dot-net/ce-ai-ace/releases)
 
