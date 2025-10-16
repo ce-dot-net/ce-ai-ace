@@ -1,6 +1,6 @@
 # ACE Plugin for Claude Code CLI
 
-![Version](https://img.shields.io/badge/version-2.3.0-blue) ![License](https://img.shields.io/badge/license-MIT-green) [![Research](https://img.shields.io/badge/arXiv-2510.04618-red)](https://arxiv.org/abs/2510.04618)
+![Version](https://img.shields.io/badge/version-2.3.7-blue) ![License](https://img.shields.io/badge/license-MIT-green) [![Research](https://img.shields.io/badge/arXiv-2510.04618-red)](https://arxiv.org/abs/2510.04618)
 
 **Automatic Pattern Learning through Agentic Context Engineering**
 
@@ -181,14 +181,17 @@ The plugin works **100% automatically**:
 
 1. **Generator** - You + Claude Code (existing workflow)
 2. **Reflector** - Dedicated LLM agent that analyzes patterns for effectiveness
+   - Single agent (`reflector`) with iterative refinement capability (`reflector-prompt`)
    - Structured JSON input/output
    - **Full iterative refinement** (up to 5 rounds with convergence detection)
    - Progressive confidence increases (0.80 → 0.95 over rounds)
    - Evidence-based insights with specific recommendations
+   - No fallback heuristics (acknowledged limitation per research paper Appendix B)
 3. **Curator** - Deterministic algorithm (85% similarity threshold)
    - Bulletized structure with IDs: `[domain-NNNNN]`
    - Incremental delta updates (append, update, prune)
    - Tracks helpful/harmful counts per pattern
+   - Uses semantic embeddings (ChromaDB) for similarity calculation
 
 ---
 
@@ -523,11 +526,11 @@ MIT License - See LICENSE file for details
 
 View the [full changelog](CHANGELOG.md) for detailed version history.
 
-**Latest Release**: [v2.3.0](https://github.com/ce-dot-net/ce-ai-ace/releases/tag/v2.3.0) (October 2025)
-- Smart Serena MCP detection - Auto-detects global vs bundled Serena
-- Eliminates tool use concurrency conflicts (API Error 400)
-- Zero manual configuration - works automatically for all users
-- Prefers global Serena if installed, falls back to bundled version
+**Latest Release**: [v2.3.7](https://github.com/ce-dot-net/ce-ai-ace/releases/tag/v2.3.7) (October 2025)
+- Agent architecture clarification - Explicit registration and comprehensive documentation
+- Fixed missing YAML frontmatter in reflector-prompt agent
+- Removed all fallback heuristics (aligns with research paper Appendix B)
+- Complete agents/README.md with invocation patterns and design decisions
 
 **Previous Releases**: [GitHub Releases](https://github.com/ce-dot-net/ce-ai-ace/releases)
 

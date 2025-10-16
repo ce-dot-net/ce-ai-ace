@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.7] - 2025-10-17
+
+### Changed
+- **Agent Architecture Clarification** - Enhanced documentation for Generator-Reflector-Curator roles
+  - Added explicit `agents` field to plugin.json for better discoverability
+  - Updated README.md Three Roles section with agent details and design decisions
+  - Clarified single Reflector with iterative refinement (not two separate agents)
+  - Documented no fallback heuristics (research paper Appendix B compliance)
+  - Added Curator semantic embeddings note (ChromaDB usage)
+
+### Fixed
+- **Agent YAML Frontmatter** - Fixed missing YAML frontmatter in reflector-prompt.md
+  - Agent was not properly registered due to missing metadata
+  - Added complete YAML frontmatter: name, description, tools, model
+  - All 3 agents now have proper frontmatter for auto-discovery
+
+### Added
+- **Comprehensive Agent Documentation** - Created agents/README.md
+  - Complete agent architecture explanation (Generator/Reflector/Curator)
+  - Agent definition format with YAML frontmatter requirements
+  - Agent registration and auto-discovery details
+  - Agent invocation patterns (Task tool via stderr)
+  - Design decisions including why NO fallback heuristics
+  - Research paper alignment verification
+
+### Removed
+- **Fallback Heuristics** - Removed all hardcoded fallback logic (94 lines)
+  - Removed `fallback_reflection()` function (24 lines) from ace-cycle.py
+  - Removed `fallback_refinement()` function (39 lines) from ace-cycle.py
+  - Replaced with simple returns acknowledging limitation
+  - Aligns with research paper Appendix B: fallbacks are "acknowledged limitation"
+  - When Reflector cannot analyze, return empty result instead of hardcoded heuristics
+
+## [2.3.6] - 2025-10-17
+
+### Fixed
+- **Database Initialization** - Fixed pattern database initialization in offline training
+  - Ensured all required tables are created before use
+  - Fixed schema consistency across training modes
+
 ## [2.3.5] - 2025-10-16
 
 ### Fixed
@@ -381,6 +421,12 @@ For existing users:
 
 ## Version History Summary
 
+- **v2.3.7** (2025-10-17): Agent architecture clarification - Complete documentation and fallback removal
+- **v2.3.6** (2025-10-17): Database initialization fixes
+- **v2.3.5** (2025-10-16): Database table initialization fixes
+- **v2.3.4** (2025-10-16): Database directory creation fixes
+- **v2.3.3** (2025-10-16): Command bash block execution fixes
+- **v2.3.2** (2025-10-16): Command registration and path resolution fixes
 - **v2.3.1** (2025-10-16): Documentation accuracy - 100% ACE paper alignment verification
 - **v2.3.0** (2025-10-16): Smart Serena MCP detection - Eliminates concurrency conflicts
 - **v2.2.3** (2025-10-15): Documentation updates for marketplace structure
@@ -435,7 +481,13 @@ When adding entries to this changelog:
 
 ---
 
-[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.1...HEAD
+[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.7...HEAD
+[2.3.7]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.6...v2.3.7
+[2.3.6]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.5...v2.3.6
+[2.3.5]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.4...v2.3.5
+[2.3.4]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.3...v2.3.4
+[2.3.3]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.2...v2.3.3
+[2.3.2]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.1...v2.3.2
 [2.3.1]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.0...v2.3.1
 [2.3.0]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.3...v2.3.0
 [2.2.3]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.2.2...v2.2.3
