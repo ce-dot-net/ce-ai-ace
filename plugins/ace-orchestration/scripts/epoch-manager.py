@@ -22,6 +22,9 @@ MAX_EPOCHS = 5  # From ACE paper
 
 def init_epochs_table():
     """Add epochs table to database."""
+    # Ensure .ace-memory directory exists
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+
     conn = sqlite3.connect(str(DB_PATH))
     cursor = conn.cursor()
 

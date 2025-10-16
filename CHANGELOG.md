@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.4] - 2025-10-16
+
+### Fixed
+- **Database Directory Creation** - Fixed offline training to create `.ace-memory/` directory before database initialization
+  - Error: `sqlite3.OperationalError: unable to open database file` when running `/ace-train-offline` on fresh projects
+  - Root cause: `epoch-manager.py` tried to create database without ensuring parent directory exists
+  - Solution: Added `DB_PATH.parent.mkdir(parents=True, exist_ok=True)` in `init_epochs_table()`
+  - Offline training now works correctly on projects without existing `.ace-memory/` directory
+
 ## [2.3.3] - 2025-10-16
 
 ### Fixed
