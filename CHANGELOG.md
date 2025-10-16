@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.3] - 2025-10-16
+
+### Fixed
+- **Command Bash Execution** - Consolidated multi-block bash scripts into single blocks
+  - Fixed ace-train-offline.md: Combined plugin path detection and script execution into one bash block
+  - Fixed ace-force-reflect.md: Combined file detection, validation, and ACE cycle trigger into one bash block
+  - Root cause: Claude Code executes each markdown bash block independently; variables don't persist across blocks
+  - Commands now execute properly with persistent variable scope throughout the entire script
+
+### Technical Details
+- Issue: Separate bash code blocks in command markdown files don't share variable scope
+- Variables like `$PLUGIN_PATH` defined in one block weren't available in subsequent blocks
+- Error: "parse error near `fi'" when trying to reference undefined variables
+- Solution: Consolidate all bash logic into single code blocks per command
+
 ## [2.3.2] - 2025-10-16
 
 ### Fixed

@@ -19,37 +19,37 @@ Normally, ACE runs automatically after code changes. Use this command to:
 
 ## Steps:
 
-1. **Determine file to analyze**:
-   - If $1 provided: use that file path
-   - Otherwise: use last edited file from git
-   ```bash
-   if [ -z "$1" ]; then
-     file=$(git diff --name-only HEAD | head -1)
-   else
-     file="$1"
-   fi
-   ```
+Execute the following in a single bash command:
 
-2. **Validate file exists**:
-   - Check file exists
-   - Check file is supported (.py, .js, .jsx, .ts, .tsx)
-   - Show error if invalid
+```bash
+# Determine file to analyze
+if [ -z "$1" ]; then
+  file=$(git diff --name-only HEAD | head -1)
+else
+  file="$1"
+fi
 
-3. **Locate ACE plugin and trigger cycle**:
-   ```bash
-   if [ -n "$CLAUDE_PLUGIN_ROOT" ]; then
-     PLUGIN_PATH="$CLAUDE_PLUGIN_ROOT"
-   else
-     PLUGIN_PATH=$(find ~/.claude/plugins/marketplaces -type d -name "ace-orchestration" 2>/dev/null | head -1)
-   fi
+# Validate file exists
+if [ -z "$file" ] || [ ! -f "$file" ]; then
+  echo "❌ No file specified or file not found"
+  exit 1
+fi
 
-   if [ -z "$PLUGIN_PATH" ]; then
-     echo "❌ ACE plugin not found"
-     exit 1
-   fi
+# Locate ACE plugin
+if [ -n "$CLAUDE_PLUGIN_ROOT" ]; then
+  PLUGIN_PATH="$CLAUDE_PLUGIN_ROOT"
+else
+  PLUGIN_PATH=$(find ~/.claude/plugins/marketplaces -type d -name "ace-orchestration" 2>/dev/null | head -1)
+fi
 
-   uvx --from chroma-mcp --with chromadb --with sentence-transformers --with scikit-learn python3 "$PLUGIN_PATH/scripts/ace-cycle.py" "$file" --force
-   ```
+if [ -z "$PLUGIN_PATH" ]; then
+  echo "❌ ACE plugin not found"
+  exit 1
+fi
+
+# Trigger ACE cycle
+uvx --from chroma-mcp --with chromadb --with sentence-transformers --with scikit-learn python3 "$PLUGIN_PATH/scripts/ace-cycle.py" "$file" --force
+```
 
 4. **Show progress**:
    ```
