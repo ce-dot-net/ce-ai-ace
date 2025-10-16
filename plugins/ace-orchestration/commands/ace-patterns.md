@@ -13,12 +13,9 @@ Display learned patterns with optional filtering.
 - `/ace-patterns python` - Show only Python patterns
 - `/ace-patterns javascript 0.7` - Show JavaScript patterns with ≥70% confidence
 
-## Steps:
-
-1. **List patterns from current directory**:
-   ```bash
-   if [ -f .ace-memory/patterns.db ]; then
-     python3 -c "
+!```bash
+if [ -f .ace-memory/patterns.db ]; then
+  python3 -c "
 import sqlite3
 import sys
 from pathlib import Path
@@ -55,9 +52,7 @@ else:
 
 conn.close()
 " "$1" "$2"
-   else
-     echo "⚠️  No patterns learned yet. Start coding to detect patterns!"
-   fi
-   ```
-
-2. **Display filtered patterns** from the current project's pattern database
+else
+  echo "⚠️  No patterns learned yet. Start coding to detect patterns!"
+fi
+```

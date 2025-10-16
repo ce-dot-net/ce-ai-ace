@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.8] - 2025-10-17
+
+### Fixed
+- **Slash Command Auto-Execution** - Fixed all slash commands to auto-execute bash blocks
+  - Added `!` prefix to all bash code blocks for automatic execution
+  - Commands now execute automatically instead of showing instructions
+  - Fixed all 8 commands: ace-clear, ace-train-offline, ace-status, ace-patterns, ace-force-reflect, ace-export-patterns, ace-import-patterns, ace-export-speckit
+  - Properly structured command markdown files per Claude Code documentation
+  - Removed manual execution requirement - commands work as expected
+
 ## [2.3.7] - 2025-10-17
 
 ### Changed
@@ -421,6 +431,7 @@ For existing users:
 
 ## Version History Summary
 
+- **v2.3.8** (2025-10-17): Slash command auto-execution fixes - All commands now execute automatically
 - **v2.3.7** (2025-10-17): Agent architecture clarification - Complete documentation and fallback removal
 - **v2.3.6** (2025-10-17): Database initialization fixes
 - **v2.3.5** (2025-10-16): Database table initialization fixes
@@ -481,7 +492,8 @@ When adding entries to this changelog:
 
 ---
 
-[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.7...HEAD
+[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.8...HEAD
+[2.3.8]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.7...v2.3.8
 [2.3.7]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.6...v2.3.7
 [2.3.6]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.5...v2.3.6
 [2.3.5]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.4...v2.3.5

@@ -3,9 +3,17 @@ description: Export learned patterns to share across projects
 allowed-tools: Bash
 ---
 
+# ACE Export Patterns
+
 Export your learned patterns to a JSON file for backup or cross-project sharing.
 
-```bash
+Exported patterns include:
+- Pattern definitions and metadata
+- Confidence scores and observations
+- Insights and recommendations
+- Evolution history
+
+!```bash
 # Locate ACE plugin
 if [ -n "$CLAUDE_PLUGIN_ROOT" ]; then
   PLUGIN_PATH="$CLAUDE_PLUGIN_ROOT"
@@ -21,9 +29,3 @@ fi
 # Export patterns
 python3 "$PLUGIN_PATH/scripts/pattern-portability.py" export --output ./my-patterns.json
 ```
-
-Exported patterns include:
-- Pattern definitions and metadata
-- Confidence scores and observations
-- Insights and recommendations
-- Evolution history

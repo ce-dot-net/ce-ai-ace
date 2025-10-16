@@ -8,12 +8,9 @@ allowed-tools: Bash
 
 Display comprehensive statistics about the ACE pattern learning system.
 
-## Steps:
-
-1. **Run stats from current directory**:
-   ```bash
-   if [ -f .ace-memory/patterns.db ]; then
-     python3 -c "
+!```bash
+if [ -f .ace-memory/patterns.db ]; then
+  python3 -c "
 import sqlite3
 from pathlib import Path
 
@@ -47,9 +44,7 @@ for name, conf, obs in patterns:
 
 conn.close()
 "
-   else
-     echo "⚠️  No patterns learned yet. Start coding to see patterns!"
-   fi
-   ```
-
-2. **Display statistics** from the patterns database in the current project
+else
+  echo "⚠️  No patterns learned yet. Start coding to see patterns!"
+fi
+```
