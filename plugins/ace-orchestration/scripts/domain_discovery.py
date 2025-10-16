@@ -89,98 +89,41 @@ CRITICAL: Do NOT hardcode domains. Infer them from the actual patterns and file 
 """
 
     try:
-        # Simplified domain discovery using heuristic analysis
-        # In production with Claude Code, this would use the Task tool to invoke domain-discoverer agent
-        # For now, use rule-based discovery from file paths and pattern descriptions
+        # Output patterns to context for Claude to analyze via domain-discoverer agent
+        # This allows Claude in interactive session to use the Task tool
 
-        concrete_domains = {}
-        abstract_patterns = {}
-        principles = {}
+        print(f"""
+🔬 ACE Domain Discovery Request
 
-        # Group patterns by file directory (concrete domains)
-        file_groups = {}
-        for p in pattern_summary:
-            file_path = p.get('file_path', '')
-            if not file_path:
-                continue
+{len(pattern_summary)} patterns detected. Please invoke the domain-discoverer agent to analyze these patterns and discover domain taxonomy.
 
-            # Extract directory structure for domain detection
-            path_parts = Path(file_path).parts
+<patterns_for_domain_discovery>
+{json.dumps(pattern_summary, indent=2)}
+</patterns_for_domain_discovery>
 
-            # Identify concrete domains from file paths
-            if 'plugins' in path_parts:
-                domain_key = 'claude-code-plugin-dev'
-            elif 'scripts' in path_parts:
-                domain_key = 'python-scripting'
-            elif 'agents' in path_parts:
-                domain_key = 'agent-development'
-            elif 'hooks' in path_parts:
-                domain_key = 'plugin-hooks'
-            else:
-                domain_key = 'general-python'
+Use the Task tool to invoke ace-orchestration:domain-discoverer agent with the patterns above.
+The agent will discover concrete domains, abstract patterns, and principles WITHOUT hardcoding.
 
-            if domain_key not in file_groups:
-                file_groups[domain_key] = []
-            file_groups[domain_key].append(p)
+Expected output format:
+- concrete: File-location specific domains (e.g., "claude-code-plugin-dev", "mcp-integration")
+- abstract: Architectural patterns (e.g., "plugin-architecture", "hook-lifecycle")
+- principles: General best practices (e.g., "separation-of-concerns", "modern-python-apis")
 
-        # Build concrete domains from file groups
-        for domain_id, patterns in file_groups.items():
-            if len(patterns) < 2:  # Need at least 2 patterns for a domain
-                continue
+Store the discovered taxonomy in .ace-memory/domain_taxonomy.json
+""")
 
-            concrete_domains[domain_id] = {
-                'description': f"Patterns found in {domain_id.replace('-', ' ')} code",
-                'evidence': list(set(p.get('file_path', '') for p in patterns)),
-                'patterns': [p.get('name', 'unnamed') for p in patterns],
-                'confidence': min(0.9, 0.5 + (len(patterns) * 0.1))
-            }
-
-        # Identify abstract patterns from descriptions
-        desc_keywords = {
-            'modern-python-apis': ['pathlib', 'f-string', 'comprehension'],
-            'defensive-coding': ['error handling', 'exception', 'validation'],
-            'code-quality': ['readability', 'maintainability', 'pythonic']
-        }
-
-        for abstract_id, keywords in desc_keywords.items():
-            matching_patterns = []
-            for p in pattern_summary:
-                desc = p.get('description', '').lower()
-                name = p.get('name', '').lower()
-                if any(kw in desc or kw in name for kw in keywords):
-                    matching_patterns.append(p.get('name', 'unnamed'))
-
-            if matching_patterns:
-                abstract_patterns[abstract_id] = {
-                    'description': f"Patterns related to {abstract_id.replace('-', ' ')}",
-                    'instances': list(concrete_domains.keys()),
-                    'confidence': 0.7
-                }
-
-        # Identify principles
-        if abstract_patterns:
-            principles['best-practices'] = {
-                'description': 'Modern Python best practices and idioms',
-                'applied_in': list(abstract_patterns.keys()),
-                'confidence': 0.8
-            }
-
-        taxonomy = {
-            'concrete': concrete_domains,
-            'abstract': abstract_patterns,
-            'principles': principles,
-            'metadata': {
-                'total_patterns_analyzed': len(pattern_summary),
-                'discovery_method': 'heuristic file-path and description analysis',
-                'discovered_at': subprocess.run(['date', '-Iseconds'], capture_output=True, text=True).stdout.strip()
+        # Return empty taxonomy - actual discovery happens via Claude + Task tool
+        return {
+            "concrete": {},
+            "abstract": {},
+            "principles": {},
+            "metadata": {
+                "total_patterns_analyzed": len(pattern_summary),
+                "discovery_method": "agent-based (domain-discoverer via Task tool)",
+                "discovered_at": subprocess.run(['date', '-Iseconds'], capture_output=True, text=True).stdout.strip(),
+                "status": "pending_agent_invocation"
             }
         }
-
-        domains_found = len(concrete_domains) + len(abstract_patterns)
-        if domains_found > 0:
-            print(f"✅ Discovered {domains_found} domains via heuristic analysis", file=sys.stderr)
-
-        return taxonomy
 
     except Exception as e:
         print(f"⚠️  Domain discovery error: {e}", file=sys.stderr)

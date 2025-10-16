@@ -40,178 +40,18 @@ PROJECT_ROOT = Path.cwd()
 DB_PATH = PROJECT_ROOT / '.ace-memory' / 'patterns.db'
 
 # ============================================================================
-# Pattern Definitions (from config/patterns.js)
+# Pattern Definitions - REMOVED (now uses semantic_pattern_extractor.py)
 # ============================================================================
 
-PATTERNS = [
-    # Python Patterns
-    {
-        'id': 'py-001',
-        'name': 'Use TypedDict for configs',
-        'regex': r'class\s+\w*[Cc]onfig\w*\(TypedDict\)',
-        'domain': 'python-typing',
-        'type': 'helpful',
-        'language': 'python',
-        'description': 'Define configuration with TypedDict for type safety and IDE support'
-    },
-    {
-        'id': 'py-002',
-        'name': 'Use dataclasses for data structures',
-        'regex': r'@dataclass\s+class\s+\w+',
-        'domain': 'python-datastructures',
-        'type': 'helpful',
-        'language': 'python',
-        'description': 'Use @dataclass decorator for simple data containers'
-    },
-    {
-        'id': 'py-003',
-        'name': 'Avoid bare except',
-        'regex': r'except\s*:',
-        'domain': 'python-error-handling',
-        'type': 'harmful',
-        'language': 'python',
-        'description': 'Bare except catches all exceptions including KeyboardInterrupt'
-    },
-    {
-        'id': 'py-004',
-        'name': 'Use context managers for file operations',
-        'regex': r'with\s+open\(',
-        'domain': 'python-io',
-        'type': 'helpful',
-        'language': 'python',
-        'description': 'with statement ensures files are properly closed'
-    },
-    {
-        'id': 'py-005',
-        'name': 'Use f-strings for formatting',
-        'regex': r'f["\']',
-        'domain': 'python-strings',
-        'type': 'helpful',
-        'language': 'python',
-        'description': 'f-strings are faster and more readable than .format() or %'
-    },
-    {
-        'id': 'py-006',
-        'name': 'Use list comprehensions',
-        'regex': r'\[[^\]]+\s+for\s+\w+\s+in\s+',
-        'domain': 'python-idioms',
-        'type': 'helpful',
-        'language': 'python',
-        'description': 'List comprehensions are more Pythonic and often faster'
-    },
-    {
-        'id': 'py-007',
-        'name': 'Use pathlib over os.path',
-        'regex': r'from pathlib import Path',
-        'domain': 'python-io',
-        'type': 'helpful',
-        'language': 'python',
-        'description': 'pathlib provides object-oriented path operations'
-    },
-    {
-        'id': 'py-008',
-        'name': 'Avoid mutable default arguments',
-        'regex': r'def\s+\w+\([^)]*=\s*\[\]',
-        'domain': 'python-gotchas',
-        'type': 'harmful',
-        'language': 'python',
-        'description': 'Mutable defaults are shared across function calls'
-    },
-
-    # JavaScript Patterns
-    {
-        'id': 'js-001',
-        'name': 'Use const for constants',
-        'regex': r'const\s+[A-Z_]+\s*=',
-        'domain': 'javascript-conventions',
-        'type': 'helpful',
-        'language': 'javascript',
-        'description': 'const prevents reassignment and signals intent'
-    },
-    {
-        'id': 'js-002',
-        'name': 'Use custom hooks for data fetching',
-        'regex': r'function\s+use[A-Z]\w*\(',
-        'domain': 'react-hooks',
-        'type': 'helpful',
-        'language': 'javascript',
-        'description': 'Custom hooks encapsulate reusable stateful logic'
-    },
-    {
-        'id': 'js-003',
-        'name': 'Avoid var keyword',
-        'regex': r'\bvar\s+\w+\s*=',
-        'domain': 'javascript-scope',
-        'type': 'harmful',
-        'language': 'javascript',
-        'description': 'var has function scope and hoisting issues'
-    },
-    {
-        'id': 'js-004',
-        'name': 'Use async/await over promises',
-        'regex': r'async\s+function|\basync\s*\(',
-        'domain': 'javascript-async',
-        'type': 'helpful',
-        'language': 'javascript',
-        'description': 'async/await makes asynchronous code more readable'
-    },
-    {
-        'id': 'js-005',
-        'name': 'Use arrow functions for callbacks',
-        'regex': r'\([^)]*\)\s*=>',
-        'domain': 'javascript-functions',
-        'type': 'helpful',
-        'language': 'javascript',
-        'description': 'Arrow functions have lexical this binding'
-    },
-    {
-        'id': 'js-006',
-        'name': 'Use destructuring for props',
-        'regex': r'const\s+{[^}]+}\s*=\s*props',
-        'domain': 'react-patterns',
-        'type': 'helpful',
-        'language': 'javascript',
-        'description': 'Destructuring makes prop usage more explicit'
-    },
-
-    # TypeScript Patterns
-    {
-        'id': 'ts-001',
-        'name': 'Define interface for object types',
-        'regex': r'interface\s+\w+\s*{',
-        'domain': 'typescript-types',
-        'type': 'helpful',
-        'language': 'typescript',
-        'description': 'Interfaces provide type safety and documentation'
-    },
-    {
-        'id': 'ts-002',
-        'name': 'Use type guards for narrowing',
-        'regex': r'function\s+is\w+\([^)]+\):\s*\w+\s+is\s+\w+',
-        'domain': 'typescript-guards',
-        'type': 'helpful',
-        'language': 'typescript',
-        'description': 'Type guards enable safe type narrowing'
-    },
-    {
-        'id': 'ts-003',
-        'name': 'Avoid any type',
-        'regex': r':\s*any\b',
-        'domain': 'typescript-types',
-        'type': 'harmful',
-        'language': 'typescript',
-        'description': 'any defeats the purpose of TypeScript'
-    },
-    {
-        'id': 'ts-004',
-        'name': 'Use union types',
-        'regex': r':\s*\w+\s*\|\s*\w+',
-        'domain': 'typescript-types',
-        'type': 'helpful',
-        'language': 'typescript',
-        'description': 'Union types express multiple possible types'
-    }
-]
+# PATTERNS array removed - patterns are now discovered dynamically from the codebase
+# using semantic analysis (Serena MCP) and AST parsing fallback.
+# This allows ACE to discover project-specific patterns like:
+# - Plugin architecture patterns (hooks, commands, agents)
+# - MCP integration patterns (uvx, ChromaDB)
+# - Task tool usage patterns
+# - Domain-specific API patterns
+#
+# See semantic_pattern_extractor.py for implementation
 
 # ============================================================================
 # Database Functions
@@ -419,32 +259,99 @@ def list_patterns() -> List[Dict]:
 # ============================================================================
 
 def detect_patterns(code: str, file_path: str) -> List[Dict]:
-    """Detect patterns in code using regex."""
-    detected = []
+    """
+    Detect patterns in code using semantic pattern extraction.
 
-    # Determine language from file extension
+    Uses semantic_pattern_extractor.py which:
+    1. Tries Serena MCP for symbolic analysis (best quality)
+    2. Falls back to AST parsing if Serena unavailable
+    3. Discovers project-specific patterns dynamically
+
+    Args:
+        code: Source code to analyze
+        file_path: Path to the file being analyzed
+
+    Returns:
+        List of detected patterns with metadata
+    """
+    try:
+        # Import semantic pattern extractor
+        sys.path.insert(0, str(PLUGIN_ROOT / 'scripts'))
+        from semantic_pattern_extractor import extract_patterns_hybrid
+
+        # Extract patterns using hybrid approach (Serena + AST)
+        detected = extract_patterns_hybrid(file_path, code)
+
+        # Normalize pattern format to match expected structure
+        normalized = []
+        for pattern in detected:
+            # Ensure required fields exist
+            normalized_pattern = {
+                'id': pattern.get('id', f"discovered-{hash(pattern.get('name', '')) % 10000}"),
+                'name': pattern.get('name', 'Unknown pattern'),
+                'description': pattern.get('description', ''),
+                'file_path': pattern.get('file_path', file_path),
+                'type': pattern.get('type', 'helpful'),  # Default to helpful
+                'domain': _infer_domain_from_pattern(pattern),
+                'language': _infer_language_from_file(file_path),
+                'detected_by': pattern.get('detected_by', 'semantic')
+            }
+            normalized.append(normalized_pattern)
+
+        return normalized
+
+    except Exception as e:
+        print(f"⚠️  Semantic pattern detection failed: {e}", file=sys.stderr)
+        import traceback
+        traceback.print_exc(file=sys.stderr)
+        return []
+
+
+def _infer_domain_from_pattern(pattern: Dict) -> str:
+    """
+    Infer domain from pattern metadata.
+
+    Uses file path and pattern type to assign domain.
+    This is a temporary heuristic until domain-discoverer agent runs.
+    """
+    file_path = pattern.get('file_path', '').lower()
+    pattern_type = pattern.get('type', '')
+
+    # Check for common architectural domains
+    if 'plugin' in file_path or 'hooks' in file_path:
+        return 'plugin-architecture'
+    elif 'mcp' in file_path or 'server' in file_path:
+        return 'mcp-integration'
+    elif 'agent' in file_path or 'task' in file_path:
+        return 'agent-orchestration'
+    elif pattern_type == 'file-location':
+        # Extract from file path (e.g., "services/stripe" -> "stripe-integration")
+        parts = file_path.split('/')
+        if len(parts) >= 2:
+            return f"{parts[-2]}-{parts[-1].split('.')[0]}"
+    elif pattern_type == 'api-usage':
+        # Extract from pattern ID (e.g., "api-stripe" -> "stripe-api")
+        return pattern.get('id', 'unknown-api')
+    elif pattern_type == 'architectural':
+        return pattern.get('id', 'unknown-arch')
+
+    # Default fallback
+    return 'general'
+
+
+def _infer_language_from_file(file_path: str) -> str:
+    """Infer programming language from file extension."""
     ext = Path(file_path).suffix
     lang_map = {
         '.py': 'python',
         '.js': 'javascript',
         '.jsx': 'javascript',
         '.ts': 'typescript',
-        '.tsx': 'typescript'
+        '.tsx': 'typescript',
+        '.md': 'markdown',
+        '.json': 'json'
     }
-
-    language = lang_map.get(ext)
-    if not language:
-        return []
-
-    # Check each pattern
-    for pattern in PATTERNS:
-        if pattern['language'] != language:
-            continue
-
-        if re.search(pattern['regex'], code):
-            detected.append(pattern.copy())
-
-    return detected
+    return lang_map.get(ext, 'unknown')
 
 # ============================================================================
 # Evidence Gathering
