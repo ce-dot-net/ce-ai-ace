@@ -400,12 +400,12 @@ def invoke_reflector_agent(code: str, patterns: List[Dict], evidence: Dict, file
     """
     Invoke the reflector agent to analyze patterns.
 
-    Uses subprocess to call the agent via command line, providing structured
-    JSON input and expecting structured JSON output.
+    Outputs request to stderr asking Claude to invoke the reflector agent via Task tool.
+    This implements the ACE research paper's agent-based Reflector architecture.
     """
     # Prepare input for reflector
     reflector_input = {
-        'code': code,
+        'code': code[:1000],  # Truncate code for display
         'patterns': [
             {
                 'id': p['id'],
@@ -416,113 +416,59 @@ def invoke_reflector_agent(code: str, patterns: List[Dict], evidence: Dict, file
         ],
         'evidence': {
             'testStatus': evidence.get('test_status', 'none'),
-            'errorLogs': evidence.get('error_logs', ''),
+            'errorLogs': evidence.get('error_logs', '')[:200] if evidence.get('error_logs') else '',
             'hasTests': evidence.get('has_tests', False)
         },
         'fileContext': file_path
     }
 
     try:
-        # Write input to temp file for agent
-        import tempfile
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
-            json.dump(reflector_input, f, indent=2)
-            input_file = f.name
+        # Output request to stderr for Claude to invoke agent via Task tool
+        print(f"""
+🔬 ACE Reflector Request
 
-        # Invoke reflector agent (simplified invocation via python subprocess)
-        # In production, this would use Claude Code's Task tool or agent framework
-        result = subprocess.run(
-            [
-                'python3', '-c',
-                f'''
-import json
-import sys
+{len(patterns)} pattern(s) detected in {file_path}. Please invoke the reflector agent to analyze pattern effectiveness.
 
-# Read input
-with open("{input_file}", "r") as f:
-    input_data = json.load(f)
+<reflector_analysis_request>
+{json.dumps(reflector_input, indent=2)}
+</reflector_analysis_request>
 
-# Simplified reflection logic (in production, this would call Claude API)
-patterns_analyzed = []
-for pattern in input_data["patterns"]:
-    test_status = input_data["evidence"]["testStatus"]
+Use the Task tool to invoke ace-orchestration:reflector agent with the data above.
+The agent will analyze each pattern and determine:
+1. Was the pattern applied correctly?
+2. Did it contribute to success, failure, or neutral outcome?
+3. What specific insights can we learn from this application?
+4. When should this pattern be used or avoided?
 
-    # Basic analysis
-    if test_status == "passed":
-        contributed_to = "success"
-        confidence = 0.8
-        insight = f"Pattern '{{pattern['name']}}' applied in {{input_data['fileContext']}}. Tests passed successfully."
-    elif test_status == "failed":
-        contributed_to = "failure"
-        confidence = 0.7
-        insight = f"Pattern '{{pattern['name']}}' detected but tests failed. May need review."
-    else:
-        contributed_to = "neutral"
-        confidence = 0.5
-        insight = f"Pattern '{{pattern['name']}}' detected. No test results available for validation."
+Expected output format (JSON):
+- patterns_analyzed: List of analysis results for each pattern
+  - pattern_id: The pattern identifier
+  - applied_correctly: true/false
+  - contributed_to: "success"/"failure"/"neutral"
+  - confidence: 0.0-1.0
+  - insight: Specific observation with evidence
+  - recommendation: Actionable guidance
 
-    patterns_analyzed.append({{
-        "pattern_id": pattern["id"],
-        "applied_correctly": True,
-        "contributed_to": contributed_to,
-        "confidence": confidence,
-        "insight": insight,
-        "recommendation": pattern["description"]
-    }})
+Store the analysis results in .ace-memory/reflections/{Path(file_path).name}.json
+""", file=sys.stderr)
 
-output = {{
-    "patterns_analyzed": patterns_analyzed,
-    "meta_insights": [f"Analysis based on test status: {{test_status}}"]
-}}
-
-print(json.dumps(output))
-'''
-            ],
-            capture_output=True,
-            text=True,
-            timeout=30
-        )
-
-        # Clean up temp file
-        Path(input_file).unlink(missing_ok=True)
-
-        if result.returncode != 0:
-            print(f"⚠️  Reflector agent error: {result.stderr}", file=sys.stderr)
-            return fallback_reflection(patterns, evidence)
-
-        # Parse JSON output
-        reflection = json.loads(result.stdout)
-        return reflection
+        # Return empty result - agent invocation is required
+        # ACE paper does NOT specify fallbacks - when Reflector cannot analyze,
+        # this is an acknowledged limitation (Appendix B)
+        return {
+            'patterns_analyzed': [],
+            'meta_insights': ['Waiting for agent-based reflector analysis']
+        }
 
     except Exception as e:
-        print(f"⚠️  Reflector invocation failed: {e}", file=sys.stderr)
-        return fallback_reflection(patterns, evidence)
-
-
-def fallback_reflection(patterns: List[Dict], evidence: Dict) -> Dict:
-    """Fallback heuristic reflection when agent invocation fails."""
-    test_passed = evidence.get('test_status') == 'passed'
-
-    patterns_analyzed = []
-    for pattern in patterns:
-        contributed_to = 'success' if test_passed else 'neutral'
-        confidence = 0.7 if test_passed else 0.5
-
-        patterns_analyzed.append({
-            'pattern_id': pattern['id'],
-            'applied_correctly': True,
-            'contributed_to': contributed_to,
-            'confidence': confidence,
-            'insight': f"Pattern '{pattern['name']}' detected. Tests {evidence.get('test_status', 'unknown')}.",
-            'recommendation': pattern['description']
-        })
-
-    return {
-        'patterns_analyzed': patterns_analyzed,
-        'meta_insights': [
-            f"Fallback analysis based on test results: {evidence.get('test_status', 'unknown')}"
-        ]
-    }
+        print(f"⚠️  Reflector request failed: {e}", file=sys.stderr)
+        import traceback
+        traceback.print_exc(file=sys.stderr)
+        # No fallback - ACE paper acknowledges this as a limitation
+        return {
+            'patterns_analyzed': [],
+            'meta_insights': ['Reflector invocation failed - no analysis available']
+        }
 
 
 def reflect(code: str, patterns: List[Dict], evidence: Dict, file_path: str, max_rounds: int = MAX_REFINEMENT_ROUNDS) -> Dict:
@@ -622,10 +568,13 @@ def invoke_reflector_agent_with_feedback(
     1. Identify weaknesses in previous analysis
     2. Provide more specific evidence
     3. Improve recommendations
+
+    Outputs request to stderr asking Claude to invoke the reflector agent via Task tool
+    with refinement context from the previous round.
     """
     # Prepare enhanced input with previous insights
     reflector_input = {
-        'code': code,
+        'code': code[:1000],  # Truncate code for display
         'patterns': [
             {
                 'id': p['id'],
@@ -636,11 +585,21 @@ def invoke_reflector_agent_with_feedback(
         ],
         'evidence': {
             'testStatus': evidence.get('test_status', 'none'),
-            'errorLogs': evidence.get('error_logs', ''),
+            'errorLogs': evidence.get('error_logs', '')[:200] if evidence.get('error_logs') else '',
             'hasTests': evidence.get('has_tests', False)
         },
         'fileContext': file_path,
-        'previousInsights': previous_insights,
+        'previousInsights': {
+            'patterns_analyzed': [
+                {
+                    'pattern_id': p.get('pattern_id'),
+                    'insight': p.get('insight'),
+                    'recommendation': p.get('recommendation'),
+                    'confidence': p.get('confidence')
+                }
+                for p in previous_insights.get('patterns_analyzed', [])
+            ]
+        },
         'roundNumber': round_num,
         'refinementPrompt': (
             f"REFINEMENT ROUND {round_num}: Review your previous analysis and improve it.\n\n"
@@ -659,98 +618,45 @@ def invoke_reflector_agent_with_feedback(
     }
 
     try:
-        # Write input to temp file
-        import tempfile
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
-            json.dump(reflector_input, f, indent=2)
-            input_file = f.name
+        # Output request to stderr for Claude to invoke agent via Task tool
+        print(f"""
+🔬 ACE Reflector Refinement Request (Round {round_num})
 
-        # Invoke reflector with refinement prompt
-        result = subprocess.run(
-            [
-                'python3', '-c',
-                f'''
-import json
-import sys
+Refinement round {round_num} for {file_path}. Please invoke the reflector agent to refine previous insights.
 
-# Read input
-with open("{input_file}", "r") as f:
-    input_data = json.load(f)
+<reflector_refinement_request>
+{json.dumps(reflector_input, indent=2)}
+</reflector_refinement_request>
 
-# Enhanced reflection logic with refinement
-patterns_analyzed = []
-for pattern in input_data["patterns"]:
-    test_status = input_data["evidence"]["testStatus"]
-    round_num = input_data["roundNumber"]
+Use the Task tool to invoke ace-orchestration:reflector-prompt agent with the refinement data above.
+The agent will refine the previous insights by:
+1. Adding more specific evidence from the code
+2. Making recommendations more actionable
+3. Identifying edge cases or limitations initially missed
+4. Increasing confidence if justified by code evidence
 
-    # Get previous insight for this pattern
-    prev_insights = input_data.get("previousInsights", {{}}).get("patterns_analyzed", [])
-    prev_insight = next(
-        (p for p in prev_insights if p.get("pattern_id") == pattern["id"]),
-        None
-    )
+Expected output format (JSON):
+- patterns_analyzed: List of REFINED analysis results (should be more detailed than previous round)
+  - pattern_id: The pattern identifier
+  - applied_correctly: true/false
+  - contributed_to: "success"/"failure"/"neutral"
+  - confidence: 0.0-1.0 (may increase if more evidence found)
+  - insight: MORE SPECIFIC observation with concrete evidence from code
+  - recommendation: MORE ACTIONABLE guidance with examples
 
-    # Refine confidence based on round number (simulated improvement)
-    if test_status == "passed":
-        base_confidence = 0.8
-        contributed_to = "success"
-        # Increase confidence slightly each round
-        confidence = min(0.95, base_confidence + (round_num * 0.03))
-        insight = f"Pattern '{{pattern['name']}}' applied in {{input_data['fileContext']}}. Tests passed successfully. [Round {{round_num}}: Enhanced analysis with code-specific evidence]"
-    elif test_status == "failed":
-        base_confidence = 0.7
-        contributed_to = "failure"
-        confidence = min(0.85, base_confidence + (round_num * 0.02))
-        insight = f"Pattern '{{pattern['name']}}' detected but tests failed. May need review. [Round {{round_num}}: Additional context suggests potential conflict with codebase conventions]"
-    else:
-        base_confidence = 0.5
-        contributed_to = "neutral"
-        confidence = min(0.65, base_confidence + (round_num * 0.02))
-        insight = f"Pattern '{{pattern['name']}}' detected. No test results available for validation. [Round {{round_num}}: Code analysis suggests pattern is consistently applied]"
+Store the refined analysis results in .ace-memory/reflections/{Path(file_path).name}_round{round_num}.json
+""", file=sys.stderr)
 
-    # Add more details in refinement rounds
-    if prev_insight:
-        # Enhance the previous insight
-        prev_rec = prev_insight.get('recommendation', pattern['description'])
-        recommendation = f"{{prev_rec}} [Refinement: Consider edge cases and ensure consistent application across similar code patterns]"
-    else:
-        recommendation = pattern["description"]
-
-    patterns_analyzed.append({{
-        "pattern_id": pattern["id"],
-        "applied_correctly": True,
-        "contributed_to": contributed_to,
-        "confidence": confidence,
-        "insight": insight,
-        "recommendation": recommendation
-    }})
-
-output = {{
-    "patterns_analyzed": patterns_analyzed,
-    "meta_insights": [f"Refinement round {{round_num}} complete: Enhanced analysis with {{len(patterns_analyzed)}} patterns"]
-}}
-
-print(json.dumps(output))
-'''
-            ],
-            capture_output=True,
-            text=True,
-            timeout=30
-        )
-
-        # Clean up
-        Path(input_file).unlink(missing_ok=True)
-
-        if result.returncode != 0:
-            print(f"⚠️  Refinement failed: {result.stderr}", file=sys.stderr)
-            return previous_insights
-
-        # Parse refined output
-        refined = json.loads(result.stdout)
-        return refined
+        # No fallback - ACE paper does NOT specify fallbacks for refinement
+        # Return previous insights unchanged if agent cannot refine
+        # This is an acknowledged limitation (Appendix B)
+        return previous_insights
 
     except Exception as e:
-        print(f"⚠️  Refinement error: {e}", file=sys.stderr)
+        print(f"⚠️  Reflector refinement request failed: {e}", file=sys.stderr)
+        import traceback
+        traceback.print_exc(file=sys.stderr)
+        # No fallback - return previous insights unchanged
         return previous_insights
 
 # ============================================================================
