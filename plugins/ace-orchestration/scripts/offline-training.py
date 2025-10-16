@@ -172,6 +172,13 @@ def run_offline_training(epochs: int = MAX_EPOCHS, source: str = 'all', verbose:
         print(f"Source: {source}")
         print()
 
+    # Initialize database with all tables (patterns, insights, observations)
+    # Import ace-cycle.py to get init_database
+    _ace_spec = importlib.util.spec_from_file_location("ace_cycle", Path(__file__).parent / "ace-cycle.py")
+    _ace_cycle = importlib.util.module_from_spec(_ace_spec)
+    _ace_spec.loader.exec_module(_ace_cycle)
+    _ace_cycle.init_database()
+
     # Scan for training data
     if verbose:
         print("📂 Scanning codebase for training examples...")

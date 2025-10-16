@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.5] - 2025-10-16
+
+### Fixed
+- **Database Table Initialization** - Fixed offline training to initialize all database tables before use
+  - Error: `sqlite3.OperationalError: no such table: patterns` when running `/ace-train-offline`
+  - Root cause: `offline-training.py` created epochs tables via `epoch-manager.py` but didn't initialize main `patterns` table
+  - Solution: Call `init_database()` from `ace-cycle.py` at start of offline training to create all required tables
+  - Offline training now properly initializes complete database schema (patterns, insights, observations, epochs)
+
 ## [2.3.4] - 2025-10-16
 
 ### Fixed
