@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.19] - 2025-10-17
+
+### Fixed
+- **domain-discoverer agent** - Added Write tool access
+  - Agent can now save discovered patterns to response files
+  - Required for queue-based offline training workflow
+  - Agent reads code, discovers patterns, writes JSON response
+
 ## [2.3.18] - 2025-10-17
 
 ### Fixed

@@ -1,7 +1,7 @@
 ---
 name: domain-discoverer
 description: Discovers domain taxonomy from coding patterns through bottom-up analysis (no hardcoded domains)
-tools: Read, Grep, Glob
+tools: Read, Grep, Glob, Write
 model: sonnet
 ---
 
