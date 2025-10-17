@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.25] - 2025-10-17
+
+### Changed
+- **Cleanup and spec-kit updates** - Removed old backups and updated spec-kit playbooks
+  - Removed obsolete .ace-memory backups from testing sessions
+  - Removed old CHANGELOG version files (v2.3.9, v2.3.15)
+  - Updated spec-kit playbooks with patterns from successful offline training test
+  - Replaced placeholder test patterns with actual discovered patterns
+  - 16 new spec-kit playbooks generated from domain-discoverer agent analysis
+
 ## [2.3.24] - 2025-10-17
 
 ### Fixed
