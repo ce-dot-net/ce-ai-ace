@@ -1,6 +1,6 @@
 # ACE Plugin for Claude Code CLI
 
-![Version](https://img.shields.io/badge/version-2.3.7-blue) ![License](https://img.shields.io/badge/license-MIT-green) [![Research](https://img.shields.io/badge/arXiv-2510.04618-red)](https://arxiv.org/abs/2510.04618)
+![Version](https://img.shields.io/badge/version-2.3.9-blue) ![License](https://img.shields.io/badge/license-MIT-green) [![Research](https://img.shields.io/badge/arXiv-2510.04618-red)](https://arxiv.org/abs/2510.04618)
 
 **Automatic Pattern Learning through Agentic Context Engineering**
 
@@ -13,8 +13,9 @@ Based on research from Stanford University, SambaNova Systems, and UC Berkeley (
 ACE (Agentic Context Engineering) is a Claude Code plugin that **automatically learns from your coding patterns** and builds a comprehensive, evolving playbook (`CLAUDE.md`) to improve your development workflow.
 
 Instead of fine-tuning models or manually curating prompts, ACE:
-- **Detects patterns** in your code automatically (Python, JavaScript, TypeScript)
-- **Analyzes effectiveness** using test results and execution feedback
+- **Discovers patterns** through agent-based analysis (Python, JavaScript, TypeScript)
+- **Learns from feedback** through Generator helpful/harmful tagging
+- **Self-improves** patterns based on actual usage effectiveness
 - **Curates knowledge** deterministically (research-backed 85% similarity threshold)
 - **Grows a playbook** that evolves with your codebase
 
@@ -142,9 +143,13 @@ The plugin works **100% automatically**:
 └──────┬──────┘
        │
        ▼
-┌─────────────────┐
-│ Detect Patterns │ (20+ predefined patterns)
-└──────┬──────────┘
+┌─────────────────────────────────────┐
+│ Discover Patterns 🔍                │
+│ (Agent-based - NO hardcoded!)       │
+│ • Reflector analyzes raw code       │
+│ • Identifies imports, APIs, patterns│
+│ • Discovers from YOUR codebase      │
+└──────┬──────────────────────────────┘
        │
        ▼
 ┌─────────────────┐
@@ -174,7 +179,17 @@ The plugin works **100% automatically**:
 │ • Bulletized structure
 │ • ACE sections (STRATEGIES, CODE SNIPPETS, etc.)
 │ • Incremental delta updates
-└─────────────────────────────┘
+└──────┬──────────────────────┘
+       │
+       ▼
+┌─────────────────────────────────┐
+│ Generator Feedback Loop 🔄      │
+│ (NEW in v2.3.9)                 │
+│ • Tag bullets as helpful/harmful│
+│ • Increment counters            │
+│ • Recalculate confidence        │
+│ • Patterns self-improve! ✨     │
+└─────────────────────────────────┘
 ```
 
 ### Three Roles (ACE Framework)
@@ -197,12 +212,13 @@ The plugin works **100% automatically**:
 
 ## ✨ Features
 
-### Automatic Pattern Detection
-20+ built-in patterns for Python, JavaScript, TypeScript:
-- **Python**: TypedDict, dataclasses, f-strings, list comprehensions, context managers
-- **JavaScript**: custom hooks, async/await, arrow functions, destructuring
-- **TypeScript**: interfaces, type guards, union types
-- **Anti-patterns**: bare except, var keyword, any type
+### Agent-Based Pattern Discovery ⭐ NEW (v2.3.9)
+TRUE ACE architecture - patterns discovered from YOUR code:
+- **No hardcoded keywords** - Reflector agent analyzes raw code
+- **Discovers actual patterns** - imports, APIs, architectural choices
+- **Codebase-specific** - learns what YOU actually use
+- **Python, JavaScript, TypeScript** - multi-language support
+- **Examples**: subprocess usage, pathlib operations, SQLite queries
 
 ### Intelligent Reflection
 The **Reflector agent** analyzes:
@@ -526,11 +542,12 @@ MIT License - See LICENSE file for details
 
 View the [full changelog](CHANGELOG.md) for detailed version history.
 
-**Latest Release**: [v2.3.7](https://github.com/ce-dot-net/ce-ai-ace/releases/tag/v2.3.7) (October 2025)
-- Agent architecture clarification - Explicit registration and comprehensive documentation
-- Fixed missing YAML frontmatter in reflector-prompt agent
-- Removed all fallback heuristics (aligns with research paper Appendix B)
-- Complete agents/README.md with invocation patterns and design decisions
+**Latest Release**: [v2.3.9](https://github.com/ce-dot-net/ce-ai-ace/releases/tag/v2.3.9) (October 2025)
+- **TRUE ACE Architecture** - Agent-based pattern discovery (no hardcoded keywords!)
+- **Generator Feedback Loop** - Patterns self-improve through helpful/harmful tagging
+- **Confidence with Feedback** - New formula incorporates usage effectiveness
+- **Complete Documentation** - Architecture guide, testing guide, comprehensive changelog
+- **Breaking Change**: Removed hardcoded pattern detection for true agent-based discovery
 
 **Previous Releases**: [GitHub Releases](https://github.com/ce-dot-net/ce-ai-ace/releases)
 

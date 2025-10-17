@@ -1,8 +1,17 @@
 # ACE Plugin - Complete Implementation Guide
 
-**Version:** 2.0.0
+**Version:** 2.3.9 (TRUE ACE Architecture)
 **Based on:** [Agentic Context Engineering (arXiv:2510.04618v1)](https://arxiv.org/abs/2510.04618)
 **Authors:** Stanford University, SambaNova Systems, UC Berkeley
+
+> **⚠️ MAJOR UPDATE (v2.3.9)**: This guide is being updated to reflect the TRUE ACE architecture.
+> Key changes:
+> - ✅ Agent-based pattern discovery (NO hardcoded keywords!)
+> - ✅ Generator feedback loop for pattern self-improvement
+> - ✅ Confidence calculation incorporates usage feedback
+> - ❌ Removed deprecated hardcoded pattern detection
+>
+> See [CHANGELOG_v2.3.9.md](/CHANGELOG_v2.3.9.md) and [docs/ACE_TRUE_ARCHITECTURE.md](/docs/ACE_TRUE_ARCHITECTURE.md) for details.
 
 ---
 
