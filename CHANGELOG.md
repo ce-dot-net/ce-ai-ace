@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.21] - 2025-10-17
+
+### Fixed
+- **Offline training autonomous agent invocation** - Training now runs fully automatically
+  - Removed interactive pause/queue workflow
+  - `batch_reflect_via_agent()` now directly invokes domain-discoverer agent via subprocess
+  - Agents run autonomously during training epochs (no manual intervention needed)
+  - Responses cached in discovery queue for multi-epoch reuse
+  - Implements TRUE ACE research paper offline training (autonomous, not interactive)
+  - Aligns with paper Section 4.1: offline optimization should be automated
+
 ## [2.3.20] - 2025-10-17
 
 ### Fixed

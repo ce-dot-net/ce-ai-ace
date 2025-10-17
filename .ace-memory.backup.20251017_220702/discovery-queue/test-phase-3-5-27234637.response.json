@@ -1,0 +1,174 @@
+{
+  "patterns": [
+    {
+      "id": "custom-test-decorator",
+      "name": "Custom test decorator with global counters",
+      "domain": "python-testing",
+      "type": "helpful",
+      "description": "Implement custom @test decorator that wraps functions, catches exceptions, updates global test counters (tests_passed/tests_failed), and prints status with emojis",
+      "language": "python",
+      "confidence": 0.95,
+      "contributed_to": "success"
+    },
+    {
+      "id": "pathlib-over-string-paths",
+      "name": "Use pathlib.Path for file operations",
+      "domain": "python-file-handling",
+      "type": "helpful",
+      "description": "Use pathlib.Path objects (Path('.ace-memory/patterns.db'), Path('hooks/hooks.json')) instead of string paths for file existence checks and path manipulation",
+      "language": "python",
+      "confidence": 0.9,
+      "contributed_to": "success"
+    },
+    {
+      "id": "sqlite-schema-introspection",
+      "name": "PRAGMA table_info for schema validation",
+      "domain": "sqlite-database",
+      "type": "helpful",
+      "description": "Use 'PRAGMA table_info(patterns)' to introspect database schema, fetch column names, and verify expected columns (bullet_id, helpful_count, harmful_count) exist",
+      "language": "python",
+      "confidence": 0.92,
+      "contributed_to": "success"
+    },
+    {
+      "id": "graceful-missing-resource-handling",
+      "name": "Return True for missing optional resources",
+      "domain": "test-design",
+      "type": "helpful",
+      "description": "Tests return True with warning emoji when optional resources don't exist yet (database, cache dir, CLAUDE.md) instead of failing, allowing tests to pass on fresh installations",
+      "language": "python",
+      "confidence": 0.88,
+      "contributed_to": "success"
+    },
+    {
+      "id": "dynamic-module-import",
+      "name": "Use importlib.util for script imports",
+      "domain": "python-module-loading",
+      "type": "helpful",
+      "description": "Use importlib.util.spec_from_file_location and module_from_spec to dynamically load Python scripts (serena-pattern-detector.py) from file paths without package structure",
+      "language": "python",
+      "confidence": 0.87,
+      "contributed_to": "success"
+    },
+    {
+      "id": "sys-path-insert-for-imports",
+      "name": "sys.path.insert(0, 'scripts') for local imports",
+      "domain": "python-module-loading",
+      "type": "helpful",
+      "description": "Prepend 'scripts' directory to sys.path to enable imports from non-package directories (playbook_delta_updater, serena_detector)",
+      "language": "python",
+      "confidence": 0.85,
+      "contributed_to": "success"
+    },
+    {
+      "id": "set-comprehension-column-check",
+      "name": "Set comprehension for column existence checks",
+      "domain": "python-data-structures",
+      "type": "helpful",
+      "description": "Use set comprehension {row[1] for row in cursor.fetchall()} to extract column names from PRAGMA results, then use 'in columns' for membership testing",
+      "language": "python",
+      "confidence": 0.86,
+      "contributed_to": "success"
+    },
+    {
+      "id": "json-config-validation",
+      "name": "Load and validate JSON config structure",
+      "domain": "ace-plugin-hooks",
+      "type": "helpful",
+      "description": "Load hooks/hooks.json, extract configured hook names from hooks.get('hooks', {}).keys(), and compare against expected hooks (AgentStart, AgentEnd, PreToolUse, PostToolUse, SessionEnd)",
+      "language": "python",
+      "confidence": 0.91,
+      "contributed_to": "success"
+    },
+    {
+      "id": "file-executable-check",
+      "name": "Check file executable permissions with st_mode",
+      "domain": "python-file-handling",
+      "type": "helpful",
+      "description": "Use path.stat().st_mode & 0o111 to verify script files have executable permissions, warn if missing",
+      "language": "python",
+      "confidence": 0.84,
+      "contributed_to": "success"
+    },
+    {
+      "id": "embeddings-backend-detection",
+      "name": "Test embeddings with backend info",
+      "domain": "ace-embeddings",
+      "type": "helpful",
+      "description": "Test embeddings engine by calling calculate_semantic_similarity, validate result in range 0.0-1.0, and call get_backend_info() to determine if OpenAI/Local/Fallback backend is active",
+      "language": "python",
+      "confidence": 0.89,
+      "contributed_to": "success"
+    },
+    {
+      "id": "global-test-counters",
+      "name": "Global test_passed/test_failed counters",
+      "domain": "python-testing",
+      "type": "helpful",
+      "description": "Use module-level global variables (tests_passed, tests_failed) updated by decorator to track test results across all test functions",
+      "language": "python",
+      "confidence": 0.83,
+      "contributed_to": "success"
+    },
+    {
+      "id": "sys-exit-with-status",
+      "name": "sys.exit(0) for pass, sys.exit(1) for fail",
+      "domain": "python-testing",
+      "type": "helpful",
+      "description": "Use sys.exit(0) when all tests pass, sys.exit(1) when tests fail, enabling CI/CD integration and shell script error handling",
+      "language": "python",
+      "confidence": 0.9,
+      "contributed_to": "success"
+    },
+    {
+      "id": "sqlite-table-existence-check",
+      "name": "Query sqlite_master for table existence",
+      "domain": "sqlite-database",
+      "type": "helpful",
+      "description": "Use 'SELECT name FROM sqlite_master WHERE type='table' AND name='epochs'' to check if specific tables exist before querying them",
+      "language": "python",
+      "confidence": 0.88,
+      "contributed_to": "success"
+    },
+    {
+      "id": "emoji-test-output",
+      "name": "Unicode emojis for test status indicators",
+      "domain": "test-design",
+      "type": "helpful",
+      "description": "Use emojis (🧪 for testing, ✅ for pass, ❌ for fail, ⚠️ for warnings, 📊 for summary) to make test output visually scannable",
+      "language": "python",
+      "confidence": 0.82,
+      "contributed_to": "success"
+    },
+    {
+      "id": "ace-memory-dir-pattern",
+      "name": "Use .ace-memory directory for state",
+      "domain": "ace-plugin-architecture",
+      "type": "helpful",
+      "description": "Store plugin state (patterns.db, embeddings cache) in .ace-memory directory, check for directory existence and file count with Path.glob('*')",
+      "language": "python",
+      "confidence": 0.93,
+      "contributed_to": "success"
+    },
+    {
+      "id": "hook-script-validation-pattern",
+      "name": "Validate hook script existence and permissions",
+      "domain": "ace-plugin-hooks",
+      "type": "helpful",
+      "description": "Define list of required hook scripts (inject-playbook.py, analyze-agent-output.py, validate-patterns.py, ace-cycle.py, ace-session-end.py), verify each exists and has executable permissions",
+      "language": "python",
+      "confidence": 0.9,
+      "contributed_to": "success"
+    },
+    {
+      "id": "boolean-flag-accumulation",
+      "name": "all_exist boolean flag pattern",
+      "domain": "python-testing",
+      "type": "helpful",
+      "description": "Initialize all_exist = True, set to False when any validation fails, return accumulated result at end (allows testing all items before returning)",
+      "language": "python",
+      "confidence": 0.81,
+      "contributed_to": "success"
+    }
+  ]
+}

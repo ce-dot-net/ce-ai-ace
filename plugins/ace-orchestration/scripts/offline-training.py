@@ -160,98 +160,68 @@ def scan_codebase_for_training(source: str = 'all') -> List[Dict]:
 
 def batch_reflect_via_agent(code: str, file_path: str, language: str) -> List[Dict]:
     """
-    Pattern discovery via agent invocation (interactive mode).
+    Pattern discovery via autonomous agent invocation.
 
     TRUE ACE Architecture: Patterns are DISCOVERED by agents analyzing code,
     NOT matched against hardcoded keywords.
 
-    This function outputs a request for Claude to invoke the domain-discoverer agent.
-    The agent will analyze the code and discover domain taxonomy and patterns.
+    This function invokes the domain-discoverer agent to analyze code and
+    discover domain taxonomy and patterns autonomously.
 
-    Returns discovered patterns from agent analysis (empty until agent responds).
+    Returns discovered patterns from agent analysis.
     """
-    # Prepare agent invocation request
-    request = {
-        'code_snippet': code[:2000],  # First 2000 chars
-        'full_code_length': len(code),
-        'file_path': file_path,
-        'language': language,
-        'training_mode': 'offline'
-    }
-
-    print(f"""
-🔬 ACE Domain Discovery Request (Offline Training)
-
-File: {file_path} ({len(code)} chars, language: {language})
-
-Please invoke the ace-orchestration:domain-discoverer agent to analyze this code
-and discover domain taxonomy through bottom-up pattern analysis.
-
-<domain_discovery_request>
-{json.dumps(request, indent=2)}
-</domain_discovery_request>
-
-Use the Task tool to invoke the domain-discoverer agent with the data above.
-
-The agent will:
-1. Analyze the code to identify patterns (NO hardcoded keywords!)
-2. Discover patterns from actual code evidence
-3. Return patterns in database format
-
-**CRITICAL**: Store results in .ace-memory/domains/{file_path}.json
-
-Required JSON format:
-{{
-  "patterns": [
-    {{
-      "id": "unique-pattern-id",
-      "name": "Pattern Name",
-      "domain": "domain-name",
-      "type": "positive",
-      "description": "What this pattern does",
-      "language": "{language}",
-      "confidence": 0.0-1.0,
-      "contributed_to": "success" | "failure" | "neutral"
-    }}
-  ]
-}}
-""", file=sys.stderr)
-
-    # Write discovery request to queue for batch processing
+    # Create unique request ID from file path (deterministic hash)
     queue_dir = PROJECT_ROOT / '.ace-memory' / 'discovery-queue'
     queue_dir.mkdir(parents=True, exist_ok=True)
 
-    # Create unique request ID from file path (deterministic hash)
     hash_obj = hashlib.md5(file_path.encode())
     request_id = Path(file_path).stem + '-' + hash_obj.hexdigest()[:8]
-    request_file = queue_dir / f'{request_id}.request.json'
     response_file = queue_dir / f'{request_id}.response.json'
 
-    # Check if response already exists BEFORE writing request
+    # Check if response already exists (cached from previous run)
     if response_file.exists():
         try:
             with open(response_file, 'r') as f:
                 agent_output = json.load(f)
             return agent_output.get('patterns', [])
         except Exception as e:
-            print(f"⚠️  Error reading response: {e}", file=sys.stderr)
+            print(f"⚠️  Error reading cached response: {e}", file=sys.stderr)
 
-    # Write request only if no response exists yet
-    if not request_file.exists():
-        with open(request_file, 'w') as f:
-            json.dump(request, f, indent=2)
+    # Invoke domain-discoverer agent via subprocess
+    try:
+        agent_script = PLUGIN_ROOT / 'agents' / 'domain-discoverer.py'
 
-    # Response doesn't exist yet - check again after queue is processed
-    if response_file.exists():
-        try:
-            with open(response_file, 'r') as f:
-                agent_output = json.load(f)
+        result = subprocess.run(
+            ['python3', str(agent_script)],
+            input=json.dumps({
+                'code': code,
+                'file_path': file_path,
+                'language': language,
+                'training_mode': 'offline'
+            }),
+            capture_output=True,
+            text=True,
+            timeout=60
+        )
+
+        if result.returncode == 0 and result.stdout:
+            agent_output = json.loads(result.stdout)
+
+            # Cache the response for future epochs
+            with open(response_file, 'w') as f:
+                json.dump(agent_output, f, indent=2)
+
             return agent_output.get('patterns', [])
-        except Exception as e:
-            print(f"⚠️  Error reading response: {e}", file=sys.stderr)
+        else:
+            print(f"⚠️  Agent invocation failed for {file_path}: {result.stderr}", file=sys.stderr)
+            return []
 
-    # No response yet - agent hasn't processed this request
-    return []
+    except subprocess.TimeoutExpired:
+        print(f"⚠️  Agent timeout for {file_path}", file=sys.stderr)
+        return []
+    except Exception as e:
+        print(f"⚠️  Agent error for {file_path}: {e}", file=sys.stderr)
+        return []
 
 def run_offline_training(epochs: int = MAX_EPOCHS, source: str = 'all', verbose: bool = True):
     """
@@ -419,25 +389,6 @@ def run_offline_training(epochs: int = MAX_EPOCHS, source: str = 'all', verbose:
             improvement = avg_conf_after - avg_conf_before
             if improvement > 0:
                 print(f"     Improvement: +{improvement:.2%} 📈")
-
-    # Check for pending discovery requests
-    queue_dir = PROJECT_ROOT / '.ace-memory' / 'discovery-queue'
-    if queue_dir.exists():
-        pending_requests = list(queue_dir.glob('*.request.json'))
-        if pending_requests:
-            print(f"\n{'='*60}")
-            print(f"⏸️  OFFLINE TRAINING PAUSED")
-            print(f"{'='*60}\n")
-            print(f"Found {len(pending_requests)} pending pattern discovery requests.")
-            print(f"\nPlease process these requests by invoking the domain-discoverer agent:")
-            print(f"\n  Location: {queue_dir}/")
-            print(f"\nFor each *.request.json file:")
-            print(f"  1. Read the request")
-            print(f"  2. Invoke domain-discoverer agent with the code")
-            print(f"  3. Save agent output as *.response.json (same filename)")
-            print(f"\nAfter processing all requests, re-run: /ace-train-offline")
-            print(f"\nThe training will resume and use the discovered patterns.\n")
-            return
 
     # Generate final playbook
     if verbose:
