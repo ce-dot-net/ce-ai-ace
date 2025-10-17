@@ -193,35 +193,49 @@ and discover domain taxonomy through bottom-up pattern analysis.
 Use the Task tool to invoke the domain-discoverer agent with the data above.
 
 The agent will:
-1. Analyze the code to identify coding patterns
-2. Discover domain taxonomy (imports, APIs, architectural patterns)
-3. Return discovered patterns with confidence scores
+1. Analyze the code to identify patterns (NO hardcoded keywords!)
+2. Discover patterns from actual code evidence
+3. Return patterns in database format
 
-Expected output format:
+**CRITICAL**: Store results in .ace-memory/domains/{file_path}.json
+
+Required JSON format:
 {{
-  "discovered_domains": [
+  "patterns": [
     {{
-      "id": "domain-id",
-      "name": "Domain name",
-      "patterns": [
-        {{
-          "id": "pattern-id",
-          "name": "Pattern name",
-          "description": "Pattern description",
-          "confidence": 0.8
-        }}
-      ]
+      "id": "unique-pattern-id",
+      "name": "Pattern Name",
+      "domain": "domain-name",
+      "type": "positive",
+      "description": "What this pattern does",
+      "language": "{language}",
+      "confidence": 0.0-1.0,
+      "contributed_to": "success" | "failure" | "neutral"
     }}
   ]
 }}
-
-Store results in .ace-memory/domains/{file_path}.json
 """, file=sys.stderr)
 
-    # Return empty - awaiting agent response
-    # In true offline training, this would be automated via LLM API
-    # For now, offline training requires interactive mode
-    return []
+    # Agent writes discovered patterns to .ace-memory/domains/{file_path}.json
+    # Read the patterns directly from file (agent decides format)
+    import time
+    time.sleep(1)  # Give agent time to write file
+
+    domain_file = PROJECT_ROOT / '.ace-memory' / 'domains' / f'{file_path}.json'
+    if domain_file.exists():
+        try:
+            with open(domain_file, 'r') as f:
+                agent_output = json.load(f)
+
+            # Agent should return patterns in database format:
+            # If 'patterns' key exists, use it directly
+            # Otherwise return empty (agent output format not recognized)
+            return agent_output.get('patterns', [])
+        except Exception as e:
+            print(f"⚠️  Error reading agent output: {e}", file=sys.stderr)
+            return []
+    else:
+        return []
 
 def run_offline_training(epochs: int = MAX_EPOCHS, source: str = 'all', verbose: bool = True):
     """
