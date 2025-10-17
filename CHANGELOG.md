@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.26] - 2025-10-17
+
+### Fixed
+- **Offline training agent response parsing** - Fixed domain-discoverer agent response format parsing
+  - Agent returns `{concrete, abstract, principles}` structure from domain taxonomy discovery
+  - Script was looking for non-existent `patterns` key in response JSON
+  - Added conversion logic to transform agent's domain taxonomy into pattern list format
+  - Converts concrete domain patterns, abstract patterns, and principles into unified pattern objects
+  - Each pattern gets unique ID (domain-NNNNN format), name, description, confidence
+  - Issue affected all offline training runs - patterns were discovered but not stored in database
+  - Now successfully processes 164 unique patterns from 9 files (351 pattern observations per epoch)
+  - Tests confirm: 5 epochs completed, 3260 total observations, no UNIQUE constraint violations
+  - Validates that v2.3.24 bullet_id fix still works correctly with actual multi-pattern files
+
 ## [2.3.25] - 2025-10-17
 
 ### Changed

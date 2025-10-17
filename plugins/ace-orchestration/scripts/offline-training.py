@@ -187,7 +187,50 @@ def batch_reflect_via_agent(code: str, file_path: str, language: str) -> List[Di
         try:
             with open(response_file, 'r') as f:
                 agent_output = json.load(f)
-            return agent_output.get('patterns', [])
+
+            # Convert domain-discoverer agent response format to pattern list
+            # Agent returns: {concrete: {...}, abstract: {...}, principles: {...}}
+            # We need to convert to: [{id, name, domain, description, confidence}, ...]
+            patterns = []
+
+            # Process concrete domains
+            for domain_id, domain_data in agent_output.get('concrete', {}).items():
+                for pattern_name in domain_data.get('patterns', []):
+                    patterns.append({
+                        'id': f"{domain_id}-{len(patterns):05d}",
+                        'name': pattern_name,
+                        'domain': domain_id,
+                        'type': 'helpful',
+                        'description': domain_data.get('description', ''),
+                        'confidence': domain_data.get('confidence', 0.5),
+                        'language': language
+                    })
+
+            # Process abstract patterns
+            for pattern_id, pattern_data in agent_output.get('abstract', {}).items():
+                patterns.append({
+                    'id': f"abstract-{pattern_id}",
+                    'name': pattern_id,
+                    'domain': 'abstract-patterns',
+                    'type': 'helpful',
+                    'description': pattern_data.get('description', ''),
+                    'confidence': pattern_data.get('confidence', 0.5),
+                    'language': language
+                })
+
+            # Process principles
+            for principle_id, principle_data in agent_output.get('principles', {}).items():
+                patterns.append({
+                    'id': f"principle-{principle_id}",
+                    'name': principle_id,
+                    'domain': 'principles',
+                    'type': 'helpful',
+                    'description': principle_data.get('description', ''),
+                    'confidence': principle_data.get('confidence', 0.5),
+                    'language': language
+                })
+
+            return patterns
         except Exception as e:
             print(f"⚠️  Error reading cached response: {e}", file=sys.stderr)
 

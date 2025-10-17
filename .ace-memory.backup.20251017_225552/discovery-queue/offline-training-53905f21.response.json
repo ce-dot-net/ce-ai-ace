@@ -1,0 +1,246 @@
+{
+  "concrete": {
+    "python-dynamic-module-loading": {
+      "description": "Dynamic import of Python modules with hyphens in filenames using importlib.util",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:27-30",
+        "plugins/ace-orchestration/scripts/offline-training.py:242-244",
+        "plugins/ace-orchestration/scripts/offline-training.py:278-280"
+      ],
+      "patterns": [
+        "Use importlib.util.spec_from_file_location for hyphenated module names",
+        "Load module attributes after exec_module",
+        "Reuse module loading pattern for multiple imports"
+      ],
+      "confidence": 0.95
+    },
+    "pathlib-modern-python": {
+      "description": "Use pathlib.Path for filesystem operations instead of os.path",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:19",
+        "plugins/ace-orchestration/scripts/offline-training.py:39-41",
+        "plugins/ace-orchestration/scripts/offline-training.py:177-183"
+      ],
+      "patterns": [
+        "Path(__file__).parent for script directory",
+        "Path.cwd() for project root",
+        "Path division operator for path construction",
+        "Path.exists(), Path.mkdir(parents=True, exist_ok=True)"
+      ],
+      "confidence": 0.92
+    },
+    "git-history-mining": {
+      "description": "Extract training data from git commit history using subprocess commands",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:71-112",
+        "plugins/ace-orchestration/scripts/offline-training.py:113-157"
+      ],
+      "patterns": [
+        "git log --pretty=format:%H --max-count=N to get commit hashes",
+        "git show --name-only to get changed files",
+        "git show commit:path to get file contents at commit",
+        "git diff-tree for commit file changes",
+        "Limit processing with slicing (commits[:20], files[:5])"
+      ],
+      "confidence": 0.88
+    },
+    "sqlite3-pattern-storage": {
+      "description": "SQLite database for persistent pattern storage with row_factory for dict conversion",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:14",
+        "plugins/ace-orchestration/scripts/offline-training.py:40",
+        "plugins/ace-orchestration/scripts/offline-training.py:409-417"
+      ],
+      "patterns": [
+        "sqlite3.connect with string path conversion",
+        "conn.row_factory = sqlite3.Row for dict-like access",
+        "cursor.fetchall() with row_factory for list of dicts"
+      ],
+      "confidence": 0.85
+    },
+    "agent-coordination-queue": {
+      "description": "File-based queue system for agent coordination with deterministic request IDs",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:176-222"
+      ],
+      "patterns": [
+        "Use hashlib.md5 for deterministic request IDs",
+        "Check response_file.exists() before creating request",
+        "Write request.json if not exists, read response.json if exists",
+        "Print to stderr for Claude Code to process agent invocations",
+        "Return empty list if not yet processed (caching pattern)"
+      ],
+      "confidence": 0.93
+    },
+    "multi-epoch-training": {
+      "description": "Iterative training loop with epoch tracking and pattern refinement",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:224-403"
+      ],
+      "patterns": [
+        "start_epoch() before processing, complete_epoch() after",
+        "Track metrics before/after (avg_conf_before, avg_conf_after)",
+        "track_pattern_evolution for each pattern change",
+        "cache_training_data outside pattern loop",
+        "Merge existing patterns with new observations"
+      ],
+      "confidence": 0.91
+    },
+    "defensive-file-operations": {
+      "description": "Defensive coding with size checks, try-except blocks, and existence checks",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:60",
+        "plugins/ace-orchestration/scripts/offline-training.py:68-69",
+        "plugins/ace-orchestration/scripts/offline-training.py:102",
+        "plugins/ace-orchestration/scripts/offline-training.py:186-192"
+      ],
+      "patterns": [
+        "file_path.stat().st_size < 100000 to skip huge files",
+        "len(code) < 50000 size limit checks",
+        "Bare except: pass for non-critical operations",
+        "try-except with error message to stderr for critical operations",
+        "if file.exists() checks before reading"
+      ],
+      "confidence": 0.87
+    },
+    "subprocess-git-integration": {
+      "description": "Subprocess-based git command execution with capture_output and text mode",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:74-79",
+        "plugins/ace-orchestration/scripts/offline-training.py:84-89",
+        "plugins/ace-orchestration/scripts/offline-training.py:95-100"
+      ],
+      "patterns": [
+        "subprocess.run with capture_output=True, text=True",
+        "cwd=PROJECT_ROOT for git commands",
+        "result.stdout.strip().split() for parsing output",
+        "Wrap subprocess in try-except for graceful failure"
+      ],
+      "confidence": 0.89
+    },
+    "glob-pattern-scanning": {
+      "description": "Use glob patterns with pathlib for file discovery",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:57-69"
+      ],
+      "patterns": [
+        "Define list of glob patterns for multiple file types",
+        "PROJECT_ROOT.glob(pattern) iteration",
+        "Filter with .is_file() and size checks",
+        "Use .relative_to(PROJECT_ROOT) for storage"
+      ],
+      "confidence": 0.84
+    },
+    "argparse-cli-interface": {
+      "description": "Standard argparse CLI with choices, defaults, and help text",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:419-450"
+      ],
+      "patterns": [
+        "ArgumentParser with description",
+        "choices parameter for enum-like arguments",
+        "action='store_true' for boolean flags",
+        "default values from constants (MAX_EPOCHS)",
+        "if __name__ == '__main__': main() entry point"
+      ],
+      "confidence": 0.86
+    }
+  },
+  "abstract": {
+    "agent-based-discovery": {
+      "description": "Pattern discovery through autonomous agent analysis instead of hardcoded rules",
+      "instances": [
+        "agent-coordination-queue",
+        "multi-epoch-training"
+      ],
+      "confidence": 0.94
+    },
+    "iterative-refinement": {
+      "description": "Multi-pass processing to improve results through repeated analysis",
+      "instances": [
+        "multi-epoch-training",
+        "git-history-mining"
+      ],
+      "confidence": 0.90
+    },
+    "file-based-ipc": {
+      "description": "Inter-process communication via file system with request/response pattern",
+      "instances": [
+        "agent-coordination-queue",
+        "sqlite3-pattern-storage"
+      ],
+      "confidence": 0.88
+    },
+    "defensive-data-collection": {
+      "description": "Robust data collection with size limits, error handling, and graceful degradation",
+      "instances": [
+        "defensive-file-operations",
+        "git-history-mining",
+        "glob-pattern-scanning"
+      ],
+      "confidence": 0.86
+    },
+    "meta-learning": {
+      "description": "System learning from its own previous outputs (ACE learning from ACE playbooks)",
+      "instances": [
+        "git-history-mining",
+        "multi-epoch-training"
+      ],
+      "confidence": 0.82
+    }
+  },
+  "principles": {
+    "modern-python-stdlib": {
+      "description": "Prefer modern Python standard library APIs over legacy alternatives",
+      "applied_in": [
+        "pathlib-modern-python",
+        "subprocess-git-integration"
+      ],
+      "confidence": 0.91
+    },
+    "fail-gracefully": {
+      "description": "Non-critical failures should not halt execution; log and continue",
+      "applied_in": [
+        "defensive-file-operations",
+        "defensive-data-collection"
+      ],
+      "confidence": 0.88
+    },
+    "deterministic-ids": {
+      "description": "Use hashing for reproducible identifiers to enable caching and deduplication",
+      "applied_in": [
+        "agent-coordination-queue"
+      ],
+      "confidence": 0.85
+    },
+    "separation-of-concerns": {
+      "description": "Separate data collection, processing, and coordination into distinct functions",
+      "applied_in": [
+        "agent-based-discovery",
+        "iterative-refinement"
+      ],
+      "confidence": 0.83
+    },
+    "progressive-disclosure": {
+      "description": "Start with overview, provide details on demand (verbose flags, stderr for details)",
+      "applied_in": [
+        "argparse-cli-interface",
+        "multi-epoch-training"
+      ],
+      "confidence": 0.79
+    },
+    "cache-expensive-operations": {
+      "description": "Check for cached results before performing expensive computations",
+      "applied_in": [
+        "agent-coordination-queue",
+        "multi-epoch-training"
+      ],
+      "confidence": 0.87
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 10,
+    "discovery_method": "bottom-up from file paths and descriptions",
+    "discovered_at": "2025-10-17T22:30:00Z"
+  }
+}
