@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.14] - 2025-10-17
+
+### Changed
+- **Simplified All Commands** - Updated all command patterns to use simple instructions
+  - Removed `!` auto-exec prefix from all remaining commands
+  - Removed complex CLAUDE_PLUGIN_ROOT finding logic
+  - Commands now use simple relative paths: `plugins/ace-orchestration/scripts/...`
+  - ace-train-offline.md, ace-export-patterns.md, ace-import-patterns.md all simplified
+  - Consistent pattern across all 8 slash commands
+
+
+
 ## [2.3.13] - 2025-10-17
 
 ### Changed

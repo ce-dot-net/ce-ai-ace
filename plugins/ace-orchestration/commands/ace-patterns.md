@@ -13,7 +13,7 @@ Display learned patterns with optional filtering.
 - `/ace-patterns python` - Show only Python patterns
 - `/ace-patterns javascript 0.7` - Show JavaScript patterns with ≥70% confidence
 
-!```bash
+```bash
 if [ -f .ace-memory/patterns.db ]; then
   python3 -c "
 import sqlite3

@@ -26,7 +26,7 @@ Exports include:
 - **Version Control**: Track pattern evolution via git
 - **Human-Readable**: Standard markdown format
 
-!```bash
+```bash
 if [ "$ARGUMENTS" = "--all" ]; then
   # Export all playbooks
   tar -czf ace-playbooks-$(date +%Y%m%d).tar.gz specs/

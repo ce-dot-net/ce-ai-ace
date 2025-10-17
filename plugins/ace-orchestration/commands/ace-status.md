@@ -8,7 +8,7 @@ allowed-tools: Bash
 
 Display comprehensive statistics about the ACE pattern learning system.
 
-!```bash
+```bash
 if [ -f .ace-memory/patterns.db ]; then
   python3 -c "
 import sqlite3

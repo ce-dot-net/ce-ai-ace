@@ -17,7 +17,7 @@ Normally, ACE runs automatically after code changes. Use this command to:
 - `/ace-force-reflect` - Analyze most recently edited file
 - `/ace-force-reflect path/to/file.py` - Analyze specific file
 
-!```bash
+```bash
 # Determine file to analyze
 if [ -z "$ARGUMENTS" ]; then
   file=$(git diff --name-only HEAD | head -1)
