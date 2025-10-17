@@ -1,7 +1,7 @@
 ---
 name: reflector
 description: Discovers coding patterns from raw code through analysis (TRUE ACE architecture - no pre-detection!)
-tools: Read, Grep, Glob
+tools: Read, Grep, Glob, Write
 model: sonnet
 ---
 

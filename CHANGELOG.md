@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.23] - 2025-10-17
+
+### Fixed
+- **Reflector agent invocation caching** - Implements response caching for PostToolUse hook pattern discovery
+  - Both `invoke_reflector_agent()` and `invoke_reflector_agent_with_feedback()` now check for cached responses
+  - Responses cached in `.ace-memory/reflections/` directory (per-file and per-refinement-round)
+  - Same two-phase workflow as domain-discoverer: (1) Generate request → (2) Claude processes → (3) Re-run uses cache
+  - Aligns with ACE paper's max 5 refinement rounds (Section 4: "maximum number of Reflector refinement rounds...to 5")
+  - Added Write tool to both reflector agents (reflector.md and reflector-prompt.md) so they can save responses
+  - Verified against research paper using pdfgrep - confirms iterative refinement architecture
+  - All three agents now properly implement Claude Code agent coordination pattern
+
 ## [2.3.22] - 2025-10-17
 
 ### Fixed

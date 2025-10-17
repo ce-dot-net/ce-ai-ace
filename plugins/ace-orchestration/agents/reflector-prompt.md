@@ -1,7 +1,7 @@
 ---
 name: reflector-prompt
 description: Refines previous reflector analysis with more specific evidence and actionable recommendations through iterative improvement
-tools: Read, Grep, Glob
+tools: Read, Grep, Glob, Write
 model: sonnet
 ---
 

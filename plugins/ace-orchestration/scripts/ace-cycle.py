@@ -348,11 +348,11 @@ def invoke_reflector_agent(code: str, evidence: Dict, file_path: str) -> Dict:
     TRUE ACE paper architecture: Reflector analyzes raw code trajectories
     and DISCOVERS what patterns exist - no pre-detection!
 
-    The agent will:
-    1. Analyze the raw code
-    2. Discover what coding patterns are present (imports, APIs, structures)
-    3. Determine if each pattern contributed to success/failure
-    4. Output structured pattern definitions with insights
+    This function coordinates with Claude to invoke the reflector agent.
+    The workflow:
+    1. Check if agent response already exists (cached from previous run)
+    2. If not, output request to stderr for Claude to process
+    3. Return cached patterns if available, empty list if not yet processed
 
     Args:
         code: Raw source code
@@ -362,7 +362,22 @@ def invoke_reflector_agent(code: str, evidence: Dict, file_path: str) -> Dict:
     Returns:
         Dict with discovered_patterns and insights
     """
-    # Prepare input for reflector (NO pre-detected patterns!)
+    # Create response file path
+    reflections_dir = PROJECT_ROOT / '.ace-memory' / 'reflections'
+    reflections_dir.mkdir(parents=True, exist_ok=True)
+
+    response_file = reflections_dir / f'{Path(file_path).name}.json'
+
+    # Check if response already exists (cached from previous agent run)
+    if response_file.exists():
+        try:
+            with open(response_file, 'r') as f:
+                agent_output = json.load(f)
+            return agent_output
+        except Exception as e:
+            print(f"⚠️  Error reading cached reflection: {e}", file=sys.stderr)
+
+    # No response yet - prepare input for reflector (NO pre-detected patterns!)
     reflector_input = {
         'code': code[:2000],  # Include more code for pattern discovery
         'full_code_length': len(code),
@@ -420,12 +435,10 @@ Expected output format (JSON):
   "meta_insights": ["Discovered 5 patterns via code analysis"]
 }}
 
-Store the analysis results in .ace-memory/reflections/{Path(file_path).name}.json
+Store the analysis results in: {response_file}
 """, file=sys.stderr)
 
-        # Return empty result - agent invocation is required
-        # ACE paper does NOT specify fallbacks - when Reflector cannot analyze,
-        # this is an acknowledged limitation (Appendix B)
+        # No response yet - return empty (will be filled on subsequent run after Claude processes)
         return {
             'discovered_patterns': [],
             'meta_insights': ['Waiting for agent-based pattern discovery']
@@ -547,17 +560,37 @@ def invoke_reflector_agent_with_feedback(
 
     TRUE ACE architecture: No pre-detected patterns! Agent refines its own discoveries.
 
-    This implements multi-round iterative refinement as described in ACE paper.
+    This implements multi-round iterative refinement as described in ACE paper
+    (max 5 refinement rounds per research paper Section 4).
+
+    This function coordinates with Claude to invoke the reflector-prompt agent.
+    The workflow:
+    1. Check if agent response already exists (cached from previous run)
+    2. If not, output request to stderr for Claude to process
+    3. Return cached refined patterns if available, previous insights if not yet processed
+
     Each round provides the previous insights and asks the agent to:
     1. Identify weaknesses in previous analysis
     2. Provide more specific evidence
     3. Improve recommendations
     4. Discover additional patterns that were initially missed
-
-    Outputs request to stderr asking Claude to invoke the reflector agent via Task tool
-    with refinement context from the previous round.
     """
-    # Prepare enhanced input with previous insights (NO pre-detected patterns!)
+    # Create response file path for this refinement round
+    reflections_dir = PROJECT_ROOT / '.ace-memory' / 'reflections'
+    reflections_dir.mkdir(parents=True, exist_ok=True)
+
+    response_file = reflections_dir / f'{Path(file_path).name}_round{round_num}.json'
+
+    # Check if response already exists (cached from previous agent run)
+    if response_file.exists():
+        try:
+            with open(response_file, 'r') as f:
+                agent_output = json.load(f)
+            return agent_output
+        except Exception as e:
+            print(f"⚠️  Error reading cached refinement: {e}", file=sys.stderr)
+
+    # No response yet - prepare enhanced input with previous insights (NO pre-detected patterns!)
     reflector_input = {
         'code': code[:1000],  # Truncate code for display
         'evidence': {
@@ -627,12 +660,10 @@ Expected output format (JSON):
   - insight: MORE SPECIFIC observation with concrete evidence from code
   - recommendation: MORE ACTIONABLE guidance with examples
 
-Store the refined analysis results in .ace-memory/reflections/{Path(file_path).name}_round{round_num}.json
+Store the refined analysis results in: {response_file}
 """, file=sys.stderr)
 
-        # No fallback - ACE paper does NOT specify fallbacks for refinement
-        # Return previous insights unchanged if agent cannot refine
-        # This is an acknowledged limitation (Appendix B)
+        # No response yet - return previous insights unchanged (will be refined on subsequent run after Claude processes)
         return previous_insights
 
     except Exception as e:
