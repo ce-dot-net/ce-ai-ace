@@ -214,23 +214,16 @@ def run_offline_training(epochs: int = MAX_EPOCHS, source: str = 'all', verbose:
         _ace_cycle = importlib.util.module_from_spec(_ace_spec)
         _ace_spec.loader.exec_module(_ace_cycle)
 
-        detect_patterns = _ace_cycle.detect_patterns
-        gather_evidence = _ace_cycle.gather_evidence
         reflect = _ace_cycle.reflect
         curate = _ace_cycle.curate
         merge_patterns = _ace_cycle.merge_patterns
         store_pattern = _ace_cycle.store_pattern
+        _infer_language_from_file = _ace_cycle._infer_language_from_file
 
         # Process each training example
         for idx, example in enumerate(training_data):
             if verbose and (idx + 1) % 10 == 0:
                 print(f"  Processing {idx + 1}/{len(training_data)}...", file=sys.stderr)
-
-            detected = detect_patterns(example['code'], example['file_path'])
-            if not detected:
-                continue
-
-            patterns_processed += len(detected)
 
             # Gather evidence (mock for offline)
             evidence = {
@@ -239,35 +232,41 @@ def run_offline_training(epochs: int = MAX_EPOCHS, source: str = 'all', verbose:
                 'has_tests': False
             }
 
-            # Reflect on patterns
-            reflection = reflect(example['code'], detected, evidence, example['file_path'], max_rounds=5)
+            # Reflect - DISCOVER patterns from raw code (TRUE ACE architecture!)
+            reflection = reflect(example['code'], evidence, example['file_path'], max_rounds=5)
 
-            # Curate each pattern
+            # Get discovered patterns
+            discovered = reflection.get('discovered_patterns', [])
+            if not discovered:
+                continue
+
+            patterns_processed += len(discovered)
+
+            # Curate each discovered pattern
             existing_patterns = get_all_patterns()
 
-            for analysis in reflection['patterns_analyzed']:
-                pattern_id = analysis['pattern_id']
-                pattern_def = next((p for p in detected if p['id'] == pattern_id), None)
-                if not pattern_def:
+            for pattern_def in discovered:
+                pattern_id = pattern_def.get('id')
+                if not pattern_id:
                     continue
 
                 # Check if pattern exists
                 existing = next((p for p in existing_patterns if p['id'] == pattern_id), None)
                 conf_before = existing['confidence'] if existing else 0.0
 
-                # Prepare new observation
+                # Prepare new observation from discovered pattern
                 new_pattern = {
-                    'id': pattern_def['id'],
-                    'name': pattern_def['name'],
-                    'domain': pattern_def['domain'],
-                    'type': pattern_def['type'],
-                    'description': pattern_def['description'],
-                    'language': pattern_def['language'],
+                    'id': pattern_def.get('id'),
+                    'name': pattern_def.get('name', 'Unknown pattern'),
+                    'domain': pattern_def.get('domain', 'general'),
+                    'type': pattern_def.get('type', 'neutral'),
+                    'description': pattern_def.get('description', ''),
+                    'language': pattern_def.get('language', _infer_language_from_file(example['file_path'])),
                     'observations': 1,
-                    'successes': 1 if analysis['contributed_to'] == 'success' else 0,
-                    'failures': 1 if analysis['contributed_to'] == 'failure' else 0,
-                    'neutrals': 1 if analysis['contributed_to'] == 'neutral' else 0,
-                    'confidence': 0.0,
+                    'successes': 1 if pattern_def.get('contributed_to') == 'success' else 0,
+                    'failures': 1 if pattern_def.get('contributed_to') == 'failure' else 0,
+                    'neutrals': 1 if pattern_def.get('contributed_to') == 'neutral' else 0,
+                    'confidence': pattern_def.get('confidence', 0.0),
                     'last_seen': datetime.now().isoformat()
                 }
 
@@ -301,7 +300,7 @@ def run_offline_training(epochs: int = MAX_EPOCHS, source: str = 'all', verbose:
                 cache_training_data(
                     file_path=example['file_path'],
                     code=example['code'],
-                    patterns_detected=[p['id'] for p in detected],
+                    patterns_detected=[p['id'] for p in discovered],
                     test_status='passed'
                 )
 

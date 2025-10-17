@@ -1,17 +1,26 @@
 #!/usr/bin/env python3
 """
-ACE Cycle - Main orchestration script
+ACE Cycle - Main orchestration script (TRUE ACE Research Paper Architecture)
 
-Orchestrates the complete ACE cycle:
-1. Pattern Detection (regex-based)
-2. Evidence Gathering (test results)
-3. Reflection (via reflector agent using Task tool)
-4. Curation (deterministic algorithm with semantic embeddings)
+Orchestrates the complete ACE cycle per the research paper:
+1. Evidence Gathering (test results, execution feedback)
+2. Pattern Discovery via Reflector Agent (LLM-based code analysis - NO pre-detection!)
+3. Curation (deterministic algorithm: merge at 85% similarity, prune at 30% confidence)
+4. Domain Discovery (periodic, agent-based taxonomy learning)
 5. Playbook Update (CLAUDE.md generation with delta updates)
 
-ACE Phase 3 Enhancements:
-- Semantic embeddings for pattern similarity (replaces Jaccard)
+CRITICAL ARCHITECTURE CHANGE (v2.3.9):
+- Removed hardcoded pattern detection (semantic_pattern_extractor.py)
+- Reflector agent NOW DISCOVERS patterns by analyzing raw code
+- This matches the TRUE ACE research paper architecture (Section 3, Figure 4)
+- Generator → Trajectory → Reflector (discovers patterns) → Curator (merges/prunes)
+
+ACE Phase 3+ Enhancements:
+- Agent-based pattern discovery (not hardcoded keyword matching!)
+- Semantic embeddings for pattern similarity (Claude → ChromaDB → Jaccard fallback)
 - Delta-based CLAUDE.md updates (prevents context collapse)
+- Multi-epoch offline training mode
+- Bottom-up domain taxonomy discovery
 
 Called by PostToolUse hook after Edit/Write operations.
 """
@@ -40,18 +49,28 @@ PROJECT_ROOT = Path.cwd()
 DB_PATH = PROJECT_ROOT / '.ace-memory' / 'patterns.db'
 
 # ============================================================================
-# Pattern Definitions - REMOVED (now uses semantic_pattern_extractor.py)
+# Pattern Discovery - TRUE ACE Architecture (v2.3.9+)
 # ============================================================================
 
-# PATTERNS array removed - patterns are now discovered dynamically from the codebase
-# using semantic analysis (Serena MCP) and AST parsing fallback.
-# This allows ACE to discover project-specific patterns like:
-# - Plugin architecture patterns (hooks, commands, agents)
-# - MCP integration patterns (uvx, ChromaDB)
-# - Task tool usage patterns
-# - Domain-specific API patterns
+# PATTERNS array REMOVED - no hardcoded pattern detection!
 #
-# See semantic_pattern_extractor.py for implementation
+# ACE Research Paper Architecture (Section 3, Figure 4):
+# 1. Generator produces code trajectories (raw code + execution)
+# 2. Reflector agent DISCOVERS patterns by analyzing raw code via LLM
+# 3. Curator merges/prunes discovered patterns deterministically
+#
+# This is the CORRECT implementation per the research paper.
+# Previous semantic_pattern_extractor.py was wrong - it used hardcoded
+# keywords ("stripe", "auth", "payment") which don't match this codebase.
+#
+# Now: Reflector agent reads code and discovers what patterns exist:
+# - "subprocess module usage" - by seeing `import subprocess`
+# - "pathlib operations" - by seeing `from pathlib import Path`
+# - "SQLite database queries" - by seeing `sqlite3.connect()`
+# - "JSON serialization" - by seeing `json.dumps()`
+# etc.
+#
+# The agent outputs structured pattern definitions with insights and recommendations.
 
 # ============================================================================
 # Database Functions
@@ -255,89 +274,15 @@ def list_patterns() -> List[Dict]:
     return [dict(row) for row in rows]
 
 # ============================================================================
-# Pattern Detection
+# Pattern Discovery (via Reflector Agent)
 # ============================================================================
-
-def detect_patterns(code: str, file_path: str) -> List[Dict]:
-    """
-    Detect patterns in code using semantic pattern extraction.
-
-    Uses semantic_pattern_extractor.py which:
-    1. Tries Serena MCP for symbolic analysis (best quality)
-    2. Falls back to AST parsing if Serena unavailable
-    3. Discovers project-specific patterns dynamically
-
-    Args:
-        code: Source code to analyze
-        file_path: Path to the file being analyzed
-
-    Returns:
-        List of detected patterns with metadata
-    """
-    try:
-        # Import semantic pattern extractor
-        sys.path.insert(0, str(PLUGIN_ROOT / 'scripts'))
-        from semantic_pattern_extractor import extract_patterns_hybrid
-
-        # Extract patterns using hybrid approach (Serena + AST)
-        detected = extract_patterns_hybrid(file_path, code)
-
-        # Normalize pattern format to match expected structure
-        normalized = []
-        for pattern in detected:
-            # Ensure required fields exist
-            normalized_pattern = {
-                'id': pattern.get('id', f"discovered-{hash(pattern.get('name', '')) % 10000}"),
-                'name': pattern.get('name', 'Unknown pattern'),
-                'description': pattern.get('description', ''),
-                'file_path': pattern.get('file_path', file_path),
-                'type': pattern.get('type', 'helpful'),  # Default to helpful
-                'domain': _infer_domain_from_pattern(pattern),
-                'language': _infer_language_from_file(file_path),
-                'detected_by': pattern.get('detected_by', 'semantic')
-            }
-            normalized.append(normalized_pattern)
-
-        return normalized
-
-    except Exception as e:
-        print(f"⚠️  Semantic pattern detection failed: {e}", file=sys.stderr)
-        import traceback
-        traceback.print_exc(file=sys.stderr)
-        return []
-
-
-def _infer_domain_from_pattern(pattern: Dict) -> str:
-    """
-    Infer domain from pattern metadata.
-
-    Uses file path and pattern type to assign domain.
-    This is a temporary heuristic until domain-discoverer agent runs.
-    """
-    file_path = pattern.get('file_path', '').lower()
-    pattern_type = pattern.get('type', '')
-
-    # Check for common architectural domains
-    if 'plugin' in file_path or 'hooks' in file_path:
-        return 'plugin-architecture'
-    elif 'mcp' in file_path or 'server' in file_path:
-        return 'mcp-integration'
-    elif 'agent' in file_path or 'task' in file_path:
-        return 'agent-orchestration'
-    elif pattern_type == 'file-location':
-        # Extract from file path (e.g., "services/stripe" -> "stripe-integration")
-        parts = file_path.split('/')
-        if len(parts) >= 2:
-            return f"{parts[-2]}-{parts[-1].split('.')[0]}"
-    elif pattern_type == 'api-usage':
-        # Extract from pattern ID (e.g., "api-stripe" -> "stripe-api")
-        return pattern.get('id', 'unknown-api')
-    elif pattern_type == 'architectural':
-        return pattern.get('id', 'unknown-arch')
-
-    # Default fallback
-    return 'general'
-
+#
+# ACE Research Paper Architecture:
+# - Generator produces code trajectories
+# - Reflector DISCOVERS patterns by analyzing raw code + execution feedback
+# - Curator merges/prunes discovered patterns
+#
+# NO pre-detection step! Reflector does dynamic discovery via LLM analysis.
 
 def _infer_language_from_file(file_path: str) -> str:
     """Infer programming language from file extension."""
@@ -396,58 +341,84 @@ def gather_evidence() -> Dict:
 
 MAX_REFINEMENT_ROUNDS = 5
 
-def invoke_reflector_agent(code: str, patterns: List[Dict], evidence: Dict, file_path: str) -> Dict:
+def invoke_reflector_agent(code: str, evidence: Dict, file_path: str) -> Dict:
     """
-    Invoke the reflector agent to analyze patterns.
+    Invoke the reflector agent to DISCOVER patterns from raw code.
 
-    Outputs request to stderr asking Claude to invoke the reflector agent via Task tool.
-    This implements the ACE research paper's agent-based Reflector architecture.
+    TRUE ACE paper architecture: Reflector analyzes raw code trajectories
+    and DISCOVERS what patterns exist - no pre-detection!
+
+    The agent will:
+    1. Analyze the raw code
+    2. Discover what coding patterns are present (imports, APIs, structures)
+    3. Determine if each pattern contributed to success/failure
+    4. Output structured pattern definitions with insights
+
+    Args:
+        code: Raw source code
+        evidence: Execution feedback (test results, errors)
+        file_path: File being analyzed
+
+    Returns:
+        Dict with discovered_patterns and insights
     """
-    # Prepare input for reflector
+    # Prepare input for reflector (NO pre-detected patterns!)
     reflector_input = {
-        'code': code[:1000],  # Truncate code for display
-        'patterns': [
-            {
-                'id': p['id'],
-                'name': p['name'],
-                'description': p['description']
-            }
-            for p in patterns
-        ],
+        'code': code[:2000],  # Include more code for pattern discovery
+        'full_code_length': len(code),
         'evidence': {
             'testStatus': evidence.get('test_status', 'none'),
-            'errorLogs': evidence.get('error_logs', '')[:200] if evidence.get('error_logs') else '',
-            'hasTests': evidence.get('has_tests', False)
+            'errorLogs': evidence.get('error_logs', '')[:300] if evidence.get('error_logs') else '',
+            'hasTests': evidence.get('has_tests', False),
+            'output': evidence.get('output', '')[:200] if evidence.get('output') else ''
         },
-        'fileContext': file_path
+        'fileContext': file_path,
+        'language': _infer_language_from_file(file_path)
     }
 
     try:
         # Output request to stderr for Claude to invoke agent via Task tool
         print(f"""
-🔬 ACE Reflector Request
+🔬 ACE Pattern Discovery Request
 
-{len(patterns)} pattern(s) detected in {file_path}. Please invoke the reflector agent to analyze pattern effectiveness.
+Analyzing {file_path} ({len(code)} chars). Please invoke the reflector agent to DISCOVER patterns.
 
-<reflector_analysis_request>
+<pattern_discovery_request>
 {json.dumps(reflector_input, indent=2)}
-</reflector_analysis_request>
+</pattern_discovery_request>
 
 Use the Task tool to invoke ace-orchestration:reflector agent with the data above.
-The agent will analyze each pattern and determine:
-1. Was the pattern applied correctly?
-2. Did it contribute to success, failure, or neutral outcome?
-3. What specific insights can we learn from this application?
-4. When should this pattern be used or avoided?
+
+CRITICAL: The agent must DISCOVER patterns by analyzing the raw code, not match predefined patterns!
+
+The agent should:
+1. Read and analyze the code
+2. Identify what coding patterns are present (e.g., "subprocess usage", "SQLite queries", "pathlib operations", "JSON handling", "uvx commands", "ChromaDB calls")
+3. For each discovered pattern, determine:
+   - Pattern name and description
+   - Whether it contributed to success, failure, or neutral outcome (based on test results)
+   - Confidence level (0.0-1.0)
+   - Specific insights with evidence from the code
+   - Recommendations for when to use/avoid
 
 Expected output format (JSON):
-- patterns_analyzed: List of analysis results for each pattern
-  - pattern_id: The pattern identifier
-  - applied_correctly: true/false
-  - contributed_to: "success"/"failure"/"neutral"
-  - confidence: 0.0-1.0
-  - insight: Specific observation with evidence
-  - recommendation: Actionable guidance
+{{
+  "discovered_patterns": [
+    {{
+      "id": "discovered-subprocess-usage",
+      "name": "subprocess module usage",
+      "description": "Uses Python subprocess module for running external commands",
+      "domain": "python-stdlib",
+      "type": "helpful",
+      "applied_correctly": true,
+      "contributed_to": "success",
+      "confidence": 0.9,
+      "insight": "Code uses subprocess.run() with capture_output=True for safe command execution",
+      "recommendation": "Continue using subprocess.run() with explicit parameters for reliability"
+    }}
+  ],
+  "meta_insights": ["Discovered 5 patterns via code analysis"]
+}}
 
 Store the analysis results in .ace-memory/reflections/{Path(file_path).name}.json
 """, file=sys.stderr)
@@ -456,8 +427,8 @@ Store the analysis results in .ace-memory/reflections/{Path(file_path).name}.jso
         # ACE paper does NOT specify fallbacks - when Reflector cannot analyze,
         # this is an acknowledged limitation (Appendix B)
         return {
-            'patterns_analyzed': [],
-            'meta_insights': ['Waiting for agent-based reflector analysis']
+            'discovered_patterns': [],
+            'meta_insights': ['Waiting for agent-based pattern discovery']
         }
 
     except Exception as e:
@@ -466,20 +437,32 @@ Store the analysis results in .ace-memory/reflections/{Path(file_path).name}.jso
         traceback.print_exc(file=sys.stderr)
         # No fallback - ACE paper acknowledges this as a limitation
         return {
-            'patterns_analyzed': [],
-            'meta_insights': ['Reflector invocation failed - no analysis available']
+            'discovered_patterns': [],
+            'meta_insights': ['Pattern discovery failed - no analysis available']
         }
 
 
-def reflect(code: str, patterns: List[Dict], evidence: Dict, file_path: str, max_rounds: int = MAX_REFINEMENT_ROUNDS) -> Dict:
+def reflect(code: str, evidence: Dict, file_path: str, max_rounds: int = MAX_REFINEMENT_ROUNDS) -> Dict:
     """
     Invoke reflector agent with iterative refinement.
 
+    TRUE ACE architecture: Pass raw code to Reflector for pattern DISCOVERY.
+    No pre-detected patterns - the agent discovers what patterns exist!
+
     The reflector can refine its insights across multiple rounds for higher quality.
     Implements the ACE paper's "Iterative Refinement" mechanism (Figure 4).
+
+    Args:
+        code: Raw source code
+        evidence: Execution feedback (test results, errors)
+        file_path: File being analyzed
+        max_rounds: Maximum refinement rounds
+
+    Returns:
+        Dict with discovered_patterns and insights
     """
-    # First round of reflection
-    reflection = invoke_reflector_agent(code, patterns, evidence, file_path)
+    # First round of reflection - DISCOVER patterns from raw code
+    reflection = invoke_reflector_agent(code, evidence, file_path)
 
     # Iterative refinement: provide previous insights and ask for improvement
     # This is the ACE "Reflector → Insights → Iterative Refinement" loop
@@ -487,7 +470,6 @@ def reflect(code: str, patterns: List[Dict], evidence: Dict, file_path: str, max
         # Invoke reflector with feedback from previous round
         refined = invoke_reflector_agent_with_feedback(
             code=code,
-            patterns=patterns,
             evidence=evidence,
             file_path=file_path,
             previous_insights=reflection,
@@ -519,8 +501,9 @@ def calculate_insight_improvement(old_insights: Dict, new_insights: Dict) -> flo
     Returns:
         Improvement score (0.0 to 1.0+)
     """
-    old_patterns = old_insights.get('patterns_analyzed', [])
-    new_patterns = new_insights.get('patterns_analyzed', [])
+    # Changed from 'patterns_analyzed' to 'discovered_patterns' per new architecture
+    old_patterns = old_insights.get('discovered_patterns', [])
+    new_patterns = new_insights.get('discovered_patterns', [])
 
     if not old_patterns or not new_patterns:
         return 0.0
@@ -554,7 +537,6 @@ def calculate_insight_improvement(old_insights: Dict, new_insights: Dict) -> flo
 
 def invoke_reflector_agent_with_feedback(
     code: str,
-    patterns: List[Dict],
     evidence: Dict,
     file_path: str,
     previous_insights: Dict,
@@ -563,26 +545,21 @@ def invoke_reflector_agent_with_feedback(
     """
     Invoke reflector with feedback from previous round for refinement.
 
+    TRUE ACE architecture: No pre-detected patterns! Agent refines its own discoveries.
+
     This implements multi-round iterative refinement as described in ACE paper.
     Each round provides the previous insights and asks the agent to:
     1. Identify weaknesses in previous analysis
     2. Provide more specific evidence
     3. Improve recommendations
+    4. Discover additional patterns that were initially missed
 
     Outputs request to stderr asking Claude to invoke the reflector agent via Task tool
     with refinement context from the previous round.
     """
-    # Prepare enhanced input with previous insights
+    # Prepare enhanced input with previous insights (NO pre-detected patterns!)
     reflector_input = {
         'code': code[:1000],  # Truncate code for display
-        'patterns': [
-            {
-                'id': p['id'],
-                'name': p['name'],
-                'description': p['description']
-            }
-            for p in patterns
-        ],
         'evidence': {
             'testStatus': evidence.get('test_status', 'none'),
             'errorLogs': evidence.get('error_logs', '')[:200] if evidence.get('error_logs') else '',
@@ -590,30 +567,32 @@ def invoke_reflector_agent_with_feedback(
         },
         'fileContext': file_path,
         'previousInsights': {
-            'patterns_analyzed': [
+            'discovered_patterns': [
                 {
-                    'pattern_id': p.get('pattern_id'),
+                    'id': p.get('id'),
+                    'name': p.get('name'),
                     'insight': p.get('insight'),
                     'recommendation': p.get('recommendation'),
                     'confidence': p.get('confidence')
                 }
-                for p in previous_insights.get('patterns_analyzed', [])
+                for p in previous_insights.get('discovered_patterns', [])
             ]
         },
         'roundNumber': round_num,
         'refinementPrompt': (
             f"REFINEMENT ROUND {round_num}: Review your previous analysis and improve it.\n\n"
-            "Previous insights:\n" +
+            "Previously discovered patterns:\n" +
             "\n".join([
-                f"- {p.get('pattern_id', 'unknown')}: {p.get('insight', 'N/A')}"
-                for p in previous_insights.get('patterns_analyzed', [])
+                f"- {p.get('id', 'unknown')}: {p.get('insight', 'N/A')}"
+                for p in previous_insights.get('discovered_patterns', [])
             ]) +
             "\n\nImprovement tasks:\n"
             "1. Add more specific evidence from the code\n"
             "2. Make recommendations more actionable\n"
             "3. Identify edge cases or limitations you initially missed\n"
-            "4. Increase confidence if justified by code evidence\n\n"
-            "Output ONLY improved insights that are more detailed and confident than before."
+            "4. Discover additional patterns you might have missed\n"
+            "5. Increase confidence if justified by code evidence\n\n"
+            "Output improved insights that are more detailed and confident than before."
         )
     }
 
@@ -636,8 +615,12 @@ The agent will refine the previous insights by:
 4. Increasing confidence if justified by code evidence
 
 Expected output format (JSON):
-- patterns_analyzed: List of REFINED analysis results (should be more detailed than previous round)
-  - pattern_id: The pattern identifier
+- discovered_patterns: List of REFINED discovered patterns (should be more detailed than previous round)
+  - id: Pattern identifier (e.g., "discovered-subprocess-usage")
+  - name: Pattern name
+  - description: Pattern description
+  - domain: Domain (e.g., "python-stdlib", "api-usage")
+  - type: "helpful"/"harmful"/"neutral"
   - applied_correctly: true/false
   - contributed_to: "success"/"failure"/"neutral"
   - confidence: 0.0-1.0 (may increase if more evidence found)
@@ -799,45 +782,45 @@ def main():
             print(f"❌ Failed to read file: {e}", file=sys.stderr)
             sys.exit(0)
 
-        # STEP 1: Detect patterns
-        detected = detect_patterns(code, file_path)
-        if not detected:
-            print("⏭️  No patterns detected", file=sys.stderr)
-            sys.exit(0)
-
-        print(f"🔍 Detected {len(detected)} pattern(s): {', '.join(p['id'] for p in detected)}", file=sys.stderr)
-
-        # STEP 2: Gather evidence
+        # STEP 1: Gather evidence
         evidence = gather_evidence()
         print(f"🧪 Evidence: {evidence['test_status']}", file=sys.stderr)
 
-        # STEP 3: Reflect
-        reflection = reflect(code, detected, evidence, file_path)
-        print("💡 Reflection complete", file=sys.stderr)
+        # STEP 2: Reflect - DISCOVER patterns from raw code (TRUE ACE architecture!)
+        reflection = reflect(code, evidence, file_path)
+        print("💡 Pattern discovery complete", file=sys.stderr)
 
-        # STEP 4: Curate each pattern
+        # Check if patterns were discovered
+        discovered = reflection.get('discovered_patterns', [])
+        if not discovered:
+            print("⏭️  No patterns discovered (agent invocation required)", file=sys.stderr)
+            sys.exit(0)
+
+        print(f"🔍 Discovered {len(discovered)} pattern(s): {', '.join(p['id'] for p in discovered)}", file=sys.stderr)
+
+        # STEP 3: Curate each discovered pattern
         patterns_processed = 0
         existing_patterns = list_patterns()
 
-        for analysis in reflection['patterns_analyzed']:
-            pattern_id = analysis['pattern_id']
-            pattern_def = next((p for p in detected if p['id'] == pattern_id), None)
-            if not pattern_def:
+        for pattern_def in discovered:
+            # Pattern definition already contains all fields from agent discovery
+            pattern_id = pattern_def.get('id')
+            if not pattern_id:
                 continue
 
-            # Prepare new pattern record
+            # Prepare new pattern record from discovered pattern
             new_pattern = {
-                'id': pattern_def['id'],
-                'name': pattern_def['name'],
-                'domain': pattern_def['domain'],
-                'type': pattern_def['type'],
-                'description': pattern_def['description'],
-                'language': pattern_def['language'],
+                'id': pattern_def.get('id'),
+                'name': pattern_def.get('name', 'Unknown pattern'),
+                'domain': pattern_def.get('domain', 'general'),
+                'type': pattern_def.get('type', 'neutral'),
+                'description': pattern_def.get('description', ''),
+                'language': pattern_def.get('language', _infer_language_from_file(file_path)),
                 'observations': 1,
-                'successes': 1 if analysis['contributed_to'] == 'success' else 0,
-                'failures': 1 if analysis['contributed_to'] == 'failure' else 0,
-                'neutrals': 1 if analysis['contributed_to'] == 'neutral' else 0,
-                'confidence': 0.0,
+                'successes': 1 if pattern_def.get('contributed_to') == 'success' else 0,
+                'failures': 1 if pattern_def.get('contributed_to') == 'failure' else 0,
+                'neutrals': 1 if pattern_def.get('contributed_to') == 'neutral' else 0,
+                'confidence': pattern_def.get('confidence', 0.0),
                 'last_seen': datetime.now().isoformat()
             }
 
@@ -851,14 +834,21 @@ def main():
                 # Merge with existing
                 if existing:
                     merged = merge_patterns(existing, new_pattern)
-                    # Recalculate confidence
-                    merged['confidence'] = merged['successes'] / max(merged['observations'], 1)
+                    # Recalculate confidence with feedback (TRUE ACE architecture!)
+                    # Formula: (successes + helpful) / (observations + helpful + harmful)
+                    helpful = merged.get('helpful_count', 0)
+                    harmful = merged.get('harmful_count', 0)
+                    numerator = merged['successes'] + helpful
+                    denominator = merged['observations'] + helpful + harmful
+                    merged['confidence'] = numerator / max(denominator, 1)
+
                     store_pattern(merged)
                     print(f"🔀 Merged: {merged['name']} ({decision['similarity']:.0%} similar)", file=sys.stderr)
                     patterns_processed += 1
 
             elif decision['action'] == 'create':
                 # Create new pattern
+                # Initial confidence (no feedback yet)
                 new_pattern['confidence'] = new_pattern['successes'] / max(new_pattern['observations'], 1)
                 new_pattern['created_at'] = datetime.now().isoformat()
                 store_pattern(new_pattern)
@@ -868,25 +858,25 @@ def main():
             elif decision['action'] == 'prune':
                 print(f"🗑️  Pruned: {pattern_id} ({decision['reason']})", file=sys.stderr)
 
-            # Store insight
+            # Store insight (from discovered pattern)
             store_insight(pattern_id, {
                 'timestamp': datetime.now().isoformat(),
-                'insight': analysis['insight'],
-                'recommendation': analysis['recommendation'],
-                'confidence': analysis['confidence'],
-                'applied_correctly': analysis['applied_correctly']
+                'insight': pattern_def.get('insight', ''),
+                'recommendation': pattern_def.get('recommendation', ''),
+                'confidence': pattern_def.get('confidence', 0.0),
+                'applied_correctly': pattern_def.get('applied_correctly', True)
             })
 
-            # Store observation
+            # Store observation (from discovered pattern)
             store_observation(pattern_id, {
                 'timestamp': datetime.now().isoformat(),
-                'outcome': analysis['contributed_to'],
+                'outcome': pattern_def.get('contributed_to', 'neutral'),
                 'test_status': evidence.get('test_status'),
                 'error_logs': evidence.get('error_logs'),
                 'file_path': file_path
             })
 
-        # STEP 5: Domain Discovery (Periodic - runs when pattern count threshold met)
+        # STEP 4: Domain Discovery (Periodic - runs when pattern count threshold met)
         total_patterns = len(existing_patterns)
         should_discover_domains = (total_patterns > 0 and total_patterns % 10 == 0)  # Every 10 patterns
 
@@ -926,7 +916,7 @@ def main():
                 print(f"⚠️  Domain discovery failed: {e}", file=sys.stderr)
                 # Continue - don't block ACE cycle
 
-        # STEP 6: Update playbook
+        # STEP 5: Update playbook
         if patterns_processed > 0:
             subprocess.run([
                 'python3',
