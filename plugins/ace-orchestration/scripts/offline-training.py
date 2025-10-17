@@ -373,7 +373,8 @@ def run_offline_training(epochs: int = MAX_EPOCHS, source: str = 'all', verbose:
                     store_pattern(new_pattern)
                     patterns_refined += 1
 
-                # Cache for future epochs
+            # Cache for future epochs (OUTSIDE pattern loop!)
+            if discovered:
                 cache_training_data(
                     file_path=example['file_path'],
                     code=example['code'],

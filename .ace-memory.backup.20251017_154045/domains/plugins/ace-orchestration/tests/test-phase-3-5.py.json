@@ -1,0 +1,104 @@
+{
+  "patterns": [
+    {
+      "id": "python-custom-test-decorator",
+      "name": "Custom test decorator pattern",
+      "domain": "testing",
+      "type": "positive",
+      "description": "Uses decorator pattern for test functions with global counters instead of pytest/unittest",
+      "language": "python",
+      "confidence": 0.9,
+      "contributed_to": "success"
+    },
+    {
+      "id": "python-sqlite-pragma-introspection",
+      "name": "SQLite PRAGMA introspection",
+      "domain": "database",
+      "type": "positive",
+      "description": "Uses PRAGMA table_info() to validate database schema and check for specific columns",
+      "language": "python",
+      "confidence": 0.85,
+      "contributed_to": "success"
+    },
+    {
+      "id": "python-pathlib-over-os-path",
+      "name": "Pathlib for file operations",
+      "domain": "file-handling",
+      "type": "positive",
+      "description": "Uses pathlib.Path for modern Python file operations instead of os.path",
+      "language": "python",
+      "confidence": 0.95,
+      "contributed_to": "success"
+    },
+    {
+      "id": "python-graceful-missing-resource",
+      "name": "Graceful handling of missing resources",
+      "domain": "error-handling",
+      "type": "positive",
+      "description": "Returns True with warning message instead of failing when optional resources don't exist",
+      "language": "python",
+      "confidence": 0.88,
+      "contributed_to": "success"
+    },
+    {
+      "id": "python-sys-path-injection",
+      "name": "Sys.path injection for local imports",
+      "domain": "imports",
+      "type": "positive",
+      "description": "Uses sys.path.insert(0, 'scripts') to import modules from non-package directories",
+      "language": "python",
+      "confidence": 0.8,
+      "contributed_to": "success"
+    },
+    {
+      "id": "python-dynamic-module-loading",
+      "name": "Dynamic module loading with importlib",
+      "domain": "imports",
+      "type": "positive",
+      "description": "Uses importlib.util for dynamic module loading from files with hyphens in names",
+      "language": "python",
+      "confidence": 0.82,
+      "contributed_to": "success"
+    },
+    {
+      "id": "python-set-comprehension-column-check",
+      "name": "Set comprehension for column validation",
+      "domain": "database",
+      "type": "positive",
+      "description": "Uses set comprehension to efficiently check for column existence in database schema",
+      "language": "python",
+      "confidence": 0.87,
+      "contributed_to": "success"
+    },
+    {
+      "id": "python-test-isolation-conditionals",
+      "name": "Test isolation through conditionals",
+      "domain": "testing",
+      "type": "positive",
+      "description": "Each test returns early on missing prerequisites rather than failing entire suite",
+      "language": "python",
+      "confidence": 0.9,
+      "contributed_to": "success"
+    },
+    {
+      "id": "python-phased-feature-validation",
+      "name": "Phased feature validation",
+      "domain": "testing",
+      "type": "positive",
+      "description": "Organizes tests by development phases (Phase 2, Phase 3-5) for clear evolution tracking",
+      "language": "python",
+      "confidence": 0.85,
+      "contributed_to": "success"
+    },
+    {
+      "id": "python-existence-checks-before-ops",
+      "name": "Existence checks before operations",
+      "domain": "error-handling",
+      "type": "positive",
+      "description": "Always checks file/directory existence before performing operations to avoid exceptions",
+      "language": "python",
+      "confidence": 0.92,
+      "contributed_to": "success"
+    }
+  ]
+}
