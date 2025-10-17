@@ -13,7 +13,7 @@ Reset the ACE pattern learning database.
 Arguments: $ARGUMENTS
 
 !```bash
-if [ "$1" != "--confirm" ]; then
+if [ "$ARGUMENTS" != "--confirm" ]; then
   echo "⚠️  ACE CLEAR WARNING"
   echo ""
   echo "This will permanently delete:"

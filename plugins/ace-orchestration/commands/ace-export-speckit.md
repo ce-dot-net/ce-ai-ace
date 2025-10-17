@@ -27,20 +27,20 @@ Exports include:
 - **Human-Readable**: Standard markdown format
 
 !```bash
-if [ "$1" = "--all" ]; then
+if [ "$ARGUMENTS" = "--all" ]; then
   # Export all playbooks
   tar -czf ace-playbooks-$(date +%Y%m%d).tar.gz specs/
   echo "✅ Exported all playbooks to ace-playbooks-$(date +%Y%m%d).tar.gz"
-elif [ -d "specs/playbooks/$1" ]; then
+elif [ -d "specs/playbooks/$ARGUMENTS" ]; then
   # Export single playbook
-  tar -czf playbook-$1.tar.gz -C specs/playbooks $1/
-  echo "✅ Exported playbook to playbook-$1.tar.gz"
+  tar -czf playbook-$ARGUMENTS.tar.gz -C specs/playbooks $ARGUMENTS/
+  echo "✅ Exported playbook to playbook-$ARGUMENTS.tar.gz"
 elif [ -f specs/memory/constitution.md ]; then
   # Export constitution
   cp specs/memory/constitution.md ./ace-constitution-$(date +%Y%m%d).md
   echo "✅ Exported constitution to ace-constitution-$(date +%Y%m%d).md"
 else
-  echo "❌ Playbook not found: $1"
+  echo "❌ Playbook not found: $ARGUMENTS"
   echo "Usage: /ace-export-speckit [playbook-id|--all]"
 fi
 ```

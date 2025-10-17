@@ -51,7 +51,7 @@ else:
     print('⚠️  No patterns match your filter criteria')
 
 conn.close()
-" "$1" "$2"
+" "$ARGUMENTS" "$2"
 else
   echo "⚠️  No patterns learned yet. Start coding to detect patterns!"
 fi

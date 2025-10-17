@@ -19,10 +19,10 @@ Normally, ACE runs automatically after code changes. Use this command to:
 
 !```bash
 # Determine file to analyze
-if [ -z "$1" ]; then
+if [ -z "$ARGUMENTS" ]; then
   file=$(git diff --name-only HEAD | head -1)
 else
-  file="$1"
+  file="$ARGUMENTS"
 fi
 
 # Validate file exists

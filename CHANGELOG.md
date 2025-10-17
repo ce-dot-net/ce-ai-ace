@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.11] - 2025-10-17
+
+### Fixed
+- **Command Arguments Bug** - Fixed slash commands not receiving arguments properly
+  - Changed `$1` to `$ARGUMENTS` in all command bash blocks
+  - Fixed ace-clear.md - `--confirm` argument now works
+  - Fixed ace-export-speckit.md - playbook selection now works
+  - Fixed ace-force-reflect.md - file path argument now works
+  - Fixed ace-patterns.md - domain/confidence filters now work
+  - Commands now properly receive and process user arguments
+
+
 ## [2.3.10] - 2025-10-17
 
 ### Fixed
