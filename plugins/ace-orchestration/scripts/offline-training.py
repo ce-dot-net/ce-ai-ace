@@ -160,15 +160,18 @@ def scan_codebase_for_training(source: str = 'all') -> List[Dict]:
 
 def batch_reflect_via_agent(code: str, file_path: str, language: str) -> List[Dict]:
     """
-    Pattern discovery via autonomous agent invocation.
+    Pattern discovery via Claude Code agent invocation.
 
     TRUE ACE Architecture: Patterns are DISCOVERED by agents analyzing code,
     NOT matched against hardcoded keywords.
 
-    This function invokes the domain-discoverer agent to analyze code and
-    discover domain taxonomy and patterns autonomously.
+    This function coordinates with Claude to invoke the domain-discoverer agent.
+    The workflow:
+    1. Check if agent response already exists (cached from previous run)
+    2. If not, output request to stderr for Claude to process
+    3. Return cached patterns if available, empty list if not yet processed
 
-    Returns discovered patterns from agent analysis.
+    Returns discovered patterns from agent analysis (empty until Claude processes request).
     """
     # Create unique request ID from file path (deterministic hash)
     queue_dir = PROJECT_ROOT / '.ace-memory' / 'discovery-queue'
@@ -176,9 +179,10 @@ def batch_reflect_via_agent(code: str, file_path: str, language: str) -> List[Di
 
     hash_obj = hashlib.md5(file_path.encode())
     request_id = Path(file_path).stem + '-' + hash_obj.hexdigest()[:8]
+    request_file = queue_dir / f'{request_id}.request.json'
     response_file = queue_dir / f'{request_id}.response.json'
 
-    # Check if response already exists (cached from previous run)
+    # Check if response already exists (cached from previous agent run)
     if response_file.exists():
         try:
             with open(response_file, 'r') as f:
@@ -187,41 +191,35 @@ def batch_reflect_via_agent(code: str, file_path: str, language: str) -> List[Di
         except Exception as e:
             print(f"⚠️  Error reading cached response: {e}", file=sys.stderr)
 
-    # Invoke domain-discoverer agent via subprocess
-    try:
-        agent_script = PLUGIN_ROOT / 'agents' / 'domain-discoverer.py'
+    # No response yet - write request for Claude to process
+    if not request_file.exists():
+        request = {
+            'code_snippet': code[:2000],  # First 2000 chars for context
+            'full_code_length': len(code),
+            'file_path': file_path,
+            'language': language,
+            'training_mode': 'offline',
+            'request_id': request_id
+        }
 
-        result = subprocess.run(
-            ['python3', str(agent_script)],
-            input=json.dumps({
-                'code': code,
-                'file_path': file_path,
-                'language': language,
-                'training_mode': 'offline'
-            }),
-            capture_output=True,
-            text=True,
-            timeout=60
-        )
+        with open(request_file, 'w') as f:
+            json.dump(request, f, indent=2)
 
-        if result.returncode == 0 and result.stdout:
-            agent_output = json.loads(result.stdout)
+        # Output request to stderr for Claude to see and process
+        print(f"""
+🔬 ACE Domain Discovery Request
 
-            # Cache the response for future epochs
-            with open(response_file, 'w') as f:
-                json.dump(agent_output, f, indent=2)
+File: {file_path} ({len(code)} chars, language: {language})
+Request ID: {request_id}
 
-            return agent_output.get('patterns', [])
-        else:
-            print(f"⚠️  Agent invocation failed for {file_path}: {result.stderr}", file=sys.stderr)
-            return []
+Claude: Please invoke the ace-orchestration:domain-discoverer agent with this data.
+Save the response to: {response_file}
 
-    except subprocess.TimeoutExpired:
-        print(f"⚠️  Agent timeout for {file_path}", file=sys.stderr)
-        return []
-    except Exception as e:
-        print(f"⚠️  Agent error for {file_path}: {e}", file=sys.stderr)
-        return []
+Request data: {request_file}
+""", file=sys.stderr)
+
+    # No response yet - return empty (will be filled on subsequent run after Claude processes)
+    return []
 
 def run_offline_training(epochs: int = MAX_EPOCHS, source: str = 'all', verbose: bool = True):
     """

@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.22] - 2025-10-17
+
+### Fixed
+- **Offline training Claude Code agent coordination** - Properly implements Claude Code agent architecture
+  - Agents are `.md` files invoked via Claude's Task tool (not Python subprocess)
+  - Script outputs discovery requests to stderr for Claude to process
+  - Claude invokes domain-discoverer agent and saves responses to queue
+  - Subsequent training runs use cached agent responses for multi-epoch learning
+  - Two-phase workflow: (1) First run generates requests → (2) Claude processes → (3) Re-run uses cached data
+  - Aligns with Claude Code best practices for agent orchestration
+  - Research-backed: follows ACE paper's Generator-Reflector-Curator architecture
+
 ## [2.3.21] - 2025-10-17
 
 ### Fixed
@@ -17,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Responses cached in discovery queue for multi-epoch reuse
   - Implements TRUE ACE research paper offline training (autonomous, not interactive)
   - Aligns with paper Section 4.1: offline optimization should be automated
+  - **NOTE**: v2.3.21 approach was incorrect - agents can't be invoked via subprocess in Claude Code. See v2.3.22 for proper fix.
 
 ## [2.3.20] - 2025-10-17
 
