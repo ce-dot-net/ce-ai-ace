@@ -216,26 +216,30 @@ Required JSON format:
 }}
 """, file=sys.stderr)
 
-    # Agent writes discovered patterns to .ace-memory/domains/{file_path}.json
-    # Read the patterns directly from file (agent decides format)
-    import time
-    time.sleep(1)  # Give agent time to write file
+    # Write discovery request to queue for batch processing
+    queue_dir = PROJECT_ROOT / '.ace-memory' / 'discovery-queue'
+    queue_dir.mkdir(parents=True, exist_ok=True)
 
-    domain_file = PROJECT_ROOT / '.ace-memory' / 'domains' / f'{file_path}.json'
-    if domain_file.exists():
+    # Create unique request ID from file path
+    request_id = Path(file_path).stem + '-' + str(hash(file_path))[:8]
+    request_file = queue_dir / f'{request_id}.request.json'
+    response_file = queue_dir / f'{request_id}.response.json'
+
+    # Write request
+    with open(request_file, 'w') as f:
+        json.dump(request, f, indent=2)
+
+    # Check if response already exists (from previous run or agent)
+    if response_file.exists():
         try:
-            with open(domain_file, 'r') as f:
+            with open(response_file, 'r') as f:
                 agent_output = json.load(f)
-
-            # Agent should return patterns in database format:
-            # If 'patterns' key exists, use it directly
-            # Otherwise return empty (agent output format not recognized)
             return agent_output.get('patterns', [])
         except Exception as e:
-            print(f"⚠️  Error reading agent output: {e}", file=sys.stderr)
-            return []
-    else:
-        return []
+            print(f"⚠️  Error reading response: {e}", file=sys.stderr)
+
+    # No response yet - agent hasn't processed this request
+    return []
 
 def run_offline_training(epochs: int = MAX_EPOCHS, source: str = 'all', verbose: bool = True):
     """
@@ -403,6 +407,25 @@ def run_offline_training(epochs: int = MAX_EPOCHS, source: str = 'all', verbose:
             improvement = avg_conf_after - avg_conf_before
             if improvement > 0:
                 print(f"     Improvement: +{improvement:.2%} 📈")
+
+    # Check for pending discovery requests
+    queue_dir = PROJECT_ROOT / '.ace-memory' / 'discovery-queue'
+    if queue_dir.exists():
+        pending_requests = list(queue_dir.glob('*.request.json'))
+        if pending_requests:
+            print(f"\n{'='*60}")
+            print(f"⏸️  OFFLINE TRAINING PAUSED")
+            print(f"{'='*60}\n")
+            print(f"Found {len(pending_requests)} pending pattern discovery requests.")
+            print(f"\nPlease process these requests by invoking the domain-discoverer agent:")
+            print(f"\n  Location: {queue_dir}/")
+            print(f"\nFor each *.request.json file:")
+            print(f"  1. Read the request")
+            print(f"  2. Invoke domain-discoverer agent with the code")
+            print(f"  3. Save agent output as *.response.json (same filename)")
+            print(f"\nAfter processing all requests, re-run: /ace-train-offline")
+            print(f"\nThe training will resume and use the discovered patterns.\n")
+            return
 
     # Generate final playbook
     if verbose:

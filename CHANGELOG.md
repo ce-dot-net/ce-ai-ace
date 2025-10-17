@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.18] - 2025-10-17
+
+### Fixed
+- **Offline Training Queue System** - Implemented proper queue-based agent invocation
+  - Removed hardcoded `time.sleep(1)` timer (was a temporary hack)
+  - Offline training now writes discovery requests to `.ace-memory/discovery-queue/`
+  - Agents process requests and write responses as `*.response.json` files
+  - Training pauses and prompts user to process pending requests
+  - Re-running `/ace-train-offline` resumes with discovered patterns
+  - No more relying on arbitrary sleep timers - proper file-based coordination
+  - Follows queue-driven workflow pattern from Claude Code best practices
+
+### Changed
+- **ace-clear behavior** - Clarified that `specs/` directory is preserved
+  - `specs/` contains example playbooks (part of codebase, not generated data)
+  - Only `.ace-memory/` and `CLAUDE.md` are removed during clear
+  - This is correct behavior - specs are reference examples, not learned patterns
+
 ## [2.3.14] - 2025-10-17
 
 ### Changed
