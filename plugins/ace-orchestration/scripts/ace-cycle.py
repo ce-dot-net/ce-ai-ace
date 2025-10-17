@@ -156,19 +156,23 @@ def generate_bullet_id(domain: str, pattern_id: str) -> str:
     Generate bullet ID in ACE format: [domain-NNNNN]
 
     Examples: [py-00001], [js-00023], [ts-00005]
+
+    Deterministic generation based on pattern_id hash to avoid collisions
+    when multiple patterns are stored in same run (ACE paper: batch size of 1).
     """
+    import hashlib
+
     # Extract domain prefix from pattern_id (e.g., "py-001" -> "py")
     prefix = pattern_id.split('-')[0] if '-' in pattern_id else domain[:3]
 
-    # Get next number for this domain
-    conn = sqlite3.connect(str(DB_PATH))
-    cursor = conn.cursor()
-    cursor.execute('SELECT COUNT(*) FROM patterns WHERE domain LIKE ?', (f'{prefix}%',))
-    count = cursor.fetchone()[0]
-    conn.close()
+    # Generate deterministic number from pattern_id hash
+    # This ensures each unique pattern_id gets a unique bullet_id
+    hash_obj = hashlib.md5(pattern_id.encode())
+    hash_int = int(hash_obj.hexdigest()[:8], 16)  # Use first 8 hex chars
+    number = hash_int % 99999  # Keep it within 5 digits (00000-99998)
 
     # Format: [prefix-NNNNN]
-    bullet_id = f"[{prefix}-{count+1:05d}]"
+    bullet_id = f"[{prefix}-{number:05d}]"
     return bullet_id
 
 

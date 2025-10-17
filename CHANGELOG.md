@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.24] - 2025-10-17
+
+### Fixed
+- **Bullet ID generation deterministic hashing** - Fixes UNIQUE constraint violation in offline training
+  - Changed from database count-based to pattern_id hash-based generation
+  - Prevents collisions when storing multiple patterns from same domain in one run
+  - Aligns with ACE paper "batch size of 1" guidance (each pattern gets unique ID)
+  - Issue occurred when domain-discoverer agent found 20+ patterns in single file
+  - Now uses MD5 hash of pattern_id for deterministic 5-digit number (00000-99998)
+  - Fixes bug that affected anyone running offline training with multi-pattern files
+  - Bug was: `sqlite3.IntegrityError: UNIQUE constraint failed: patterns.bullet_id`
+
 ## [2.3.23] - 2025-10-17
 
 ### Fixed

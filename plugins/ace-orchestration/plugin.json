@@ -1,6 +1,6 @@
 {
   "name": "ace-orchestration",
-  "version": "2.3.23",
+  "version": "2.3.24",
   "description": "ACE (Agentic Context Engineering) - TRUE research paper implementation with agent-based pattern discovery, Generator feedback loop, and pattern self-improvement. Based on Stanford/SambaNova/UC Berkeley research (arXiv:2510.04618v1)",
   "author": {
     "name": "ACE Team",
