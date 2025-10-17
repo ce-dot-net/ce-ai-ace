@@ -6,8 +6,8 @@ language: markdown
 type: helpful
 confidence: 0.0
 observations: 35
-created_at: 2025-10-17T23:07:55.996497
-last_updated: 2025-10-17T23:07:58.381198
+created_at: 2025-10-17T23:32:14.868106
+last_updated: 2025-10-17T23:32:17.372776
 ---
 # metadata-driven-documentation
 
@@ -29,8 +29,8 @@ Use YAML frontmatter for machine-readable metadata in documentation files
 - **Failures**: 0
 - **Neutrals**: 0
 - **Confidence Score**: 0.0%
-- **First Seen**: 2025-10-17T23:07:55.996497
-- **Last Updated**: 2025-10-17T23:07:58.381198
+- **First Seen**: 2025-10-17T23:32:14.868106
+- **Last Updated**: 2025-10-17T23:32:17.372776
 
 ## Pattern ID
 

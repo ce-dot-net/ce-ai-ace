@@ -1,7 +1,7 @@
 ---
 pattern_id: principle-evidence-based-learning
 type: technical_plan
-updated: 2025-10-17T23:07:58.441360
+updated: 2025-10-17T23:32:17.435606
 ---
 # Technical Plan: evidence-based-learning
 

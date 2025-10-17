@@ -196,8 +196,10 @@ def batch_reflect_via_agent(code: str, file_path: str, language: str) -> List[Di
             # Process concrete domains
             for domain_id, domain_data in agent_output.get('concrete', {}).items():
                 for pattern_name in domain_data.get('patterns', []):
+                    # Generate deterministic ID from pattern content (not loop index!)
+                    pattern_hash = hashlib.md5(f"{domain_id}:{pattern_name}".encode()).hexdigest()[:5]
                     patterns.append({
-                        'id': f"{domain_id}-{len(patterns):05d}",
+                        'id': f"{domain_id}-{pattern_hash}",
                         'name': pattern_name,
                         'domain': domain_id,
                         'type': 'helpful',
@@ -208,6 +210,7 @@ def batch_reflect_via_agent(code: str, file_path: str, language: str) -> List[Di
 
             # Process abstract patterns
             for pattern_id, pattern_data in agent_output.get('abstract', {}).items():
+                # Abstract pattern IDs already unique from agent
                 patterns.append({
                     'id': f"abstract-{pattern_id}",
                     'name': pattern_id,
@@ -220,6 +223,7 @@ def batch_reflect_via_agent(code: str, file_path: str, language: str) -> List[Di
 
             # Process principles
             for principle_id, principle_data in agent_output.get('principles', {}).items():
+                # Principle IDs already unique from agent
                 patterns.append({
                     'id': f"principle-{principle_id}",
                     'name': principle_id,

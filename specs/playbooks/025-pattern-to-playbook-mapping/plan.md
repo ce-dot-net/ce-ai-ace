@@ -1,7 +1,7 @@
 ---
-pattern_id: playbook-reference-system-00008
+pattern_id: playbook-reference-system-159dc
 type: technical_plan
-updated: 2025-10-17T23:07:58.444312
+updated: 2025-10-17T23:32:17.438906
 ---
 # Technical Plan: Pattern-to-playbook mapping
 

@@ -1,13 +1,13 @@
 ---
-pattern_id: git-based-training-corpus-00007
+pattern_id: git-based-training-corpus-d44e9
 name: Execute 'git show {commit}:{file_rel}' to get file contents at specific commit
 domain: git-based-training-corpus
 language: python
 type: helpful
 confidence: 0.0
 observations: 15
-created_at: 2025-10-17T23:07:55.814638
-last_updated: 2025-10-17T23:07:58.061581
+created_at: 2025-10-17T23:32:14.693597
+last_updated: 2025-10-17T23:32:17.015965
 ---
 # Execute 'git show {commit}:{file_rel}' to get file contents at specific commit
 
@@ -29,13 +29,13 @@ Extract training data from git commit history using subprocess git commands
 - **Failures**: 0
 - **Neutrals**: 0
 - **Confidence Score**: 0.0%
-- **First Seen**: 2025-10-17T23:07:55.814638
-- **Last Updated**: 2025-10-17T23:07:58.061581
+- **First Seen**: 2025-10-17T23:32:14.693597
+- **Last Updated**: 2025-10-17T23:32:17.015965
 
 ## Pattern ID
 
 ```
-git-based-training-corpus-00007
+git-based-training-corpus-d44e9
 ```
 
 This pattern is tracked in ACE's learning database and evolves based on real-world usage and test results.

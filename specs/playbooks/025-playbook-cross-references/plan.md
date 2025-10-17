@@ -1,7 +1,7 @@
 ---
-pattern_id: ace-constitution-documentation-00002
+pattern_id: ace-constitution-documentation-c7413
 type: technical_plan
-updated: 2025-10-17T23:07:58.442270
+updated: 2025-10-17T23:32:17.436996
 ---
 # Technical Plan: Playbook cross-references
 

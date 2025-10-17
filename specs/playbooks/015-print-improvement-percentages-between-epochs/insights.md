@@ -1,8 +1,8 @@
 ---
-pattern_id: multi-epoch-training-00004
+pattern_id: multi-epoch-training-9d13a
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.452244
+updated: 2025-10-17T23:32:17.447904
 ---
 # Insights: Print improvement percentages between epochs
 

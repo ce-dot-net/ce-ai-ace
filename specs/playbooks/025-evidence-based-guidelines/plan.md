@@ -1,7 +1,7 @@
 ---
 pattern_id: principle-evidence-based-guidelines
 type: technical_plan
-updated: 2025-10-17T23:07:58.446102
+updated: 2025-10-17T23:32:17.440288
 ---
 # Technical Plan: evidence-based-guidelines
 

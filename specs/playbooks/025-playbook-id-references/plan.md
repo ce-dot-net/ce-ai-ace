@@ -1,7 +1,7 @@
 ---
-pattern_id: playbook-reference-system-00006
+pattern_id: playbook-reference-system-c89fc
 type: technical_plan
-updated: 2025-10-17T23:07:58.443689
+updated: 2025-10-17T23:32:17.438214
 ---
 # Technical Plan: Playbook ID references
 

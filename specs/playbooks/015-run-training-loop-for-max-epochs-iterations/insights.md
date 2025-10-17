@@ -1,8 +1,8 @@
 ---
-pattern_id: multi-epoch-training-00001
+pattern_id: multi-epoch-training-6d685
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.451249
+updated: 2025-10-17T23:32:17.446928
 ---
 # Insights: Run training loop for MAX_EPOCHS iterations
 

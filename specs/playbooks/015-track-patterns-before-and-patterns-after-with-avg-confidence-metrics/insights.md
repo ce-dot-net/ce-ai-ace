@@ -1,8 +1,8 @@
 ---
-pattern_id: multi-epoch-training-00002
+pattern_id: multi-epoch-training-615f4
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.451579
+updated: 2025-10-17T23:32:17.447300
 ---
 # Insights: Track patterns_before and patterns_after with avg_confidence metrics
 

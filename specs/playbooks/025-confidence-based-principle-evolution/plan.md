@@ -1,7 +1,7 @@
 ---
-pattern_id: ace-constitution-documentation-00001
+pattern_id: ace-constitution-documentation-6b027
 type: technical_plan
-updated: 2025-10-17T23:07:58.441959
+updated: 2025-10-17T23:32:17.436681
 ---
 # Technical Plan: Confidence-based principle evolution
 

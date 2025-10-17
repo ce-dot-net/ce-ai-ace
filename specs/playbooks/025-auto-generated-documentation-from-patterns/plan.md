@@ -1,7 +1,7 @@
 ---
-pattern_id: ace-constitution-documentation-00000
+pattern_id: ace-constitution-documentation-2790d
 type: technical_plan
-updated: 2025-10-17T23:07:58.441648
+updated: 2025-10-17T23:32:17.436378
 ---
 # Technical Plan: Auto-generated documentation from patterns
 

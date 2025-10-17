@@ -1,8 +1,8 @@
 ---
-pattern_id: git-based-training-corpus-00006
+pattern_id: git-based-training-corpus-2151a
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.453042
+updated: 2025-10-17T23:32:17.448485
 ---
 # Insights: Execute 'git show --name-only' to get changed files per commit
 

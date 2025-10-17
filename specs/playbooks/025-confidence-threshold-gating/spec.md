@@ -6,8 +6,8 @@ language: markdown
 type: helpful
 confidence: 0.0
 observations: 25
-created_at: 2025-10-17T23:07:56.017726
-last_updated: 2025-10-17T23:07:58.377204
+created_at: 2025-10-17T23:32:14.886985
+last_updated: 2025-10-17T23:32:17.368030
 ---
 # confidence-threshold-gating
 
@@ -29,8 +29,8 @@ Use quantitative confidence thresholds to control quality of patterns (70% for i
 - **Failures**: 0
 - **Neutrals**: 0
 - **Confidence Score**: 0.0%
-- **First Seen**: 2025-10-17T23:07:56.017726
-- **Last Updated**: 2025-10-17T23:07:58.377204
+- **First Seen**: 2025-10-17T23:32:14.886985
+- **Last Updated**: 2025-10-17T23:32:17.368030
 
 ## Pattern ID
 

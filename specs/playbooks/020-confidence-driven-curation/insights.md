@@ -2,7 +2,7 @@
 pattern_id: principle-confidence-driven-curation
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.450583
+updated: 2025-10-17T23:32:17.446098
 ---
 # Insights: confidence-driven-curation
 

@@ -2,7 +2,7 @@
 pattern_id: principle-metadata-driven-documentation
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.439279
+updated: 2025-10-17T23:32:17.435370
 ---
 # Insights: metadata-driven-documentation
 

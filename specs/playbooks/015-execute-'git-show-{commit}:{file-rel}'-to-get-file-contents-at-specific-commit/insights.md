@@ -1,8 +1,8 @@
 ---
-pattern_id: git-based-training-corpus-00007
+pattern_id: git-based-training-corpus-d44e9
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.453396
+updated: 2025-10-17T23:32:17.448771
 ---
 # Insights: Execute 'git show {commit}:{file_rel}' to get file contents at specific commit
 

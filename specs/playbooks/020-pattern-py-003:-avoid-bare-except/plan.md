@@ -1,7 +1,7 @@
 ---
-pattern_id: python-exception-handling-00003
+pattern_id: python-exception-handling-88446
 type: technical_plan
-updated: 2025-10-17T23:07:58.448260
+updated: 2025-10-17T23:32:17.443133
 ---
 # Technical Plan: Pattern py-003: Avoid bare except
 

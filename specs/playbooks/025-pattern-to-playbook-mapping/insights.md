@@ -1,8 +1,8 @@
 ---
-pattern_id: playbook-reference-system-00008
+pattern_id: playbook-reference-system-159dc
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.444409
+updated: 2025-10-17T23:32:17.439088
 ---
 # Insights: Pattern-to-playbook mapping
 

@@ -1,7 +1,7 @@
 ---
-pattern_id: git-based-training-corpus-00007
+pattern_id: git-based-training-corpus-d44e9
 type: technical_plan
-updated: 2025-10-17T23:07:58.453294
+updated: 2025-10-17T23:32:17.448689
 ---
 # Technical Plan: Execute 'git show {commit}:{file_rel}' to get file contents at specific commit
 

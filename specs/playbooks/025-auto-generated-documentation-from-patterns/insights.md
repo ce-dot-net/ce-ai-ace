@@ -1,8 +1,8 @@
 ---
-pattern_id: ace-constitution-documentation-00000
+pattern_id: ace-constitution-documentation-2790d
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.441736
+updated: 2025-10-17T23:32:17.436457
 ---
 # Insights: Auto-generated documentation from patterns
 

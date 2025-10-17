@@ -1,13 +1,13 @@
 ---
-pattern_id: playbook-reference-system-00007
+pattern_id: playbook-reference-system-a9f31
 name: Spec.md linking
 domain: playbook-reference-system
 language: markdown
 type: helpful
 confidence: 0.0
 observations: 25
-created_at: 2025-10-17T23:07:56.013625
-last_updated: 2025-10-17T23:07:58.370786
+created_at: 2025-10-17T23:32:14.883215
+last_updated: 2025-10-17T23:32:17.361795
 ---
 # Spec.md linking
 
@@ -29,13 +29,13 @@ Cross-referencing system linking principles to detailed playbook specifications
 - **Failures**: 0
 - **Neutrals**: 0
 - **Confidence Score**: 0.0%
-- **First Seen**: 2025-10-17T23:07:56.013625
-- **Last Updated**: 2025-10-17T23:07:58.370786
+- **First Seen**: 2025-10-17T23:32:14.883215
+- **Last Updated**: 2025-10-17T23:32:17.361795
 
 ## Pattern ID
 
 ```
-playbook-reference-system-00007
+playbook-reference-system-a9f31
 ```
 
 This pattern is tracked in ACE's learning database and evolves based on real-world usage and test results.

@@ -1,7 +1,7 @@
 ---
 pattern_id: principle-explicit-exception-specificity
 type: technical_plan
-updated: 2025-10-17T23:07:58.450179
+updated: 2025-10-17T23:32:17.445479
 ---
 # Technical Plan: explicit-exception-specificity
 

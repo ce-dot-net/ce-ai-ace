@@ -1,7 +1,7 @@
 ---
 pattern_id: principle-confidence-driven-curation
 type: technical_plan
-updated: 2025-10-17T23:07:58.450507
+updated: 2025-10-17T23:32:17.445954
 ---
 # Technical Plan: confidence-driven-curation
 

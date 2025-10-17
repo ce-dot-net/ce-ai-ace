@@ -1,13 +1,13 @@
 ---
-pattern_id: git-based-training-corpus-00008
+pattern_id: git-based-training-corpus-875c5
 name: Execute 'git diff-tree --no-commit-id --name-only -r' for file change detection
 domain: git-based-training-corpus
 language: python
 type: helpful
 confidence: 0.0
 observations: 15
-created_at: 2025-10-17T23:07:55.815353
-last_updated: 2025-10-17T23:07:58.062624
+created_at: 2025-10-17T23:32:14.694113
+last_updated: 2025-10-17T23:32:17.016928
 ---
 # Execute 'git diff-tree --no-commit-id --name-only -r' for file change detection
 
@@ -29,13 +29,13 @@ Extract training data from git commit history using subprocess git commands
 - **Failures**: 0
 - **Neutrals**: 0
 - **Confidence Score**: 0.0%
-- **First Seen**: 2025-10-17T23:07:55.815353
-- **Last Updated**: 2025-10-17T23:07:58.062624
+- **First Seen**: 2025-10-17T23:32:14.694113
+- **Last Updated**: 2025-10-17T23:32:17.016928
 
 ## Pattern ID
 
 ```
-git-based-training-corpus-00008
+git-based-training-corpus-875c5
 ```
 
 This pattern is tracked in ACE's learning database and evolves based on real-world usage and test results.

@@ -6,8 +6,8 @@ language: markdown
 type: helpful
 confidence: 0.0
 observations: 25
-created_at: 2025-10-17T23:07:56.017027
-last_updated: 2025-10-17T23:07:58.376159
+created_at: 2025-10-17T23:32:14.886386
+last_updated: 2025-10-17T23:32:17.366876
 ---
 # evidence-based-guidelines
 
@@ -29,8 +29,8 @@ Generate guidelines only from patterns validated through repeated observation an
 - **Failures**: 0
 - **Neutrals**: 0
 - **Confidence Score**: 0.0%
-- **First Seen**: 2025-10-17T23:07:56.017027
-- **Last Updated**: 2025-10-17T23:07:58.376159
+- **First Seen**: 2025-10-17T23:32:14.886386
+- **Last Updated**: 2025-10-17T23:32:17.366876
 
 ## Pattern ID
 

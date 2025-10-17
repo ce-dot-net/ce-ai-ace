@@ -1,7 +1,7 @@
 ---
-pattern_id: playbook-reference-system-00007
+pattern_id: playbook-reference-system-a9f31
 type: technical_plan
-updated: 2025-10-17T23:07:58.444030
+updated: 2025-10-17T23:32:17.438554
 ---
 # Technical Plan: Spec.md linking
 

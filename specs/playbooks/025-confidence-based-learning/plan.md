@@ -1,7 +1,7 @@
 ---
 pattern_id: abstract-confidence-based-learning
 type: technical_plan
-updated: 2025-10-17T23:07:58.445139
+updated: 2025-10-17T23:32:17.439695
 ---
 # Technical Plan: confidence-based-learning
 

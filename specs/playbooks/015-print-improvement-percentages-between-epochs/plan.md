@@ -1,7 +1,7 @@
 ---
-pattern_id: multi-epoch-training-00004
+pattern_id: multi-epoch-training-9d13a
 type: technical_plan
-updated: 2025-10-17T23:07:58.452146
+updated: 2025-10-17T23:32:17.447812
 ---
 # Technical Plan: Print improvement percentages between epochs
 

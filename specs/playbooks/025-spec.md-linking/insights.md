@@ -1,8 +1,8 @@
 ---
-pattern_id: playbook-reference-system-00007
+pattern_id: playbook-reference-system-a9f31
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.444104
+updated: 2025-10-17T23:32:17.438640
 ---
 # Insights: Spec.md linking
 

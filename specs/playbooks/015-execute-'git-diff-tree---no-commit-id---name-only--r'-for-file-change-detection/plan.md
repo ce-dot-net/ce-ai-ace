@@ -1,7 +1,7 @@
 ---
-pattern_id: git-based-training-corpus-00008
+pattern_id: git-based-training-corpus-875c5
 type: technical_plan
-updated: 2025-10-17T23:07:58.453653
+updated: 2025-10-17T23:32:17.449019
 ---
 # Technical Plan: Execute 'git diff-tree --no-commit-id --name-only -r' for file change detection
 

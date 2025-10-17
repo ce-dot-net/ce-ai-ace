@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.28] - 2025-10-17
+
+### Fixed
+- **Deterministic pattern ID generation in offline training** - Fixed UNIQUE constraint violation
+  - Changed from loop index to content-hash-based ID generation
+  - Pattern IDs now deterministic: `hashlib.md5(f"{domain_id}:{pattern_name}")[:5]`
+  - Prevents duplicate bullet_ids when same pattern discovered across epochs
+  - Bug caused `sqlite3.IntegrityError: UNIQUE constraint failed: patterns.bullet_id`
+  - Issue occurred during multi-epoch training when patterns re-discovered
+  - Fix allows successful completion of 5-epoch training (223 patterns, 2450 observations)
+
+### Added
+- **ACE Research Paper Verification Report** - Comprehensive verification against TRUE ACE architecture
+  - Created `docs/ACE_Research_Paper_Verification.md` (10-section analysis)
+  - Verified all 10 critical ACE components match research paper specifications
+  - Confirmed: Generator → Reflector → Curator architecture (TRUE ACE)
+  - Confirmed: Agent-based pattern discovery (no hardcoded patterns)
+  - Confirmed: Multi-epoch training (5 epochs per Section 4.1)
+  - Confirmed: Confidence formulas, curation thresholds (85% merge, 30% prune)
+  - Confirmed: Semantic similarity engine with sentence-transformers
+  - Confirmed: Incremental delta updates (Section 3.1)
+  - Confirmed: Iterative refinement (up to 5 rounds, Section 3.2)
+  - Evidence includes code references, formula verification, testing results
+  - **Status: ✅ FULLY COMPLIANT WITH ACE RESEARCH PAPER**
+
 ## [2.3.27] - 2025-10-17
 
 ### Fixed

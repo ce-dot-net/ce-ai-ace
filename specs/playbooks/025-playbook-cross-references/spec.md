@@ -1,13 +1,13 @@
 ---
-pattern_id: ace-constitution-documentation-00002
+pattern_id: ace-constitution-documentation-c7413
 name: Playbook cross-references
 domain: ace-constitution-documentation
 language: markdown
 type: helpful
 confidence: 0.0
 observations: 25
-created_at: 2025-10-17T23:07:56.010724
-last_updated: 2025-10-17T23:07:58.365743
+created_at: 2025-10-17T23:32:14.880665
+last_updated: 2025-10-17T23:32:17.356446
 ---
 # Playbook cross-references
 
@@ -29,13 +29,13 @@ ACE system's auto-generated constitution documenting high-confidence coding prin
 - **Failures**: 0
 - **Neutrals**: 0
 - **Confidence Score**: 0.0%
-- **First Seen**: 2025-10-17T23:07:56.010724
-- **Last Updated**: 2025-10-17T23:07:58.365743
+- **First Seen**: 2025-10-17T23:32:14.880665
+- **Last Updated**: 2025-10-17T23:32:17.356446
 
 ## Pattern ID
 
 ```
-ace-constitution-documentation-00002
+ace-constitution-documentation-c7413
 ```
 
 This pattern is tracked in ACE's learning database and evolves based on real-world usage and test results.

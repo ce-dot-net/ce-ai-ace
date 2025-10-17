@@ -1,7 +1,7 @@
 ---
-pattern_id: git-based-training-corpus-00006
+pattern_id: git-based-training-corpus-2151a
 type: technical_plan
-updated: 2025-10-17T23:07:58.452955
+updated: 2025-10-17T23:32:17.448410
 ---
 # Technical Plan: Execute 'git show --name-only' to get changed files per commit
 

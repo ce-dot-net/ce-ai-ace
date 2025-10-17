@@ -1,13 +1,13 @@
 ---
-pattern_id: python-exception-handling-00003
+pattern_id: python-exception-handling-88446
 name: Pattern py-003: Avoid bare except
 domain: python-exception-handling
 language: markdown
 type: helpful
 confidence: 0.0
 observations: 20
-created_at: 2025-10-17T23:07:56.057681
-last_updated: 2025-10-17T23:07:58.387659
+created_at: 2025-10-17T23:32:14.925377
+last_updated: 2025-10-17T23:32:17.379356
 ---
 # Pattern py-003: Avoid bare except
 
@@ -29,13 +29,13 @@ Python exception handling patterns focusing on avoiding bare except clauses
 - **Failures**: 0
 - **Neutrals**: 0
 - **Confidence Score**: 0.0%
-- **First Seen**: 2025-10-17T23:07:56.057681
-- **Last Updated**: 2025-10-17T23:07:58.387659
+- **First Seen**: 2025-10-17T23:32:14.925377
+- **Last Updated**: 2025-10-17T23:32:17.379356
 
 ## Pattern ID
 
 ```
-python-exception-handling-00003
+python-exception-handling-88446
 ```
 
 This pattern is tracked in ACE's learning database and evolves based on real-world usage and test results.

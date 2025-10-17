@@ -2,7 +2,7 @@
 pattern_id: principle-evidence-based-guidelines
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.446190
+updated: 2025-10-17T23:32:17.440374
 ---
 # Insights: evidence-based-guidelines
 

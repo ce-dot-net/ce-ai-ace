@@ -1,8 +1,8 @@
 ---
-pattern_id: ace-constitution-documentation-00001
+pattern_id: ace-constitution-documentation-6b027
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.442034
+updated: 2025-10-17T23:32:17.436768
 ---
 # Insights: Confidence-based principle evolution
 

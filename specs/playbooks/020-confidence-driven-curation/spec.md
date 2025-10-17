@@ -6,8 +6,8 @@ language: markdown
 type: helpful
 confidence: 0.0
 observations: 20
-created_at: 2025-10-17T23:07:56.063481
-last_updated: 2025-10-17T23:07:58.396654
+created_at: 2025-10-17T23:32:14.929730
+last_updated: 2025-10-17T23:32:17.389379
 ---
 # confidence-driven-curation
 
@@ -29,8 +29,8 @@ Use confidence scores (e.g., 50.0%) to guide pattern evolution and refinement
 - **Failures**: 0
 - **Neutrals**: 0
 - **Confidence Score**: 0.0%
-- **First Seen**: 2025-10-17T23:07:56.063481
-- **Last Updated**: 2025-10-17T23:07:58.396654
+- **First Seen**: 2025-10-17T23:32:14.929730
+- **Last Updated**: 2025-10-17T23:32:17.389379
 
 ## Pattern ID
 

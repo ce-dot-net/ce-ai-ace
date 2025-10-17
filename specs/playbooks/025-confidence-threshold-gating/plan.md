@@ -1,7 +1,7 @@
 ---
 pattern_id: principle-confidence-threshold-gating
 type: technical_plan
-updated: 2025-10-17T23:07:58.446454
+updated: 2025-10-17T23:32:17.440587
 ---
 # Technical Plan: confidence-threshold-gating
 

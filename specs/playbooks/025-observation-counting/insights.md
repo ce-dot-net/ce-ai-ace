@@ -1,8 +1,8 @@
 ---
-pattern_id: pattern-metadata-tracking-00004
+pattern_id: pattern-metadata-tracking-16baf
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.443030
+updated: 2025-10-17T23:32:17.437695
 ---
 # Insights: Observation counting
 

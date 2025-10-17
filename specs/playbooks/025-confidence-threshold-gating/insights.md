@@ -2,7 +2,7 @@
 pattern_id: principle-confidence-threshold-gating
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.446535
+updated: 2025-10-17T23:32:17.440659
 ---
 # Insights: confidence-threshold-gating
 

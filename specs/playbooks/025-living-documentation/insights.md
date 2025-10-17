@@ -2,7 +2,7 @@
 pattern_id: principle-living-documentation
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.446818
+updated: 2025-10-17T23:32:17.440932
 ---
 # Insights: living-documentation
 

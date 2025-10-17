@@ -1,8 +1,8 @@
 ---
-pattern_id: ace-constitution-documentation-00002
+pattern_id: ace-constitution-documentation-c7413
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.442345
+updated: 2025-10-17T23:32:17.437072
 ---
 # Insights: Playbook cross-references
 

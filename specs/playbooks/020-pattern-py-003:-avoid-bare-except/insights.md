@@ -1,8 +1,8 @@
 ---
-pattern_id: python-exception-handling-00003
+pattern_id: python-exception-handling-88446
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.448353
+updated: 2025-10-17T23:32:17.443206
 ---
 # Insights: Pattern py-003: Avoid bare except
 

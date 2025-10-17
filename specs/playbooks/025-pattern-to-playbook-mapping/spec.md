@@ -1,13 +1,13 @@
 ---
-pattern_id: playbook-reference-system-00008
+pattern_id: playbook-reference-system-159dc
 name: Pattern-to-playbook mapping
 domain: playbook-reference-system
 language: markdown
 type: helpful
 confidence: 0.0
 observations: 25
-created_at: 2025-10-17T23:07:56.014280
-last_updated: 2025-10-17T23:07:58.371866
+created_at: 2025-10-17T23:32:14.883812
+last_updated: 2025-10-17T23:32:17.362943
 ---
 # Pattern-to-playbook mapping
 
@@ -29,13 +29,13 @@ Cross-referencing system linking principles to detailed playbook specifications
 - **Failures**: 0
 - **Neutrals**: 0
 - **Confidence Score**: 0.0%
-- **First Seen**: 2025-10-17T23:07:56.014280
-- **Last Updated**: 2025-10-17T23:07:58.371866
+- **First Seen**: 2025-10-17T23:32:14.883812
+- **Last Updated**: 2025-10-17T23:32:17.362943
 
 ## Pattern ID
 
 ```
-playbook-reference-system-00008
+playbook-reference-system-159dc
 ```
 
 This pattern is tracked in ACE's learning database and evolves based on real-world usage and test results.

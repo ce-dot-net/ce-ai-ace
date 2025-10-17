@@ -6,8 +6,8 @@ language: markdown
 type: helpful
 confidence: 0.0
 observations: 25
-created_at: 2025-10-17T23:07:56.018997
-last_updated: 2025-10-17T23:07:58.379873
+created_at: 2025-10-17T23:32:14.888290
+last_updated: 2025-10-17T23:32:17.371265
 ---
 # cross-referencing
 
@@ -29,8 +29,8 @@ Link related documentation elements (principles to playbooks) for easy navigatio
 - **Failures**: 0
 - **Neutrals**: 0
 - **Confidence Score**: 0.0%
-- **First Seen**: 2025-10-17T23:07:56.018997
-- **Last Updated**: 2025-10-17T23:07:58.379873
+- **First Seen**: 2025-10-17T23:32:14.888290
+- **Last Updated**: 2025-10-17T23:32:17.371265
 
 ## Pattern ID
 

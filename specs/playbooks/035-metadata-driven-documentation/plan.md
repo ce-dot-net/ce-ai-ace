@@ -1,7 +1,7 @@
 ---
 pattern_id: principle-metadata-driven-documentation
 type: technical_plan
-updated: 2025-10-17T23:07:58.439180
+updated: 2025-10-17T23:32:17.435265
 ---
 # Technical Plan: metadata-driven-documentation
 

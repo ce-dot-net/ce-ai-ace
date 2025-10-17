@@ -1,8 +1,8 @@
 ---
-pattern_id: multi-epoch-training-00000
+pattern_id: multi-epoch-training-b3852
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.450893
+updated: 2025-10-17T23:32:17.446491
 ---
 # Insights: Import epoch-manager functions (start_epoch, complete_epoch, track_pattern_evolution)
 

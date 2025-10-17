@@ -2,7 +2,7 @@
 pattern_id: abstract-confidence-based-learning
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.445264
+updated: 2025-10-17T23:32:17.439769
 ---
 # Insights: confidence-based-learning
 

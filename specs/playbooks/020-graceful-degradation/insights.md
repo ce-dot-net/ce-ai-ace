@@ -2,7 +2,7 @@
 pattern_id: abstract-graceful-degradation
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.447742
+updated: 2025-10-17T23:32:17.442099
 ---
 # Insights: graceful-degradation
 

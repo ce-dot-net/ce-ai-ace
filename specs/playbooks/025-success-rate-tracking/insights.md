@@ -1,8 +1,8 @@
 ---
-pattern_id: pattern-metadata-tracking-00005
+pattern_id: pattern-metadata-tracking-c95ec
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.443446
+updated: 2025-10-17T23:32:17.437985
 ---
 # Insights: Success rate tracking
 

@@ -1,8 +1,8 @@
 ---
-pattern_id: git-based-training-corpus-00008
+pattern_id: git-based-training-corpus-875c5
 type: reflector_insights
 insight_count: 0
-updated: 2025-10-17T23:07:58.453733
+updated: 2025-10-17T23:32:17.449134
 ---
 # Insights: Execute 'git diff-tree --no-commit-id --name-only -r' for file change detection
 
