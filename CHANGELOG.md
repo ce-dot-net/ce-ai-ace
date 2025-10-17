@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.12] - 2025-10-17
+
+### Fixed
+- **Slash Command Pattern** - Fixed slash commands to work as instructions, not auto-executing scripts
+  - Removed `!` prefix from bash blocks - commands are instructions to Claude, not auto-exec
+  - Created `scripts/ace-clear.sh` helper script
+  - Updated ace-clear.md to use instruction pattern with `$ARGUMENTS` placeholder
+  - `$ARGUMENTS` is substituted in markdown, Claude executes the command with Bash tool
+  - This is the correct Claude Code slash command pattern per official documentation
+
+
+
 ## [2.3.11] - 2025-10-17
 
 ### Fixed
