@@ -1,0 +1,165 @@
+{
+  "concrete": {
+    "ace-plugin-testing": {
+      "description": "Test infrastructure for ACE plugin system validation and verification",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test-phase-3-5.py",
+        "scripts/embeddings_engine.py",
+        "scripts/playbook_delta_updater.py",
+        "scripts/serena-pattern-detector.py",
+        "hooks/hooks.json"
+      ],
+      "patterns": [
+        "Custom test decorator pattern",
+        "Global counters for test metrics",
+        "Emoji-enhanced test output",
+        "Graceful handling of missing resources"
+      ],
+      "confidence": 0.95
+    },
+    "sqlite-pattern-storage": {
+      "description": "SQLite database for ACE pattern storage with schema validation",
+      "evidence": [
+        ".ace-memory/patterns.db",
+        "PRAGMA table_info(patterns)",
+        "epochs table",
+        "bullet_id, helpful_count, harmful_count columns"
+      ],
+      "patterns": [
+        "SQLite schema validation with PRAGMA",
+        "Database migration verification",
+        "Set operations for validation"
+      ],
+      "confidence": 0.9
+    },
+    "plugin-hook-system": {
+      "description": "Hook-based plugin lifecycle management system",
+      "evidence": [
+        "hooks/hooks.json",
+        "scripts/inject-playbook.py",
+        "scripts/analyze-agent-output.py",
+        "scripts/validate-patterns.py",
+        "scripts/ace-cycle.py",
+        "scripts/ace-session-end.py"
+      ],
+      "patterns": [
+        "JSON configuration file validation",
+        "Hook scripts existence verification",
+        "Unix file permission validation"
+      ],
+      "confidence": 0.92
+    },
+    "python-module-system": {
+      "description": "Python module management and dynamic imports",
+      "evidence": [
+        "scripts/embeddings_engine.py",
+        "scripts/playbook_delta_updater.py",
+        "scripts/serena-pattern-detector.py"
+      ],
+      "patterns": [
+        "Dynamic module loading with importlib",
+        "Runtime sys.path modification",
+        "Conditional backend detection"
+      ],
+      "confidence": 0.88
+    },
+    "ace-embeddings-backend": {
+      "description": "Semantic similarity engine with multiple backend support",
+      "evidence": [
+        "scripts/embeddings_engine.py",
+        "calculate_semantic_similarity function",
+        "get_backend_info function",
+        "OpenAI/Local/Fallback backends"
+      ],
+      "patterns": [
+        "Runtime backend detection",
+        "Numeric range validation",
+        "Graceful fallback mechanism"
+      ],
+      "confidence": 0.85
+    }
+  },
+  "abstract": {
+    "test-driven-validation": {
+      "description": "Comprehensive test suite pattern with custom decorators and graceful degradation",
+      "instances": [
+        "ace-plugin-testing"
+      ],
+      "confidence": 0.9
+    },
+    "schema-migration-pattern": {
+      "description": "Database schema evolution with backward compatibility checks",
+      "instances": [
+        "sqlite-pattern-storage"
+      ],
+      "confidence": 0.88
+    },
+    "plugin-lifecycle-architecture": {
+      "description": "Hook-based extensibility system with JSON configuration",
+      "instances": [
+        "plugin-hook-system"
+      ],
+      "confidence": 0.92
+    },
+    "dynamic-import-pattern": {
+      "description": "Runtime module loading with path manipulation for plugin discovery",
+      "instances": [
+        "python-module-system"
+      ],
+      "confidence": 0.85
+    },
+    "multi-backend-abstraction": {
+      "description": "Multiple implementation backends with runtime selection and fallback",
+      "instances": [
+        "ace-embeddings-backend"
+      ],
+      "confidence": 0.87
+    }
+  },
+  "principles": {
+    "graceful-degradation": {
+      "description": "Handle missing resources without failure, provide informative warnings",
+      "applied_in": [
+        "test-driven-validation",
+        "multi-backend-abstraction"
+      ],
+      "confidence": 0.93
+    },
+    "modern-python-stdlib": {
+      "description": "Prefer modern Python APIs (pathlib, f-strings, decorators) over legacy equivalents",
+      "applied_in": [
+        "test-driven-validation",
+        "python-module-system"
+      ],
+      "confidence": 0.9
+    },
+    "defensive-validation": {
+      "description": "Validate assumptions explicitly (schema, permissions, file existence)",
+      "applied_in": [
+        "schema-migration-pattern",
+        "plugin-lifecycle-architecture"
+      ],
+      "confidence": 0.91
+    },
+    "developer-friendly-output": {
+      "description": "Enhance CLI output with emojis, clear formatting, and detailed feedback",
+      "applied_in": [
+        "test-driven-validation"
+      ],
+      "confidence": 0.88
+    },
+    "separation-of-concerns": {
+      "description": "Isolate test logic, database operations, and module loading into distinct units",
+      "applied_in": [
+        "test-driven-validation",
+        "dynamic-import-pattern"
+      ],
+      "confidence": 0.87
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 20,
+    "discovery_method": "bottom-up from file paths and code analysis",
+    "discovered_at": "2025-10-17T00:00:00Z"
+  }
+}

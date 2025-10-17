@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.27] - 2025-10-17
+
+### Fixed
+- **ACE clear script now removes auto-generated spec-kit playbooks**
+  - Fixed issue where old training artifacts from `specs/playbooks/` influenced new offline training runs
+  - `ace-clear.sh` now removes auto-generated playbooks (directories numbered ≥005)
+  - Preserves manually created playbooks (001-temp, 003-avoid-bare-except, etc.)
+  - Ensures clean slate for fresh pattern discovery without contamination from previous runs
+  - Uses `find` to identify and remove only auto-generated directories: `[005-999]-*`
+  - Issue affected users who ran multiple training sessions - old patterns would reappear
+
+### Documentation
+- **Clarified Write permission behavior for domain-discoverer agent**
+  - Agent requires Write tool to save JSON responses to `.ace-memory/discovery-queue/`
+  - Permission prompts are expected Claude Code security behavior (no auto-approve API)
+  - Users can click "Allow automatically" when first prompted
+  - Subsequent writes to same directory pattern are auto-approved by Claude Code
+  - This is by design for security - prevents malicious plugins from arbitrary file writes
+
 ## [2.3.26] - 2025-10-17
 
 ### Fixed

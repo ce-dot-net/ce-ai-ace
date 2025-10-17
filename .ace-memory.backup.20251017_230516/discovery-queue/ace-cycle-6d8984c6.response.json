@@ -1,0 +1,191 @@
+{
+  "concrete": {
+    "ace-orchestration-system": {
+      "description": "ACE (Agentic Context Engineering) orchestration system with pattern discovery, curation, and domain taxonomy learning",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/ace-cycle.py",
+        ".ace-memory/patterns.db",
+        ".ace-memory/reflections/",
+        ".ace-memory/domain_taxonomy.json"
+      ],
+      "patterns": [
+        "Agent-based pattern discovery via reflector",
+        "Iterative refinement with convergence detection",
+        "Deterministic curation with merge/prune decisions",
+        "Periodic domain discovery triggers"
+      ],
+      "confidence": 0.95
+    },
+    "sqlite-persistence": {
+      "description": "SQLite database for persistent storage of patterns, insights, and observations with foreign key relationships",
+      "evidence": [
+        "sqlite3.connect()",
+        "CREATE TABLE IF NOT EXISTS patterns",
+        "CREATE TABLE IF NOT EXISTS insights",
+        "CREATE TABLE IF NOT EXISTS observations",
+        "FOREIGN KEY relationships"
+      ],
+      "patterns": [
+        "Triple-table schema (patterns, insights, observations)",
+        "Row factory for dict conversion",
+        "Manual connection management with explicit commit/close",
+        "Upsert pattern via SELECT then UPDATE or INSERT"
+      ],
+      "confidence": 0.92
+    },
+    "hybrid-semantic-similarity": {
+      "description": "Multi-tier semantic similarity engine with graceful fallback (Claude -> ChromaDB -> Jaccard)",
+      "evidence": [
+        "embeddings_engine.SemanticSimilarityEngine",
+        "calculate_similarity() with method tracking",
+        "Emergency Jaccard fallback in exception handler"
+      ],
+      "patterns": [
+        "Cascading backend detection",
+        "Method-aware similarity calculation",
+        "Weighted text comparison (name 60%, description 40%)"
+      ],
+      "confidence": 0.88
+    },
+    "subprocess-test-execution": {
+      "description": "Subprocess-based test execution with timeout and error handling for npm test",
+      "evidence": [
+        "subprocess.run(['npm', 'test'])",
+        "capture_output=True",
+        "timeout=10",
+        "subprocess.TimeoutExpired exception",
+        "FileNotFoundError exception"
+      ],
+      "patterns": [
+        "Timeout-protected command execution",
+        "Structured evidence gathering from test results",
+        "Graceful degradation when tests unavailable"
+      ],
+      "confidence": 0.85
+    },
+    "agent-coordination-via-filesystem": {
+      "description": "Claude Code agent coordination using filesystem-based request/response pattern with JSON",
+      "evidence": [
+        "reflections_dir / f'{Path(file_path).name}.json'",
+        "response_file.exists() check for caching",
+        "stderr output for agent invocation requests",
+        "JSON dump/load for agent communication"
+      ],
+      "patterns": [
+        "Check-output-request workflow",
+        "Cached response detection",
+        "Structured agent invocation via stderr prompts",
+        "Round-based refinement with separate response files"
+      ],
+      "confidence": 0.90
+    },
+    "pathlib-path-operations": {
+      "description": "Modern Python path handling using pathlib.Path for cross-platform file operations",
+      "evidence": [
+        "from pathlib import Path",
+        "Path(__file__).parent.parent",
+        "Path.cwd()",
+        "DB_PATH.parent.mkdir(parents=True, exist_ok=True)",
+        "Path(file_path).suffix",
+        "Path(file_path).name"
+      ],
+      "patterns": [
+        "Path division operator for path joining",
+        "Suffix extraction for file type detection",
+        "Parent directory creation with exist_ok",
+        "Environment variable with fallback default"
+      ],
+      "confidence": 0.88
+    }
+  },
+  "abstract": {
+    "ace-research-architecture": {
+      "description": "Implementation of ACE research paper architecture (Generator -> Reflector -> Curator -> Domain Discovery)",
+      "instances": [
+        "ace-orchestration-system"
+      ],
+      "confidence": 0.93
+    },
+    "graceful-degradation": {
+      "description": "Multi-level fallback strategies ensuring system continues operating when dependencies fail",
+      "instances": [
+        "hybrid-semantic-similarity",
+        "subprocess-test-execution",
+        "agent-coordination-via-filesystem"
+      ],
+      "confidence": 0.87
+    },
+    "iterative-refinement": {
+      "description": "Multi-round improvement with convergence detection to enhance quality of LLM outputs",
+      "instances": [
+        "ace-orchestration-system"
+      ],
+      "confidence": 0.85
+    },
+    "cache-then-request": {
+      "description": "Check for cached results before making expensive calls, enabling idempotent retries",
+      "instances": [
+        "agent-coordination-via-filesystem"
+      ],
+      "confidence": 0.82
+    },
+    "deterministic-curation": {
+      "description": "Rules-based decision making with configurable thresholds for merge/prune operations",
+      "instances": [
+        "ace-orchestration-system"
+      ],
+      "confidence": 0.90
+    }
+  },
+  "principles": {
+    "research-paper-fidelity": {
+      "description": "Strict adherence to research paper architecture, avoiding shortcuts or premature optimization",
+      "applied_in": [
+        "ace-research-architecture"
+      ],
+      "confidence": 0.91
+    },
+    "no-hardcoded-patterns": {
+      "description": "Avoid hardcoding domain knowledge; discover patterns from actual code via LLM analysis",
+      "applied_in": [
+        "ace-research-architecture"
+      ],
+      "confidence": 0.94
+    },
+    "explicit-error-handling": {
+      "description": "Catch specific exceptions and provide graceful fallbacks rather than failing loudly",
+      "applied_in": [
+        "graceful-degradation"
+      ],
+      "confidence": 0.86
+    },
+    "separation-of-concerns": {
+      "description": "Clear boundaries between components: discovery (agent), curation (algorithm), storage (database)",
+      "applied_in": [
+        "ace-research-architecture",
+        "deterministic-curation"
+      ],
+      "confidence": 0.88
+    },
+    "type-hints-for-interfaces": {
+      "description": "Use Python typing module for function signatures documenting expected data structures",
+      "applied_in": [
+        "sqlite-persistence",
+        "subprocess-test-execution"
+      ],
+      "confidence": 0.79
+    },
+    "config-via-constants": {
+      "description": "Define configuration thresholds as module-level constants with research paper citations",
+      "applied_in": [
+        "deterministic-curation"
+      ],
+      "confidence": 0.83
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and descriptions",
+    "discovered_at": "2025-10-17T23:00:00Z"
+  }
+}
