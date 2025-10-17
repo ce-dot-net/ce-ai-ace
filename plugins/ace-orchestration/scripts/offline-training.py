@@ -14,6 +14,7 @@ import sys
 import json
 import sqlite3
 import subprocess
+import re
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Optional
@@ -156,6 +157,72 @@ def scan_codebase_for_training(source: str = 'all') -> List[Dict]:
 
     return training_data
 
+def batch_reflect_via_agent(code: str, file_path: str, language: str) -> List[Dict]:
+    """
+    Pattern discovery via agent invocation (interactive mode).
+
+    TRUE ACE Architecture: Patterns are DISCOVERED by agents analyzing code,
+    NOT matched against hardcoded keywords.
+
+    This function outputs a request for Claude to invoke the domain-discoverer agent.
+    The agent will analyze the code and discover domain taxonomy and patterns.
+
+    Returns discovered patterns from agent analysis (empty until agent responds).
+    """
+    # Prepare agent invocation request
+    request = {
+        'code_snippet': code[:2000],  # First 2000 chars
+        'full_code_length': len(code),
+        'file_path': file_path,
+        'language': language,
+        'training_mode': 'offline'
+    }
+
+    print(f"""
+🔬 ACE Domain Discovery Request (Offline Training)
+
+File: {file_path} ({len(code)} chars, language: {language})
+
+Please invoke the ace-orchestration:domain-discoverer agent to analyze this code
+and discover domain taxonomy through bottom-up pattern analysis.
+
+<domain_discovery_request>
+{json.dumps(request, indent=2)}
+</domain_discovery_request>
+
+Use the Task tool to invoke the domain-discoverer agent with the data above.
+
+The agent will:
+1. Analyze the code to identify coding patterns
+2. Discover domain taxonomy (imports, APIs, architectural patterns)
+3. Return discovered patterns with confidence scores
+
+Expected output format:
+{{
+  "discovered_domains": [
+    {{
+      "id": "domain-id",
+      "name": "Domain name",
+      "patterns": [
+        {{
+          "id": "pattern-id",
+          "name": "Pattern name",
+          "description": "Pattern description",
+          "confidence": 0.8
+        }}
+      ]
+    }}
+  ]
+}}
+
+Store results in .ace-memory/domains/{file_path}.json
+""", file=sys.stderr)
+
+    # Return empty - awaiting agent response
+    # In true offline training, this would be automated via LLM API
+    # For now, offline training requires interactive mode
+    return []
+
 def run_offline_training(epochs: int = MAX_EPOCHS, source: str = 'all', verbose: bool = True):
     """
     Run offline training for multiple epochs.
@@ -225,18 +292,14 @@ def run_offline_training(epochs: int = MAX_EPOCHS, source: str = 'all', verbose:
             if verbose and (idx + 1) % 10 == 0:
                 print(f"  Processing {idx + 1}/{len(training_data)}...", file=sys.stderr)
 
-            # Gather evidence (mock for offline)
-            evidence = {
-                'test_status': 'passed',  # Assume passed for offline training
-                'error_logs': '',
-                'has_tests': False
-            }
+            # BATCH MODE: Attempt agent-based discovery
+            # TRUE ACE requires agent analysis, not hardcoded patterns
+            language = _infer_language_from_file(example['file_path'])
+            discovered = batch_reflect_via_agent(example['code'], example['file_path'], language)
 
-            # Reflect - DISCOVER patterns from raw code (TRUE ACE architecture!)
-            reflection = reflect(example['code'], evidence, example['file_path'], max_rounds=5)
+            if verbose and discovered:
+                print(f"  📊 Discovered {len(discovered)} patterns in {example['file_path']}", file=sys.stderr)
 
-            # Get discovered patterns
-            discovered = reflection.get('discovered_patterns', [])
             if not discovered:
                 continue
 
