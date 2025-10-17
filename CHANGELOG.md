@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.13] - 2025-10-17
+
+### Changed
+- **Simplified Command Pattern** - Verified against official Claude Code documentation
+  - Removed complex bash conditionals from ace-clear.md
+  - Commands now use simple natural language instructions
+  - `$ARGUMENTS` is a markdown placeholder (substituted before Claude sees it)
+  - Claude executes scripts via Bash tool based on clear instructions
+  - Pattern verified against official docs: slash commands are instructions, not scripts
+
+
+
 ## [2.3.12] - 2025-10-17
 
 ### Fixed

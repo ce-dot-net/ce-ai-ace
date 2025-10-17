@@ -9,7 +9,7 @@
       "name": "ace-orchestration",
       "source": "./plugins/ace-orchestration",
       "description": "TRUE ACE architecture with agent-based discovery and self-improving patterns - Based on Stanford/SambaNova/UC Berkeley research",
-      "version": "2.3.12"
+      "version": "2.3.13"
     }
   ]
 }

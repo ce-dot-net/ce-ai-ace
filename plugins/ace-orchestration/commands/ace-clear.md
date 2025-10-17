@@ -12,8 +12,6 @@ Reset the ACE pattern learning database.
 
 **User provided**: $ARGUMENTS
 
-Use the Bash tool to run:
+Find and run the `ace-clear.sh` script from the ace-orchestration plugin with the provided arguments.
 
-```bash
-bash "${CLAUDE_PLUGIN_ROOT}/scripts/ace-clear.sh" $ARGUMENTS
-```
+The script is located at: `plugins/ace-orchestration/scripts/ace-clear.sh`
