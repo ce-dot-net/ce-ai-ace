@@ -15,6 +15,7 @@ import json
 import sqlite3
 import subprocess
 import re
+import hashlib
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Optional
@@ -220,16 +221,27 @@ Required JSON format:
     queue_dir = PROJECT_ROOT / '.ace-memory' / 'discovery-queue'
     queue_dir.mkdir(parents=True, exist_ok=True)
 
-    # Create unique request ID from file path
-    request_id = Path(file_path).stem + '-' + str(hash(file_path))[:8]
+    # Create unique request ID from file path (deterministic hash)
+    hash_obj = hashlib.md5(file_path.encode())
+    request_id = Path(file_path).stem + '-' + hash_obj.hexdigest()[:8]
     request_file = queue_dir / f'{request_id}.request.json'
     response_file = queue_dir / f'{request_id}.response.json'
 
-    # Write request
-    with open(request_file, 'w') as f:
-        json.dump(request, f, indent=2)
+    # Check if response already exists BEFORE writing request
+    if response_file.exists():
+        try:
+            with open(response_file, 'r') as f:
+                agent_output = json.load(f)
+            return agent_output.get('patterns', [])
+        except Exception as e:
+            print(f"⚠️  Error reading response: {e}", file=sys.stderr)
 
-    # Check if response already exists (from previous run or agent)
+    # Write request only if no response exists yet
+    if not request_file.exists():
+        with open(request_file, 'w') as f:
+            json.dump(request, f, indent=2)
+
+    # Response doesn't exist yet - check again after queue is processed
     if response_file.exists():
         try:
             with open(response_file, 'r') as f:

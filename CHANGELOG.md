@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.20] - 2025-10-17
+
+### Fixed
+- **Offline training queue** - Fixed non-deterministic request IDs
+  - Use hashlib.md5 instead of Python's hash() for deterministic IDs
+  - Check for existing responses BEFORE writing new requests
+  - Prevents duplicate requests for same file across runs
+  - Queue system now works correctly for multi-epoch training
+
 ## [2.3.19] - 2025-10-17
 
 ### Fixed
