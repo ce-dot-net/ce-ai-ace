@@ -1,6 +1,6 @@
 # ACE Plugin for Claude Code CLI
 
-![Version](https://img.shields.io/badge/version-2.3.9-blue) ![License](https://img.shields.io/badge/license-MIT-green) [![Research](https://img.shields.io/badge/arXiv-2510.04618-red)](https://arxiv.org/abs/2510.04618)
+![Version](https://img.shields.io/badge/version-2.3.10-blue) ![License](https://img.shields.io/badge/license-MIT-green) [![Research](https://img.shields.io/badge/arXiv-2510.04618-red)](https://arxiv.org/abs/2510.04618)
 
 **Automatic Pattern Learning through Agentic Context Engineering**
 
@@ -184,7 +184,7 @@ The plugin works **100% automatically**:
        ▼
 ┌─────────────────────────────────┐
 │ Generator Feedback Loop 🔄      │
-│ (NEW in v2.3.9)                 │
+│ (NEW in v2.3.10)                 │
 │ • Tag bullets as helpful/harmful│
 │ • Increment counters            │
 │ • Recalculate confidence        │
@@ -212,7 +212,7 @@ The plugin works **100% automatically**:
 
 ## ✨ Features
 
-### Agent-Based Pattern Discovery ⭐ NEW (v2.3.9)
+### Agent-Based Pattern Discovery ⭐ NEW (v2.3.10)
 TRUE ACE architecture - patterns discovered from YOUR code:
 - **No hardcoded keywords** - Reflector agent analyzes raw code
 - **Discovers actual patterns** - imports, APIs, architectural choices
@@ -542,7 +542,7 @@ MIT License - See LICENSE file for details
 
 View the [full changelog](CHANGELOG.md) for detailed version history.
 
-**Latest Release**: [v2.3.9](https://github.com/ce-dot-net/ce-ai-ace/releases/tag/v2.3.9) (October 2025)
+**Latest Release**: [v2.3.10](https://github.com/ce-dot-net/ce-ai-ace/releases/tag/v2.3.10) (October 2025)
 - **TRUE ACE Architecture** - Agent-based pattern discovery (no hardcoded keywords!)
 - **Generator Feedback Loop** - Patterns self-improve through helpful/harmful tagging
 - **Confidence with Feedback** - New formula incorporates usage effectiveness

@@ -7,6 +7,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.10] - 2025-10-17
+
+### Fixed
+- **Marketplace Version Sync** - Updated marketplace.json to v2.3.10
+  - Previous release v2.3.9 didn't update marketplace.json (still showed 2.3.8)
+  - Marketplace description updated to emphasize TRUE ACE architecture
+  - All version references now synchronized across all files
+  - README.md badge updated to 2.3.10
+  - plugin.json version updated to 2.3.10
+
+### Note
+This is a version bump release to properly sync marketplace distribution. All TRUE ACE architecture features from v2.3.9 are included:
+- Agent-based pattern discovery (no hardcoded keywords)
+- Generator feedback loop for pattern self-improvement
+- Confidence calculation with usage feedback
+- Complete documentation (ACE_TRUE_ARCHITECTURE.md, ACE_TESTING_GUIDE.md, CHANGELOG_v2.3.9.md)
+
+## [2.3.9] - 2025-10-17
+
+### Added
+- **TRUE ACE Architecture Implementation** - Complete research paper alignment
+  - Agent-based pattern discovery (Reflector analyzes raw code)
+  - Generator feedback loop for pattern self-improvement
+  - PostTaskCompletion hook collects helpful/harmful bullet tagging
+  - Confidence calculation incorporates usage feedback
+  - New formula: (successes + helpful) / (observations + helpful + harmful)
+
+### Changed
+- **Pattern Discovery** - Removed hardcoded detection, implemented agent-based discovery
+  - Removed detect_patterns() function entirely
+  - Updated reflect() to pass raw code directly to Reflector
+  - Reflector discovers patterns from imports, APIs, architectural choices
+  - Patterns learned from YOUR codebase, not predefined keywords
+
+### Added Documentation
+- docs/ACE_TRUE_ARCHITECTURE.md (296 lines) - Complete architecture guide
+- docs/ACE_TESTING_GUIDE.md (351 lines) - 10 comprehensive test scenarios
+- CHANGELOG_v2.3.9.md (339 lines) - Detailed release notes
+- hooks/PostTaskCompletion.sh - NEW feedback hook
+- scripts/collect-pattern-feedback.py - NEW feedback collector
+
+### Removed
+- **Deprecated Files** - Removed hardcoded pattern detection
+  - plugins/ace-orchestration/scripts/semantic_pattern_extractor.py
+
+### Breaking Changes
+**Users should run `/ace-orchestration:ace-clear --confirm`** to reset patterns. Old patterns used hardcoded detection and won't self-improve. Let ACE rediscover patterns from your actual codebase!
+
 ## [2.3.8] - 2025-10-17
 
 ### Fixed
@@ -492,7 +540,9 @@ When adding entries to this changelog:
 
 ---
 
-[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.8...HEAD
+[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.10...HEAD
+[2.3.10]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.9...v2.3.10
+[2.3.9]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.8...v2.3.9
 [2.3.8]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.7...v2.3.8
 [2.3.7]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.6...v2.3.7
 [2.3.6]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.5...v2.3.6

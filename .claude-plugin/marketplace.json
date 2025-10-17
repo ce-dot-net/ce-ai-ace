@@ -8,8 +8,8 @@
     {
       "name": "ace-orchestration",
       "source": "./plugins/ace-orchestration",
-      "description": "Automatic pattern learning through ACE cycle - Based on Stanford/SambaNova/UC Berkeley research",
-      "version": "2.3.8"
+      "description": "TRUE ACE architecture with agent-based discovery and self-improving patterns - Based on Stanford/SambaNova/UC Berkeley research",
+      "version": "2.3.10"
     }
   ]
 }
