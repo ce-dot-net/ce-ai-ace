@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.1] - 2025-10-18
+
+### Fixed
+- **PostToolUse hook concurrency control** - Eliminated API Error 400 from parallel Edit/Write operations
+  - Root cause: When Claude executes multiple Edit/Write in parallel, both trigger PostToolUse hook simultaneously
+  - Two `ace-cycle.py` processes run concurrently, both output `{'continue': True}` at slightly different times
+  - Claude Code's message builder gets confused about which `tool_result` belongs to which `tool_use`
+  - Result: API request sent to Anthropic missing `tool_result` blocks → 400 Bad Request
+  - **Solution**: Added file-based mutual exclusion lock using `fcntl.flock()`
+  - Lock file: `.ace-memory/.ace-cycle.lock` (non-blocking acquisition)
+  - First parallel edit acquires lock and runs normally, second edit skips immediately with `{'continue': True}`
+  - Prevents message corruption while maintaining both edits' success
+  - Benefits: No 400 errors, no performance impact, graceful degradation, proper cleanup
+  - Technical details in `docs/FIX_400_ERROR.md` and `docs/ACE_400_ERROR_ANALYSIS.md`
+
+### Changed
+- **Agent examples cleanup** - Removed obsolete Serena MCP references from domain-discoverer agent
+  - Replaced Serena examples with ChromaDB and git integration examples
+  - ChromaDB still used for vector storage (not removed!)
+  - Examples now show actual current integrations (chromadb, git, plugins, hooks)
+
 ## [2.4.0] - 2025-10-18
 
 ### Added
@@ -778,7 +799,9 @@ When adding entries to this changelog:
 
 ---
 
-[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.10...HEAD
+[Unreleased]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.4.1...HEAD
+[2.4.1]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.4.0...v2.4.1
+[2.4.0]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.10...v2.4.0
 [2.3.10]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.9...v2.3.10
 [2.3.9]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.8...v2.3.9
 [2.3.8]: https://github.com/ce-dot-net/ce-ai-ace/compare/v2.3.7...v2.3.8

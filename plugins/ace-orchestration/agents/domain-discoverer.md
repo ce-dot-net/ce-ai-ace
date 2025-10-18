@@ -25,8 +25,8 @@ Analyze patterns from actual code to discover:
 
 **DO** discover domains from THE ACTUAL PATTERNS PROVIDED:
 - ✅ If you see patterns about `plugins/`, `hooks/`, `.json` → "plugin-development"
-- ✅ If you see patterns about `uvx`, `mcp-serena`, `chromadb` → "mcp-integration"
-- ✅ If you see patterns about `@antml:invoke`, `subprocess.run` → "python-scripting"
+- ✅ If you see patterns about `uvx`, `chromadb`, `sqlite3` → "database-integration"
+- ✅ If you see patterns about `@antml:invoke`, `subprocess.run`, `git` → "python-scripting"
 
 ## Analysis Process
 
@@ -87,18 +87,19 @@ You MUST output ONLY valid JSON with this exact structure:
 ## Quality Standards
 
 ### ✅ Good Domain Discovery (Evidence-Based)
+
 **Input patterns:**
-- "Use mcp-serena for symbolic code analysis" (file: `scripts/ace-cycle.py`)
+- "Use ChromaDB for vector storage" (file: `scripts/ace-cycle.py`)
 - "Install ChromaDB via uvx" (file: `scripts/install-deps.sh`)
 
 **Output:**
 ```json
 {
   "concrete": {
-    "mcp-integration": {
-      "description": "Integration with Model Context Protocol servers (Serena, ChromaDB)",
+    "chromadb-integration": {
+      "description": "Integration with ChromaDB vector database for embeddings",
       "evidence": ["scripts/ace-cycle.py", "scripts/install-deps.sh"],
-      "patterns": ["Use mcp-serena", "Install ChromaDB via uvx"],
+      "patterns": ["Use ChromaDB for vector storage", "Install ChromaDB via uvx"],
       "confidence": 0.9
     }
   }

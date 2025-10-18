@@ -31,6 +31,7 @@ import os
 import re
 import sqlite3
 import subprocess
+import fcntl
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any, Optional
@@ -789,6 +790,21 @@ def merge_patterns(target: Dict, source: Dict) -> Dict:
 
 def main():
     """Main ACE cycle orchestration."""
+    # CONCURRENCY LOCK: Prevent parallel PostToolUse hook executions
+    # This fixes the 400 API error caused by simultaneous hook runs
+    lock_file = PROJECT_ROOT / '.ace-memory' / '.ace-cycle.lock'
+    lock_file.parent.mkdir(parents=True, exist_ok=True)
+
+    try:
+        # Try to acquire lock (non-blocking)
+        lock_fd = open(lock_file, 'w')
+        fcntl.flock(lock_fd.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except (IOError, OSError):
+        # Another ace-cycle.py is running, skip this one
+        print("⏭️  ACE cycle already running, skipping duplicate", file=sys.stderr)
+        print(json.dumps({'continue': True}))
+        sys.exit(0)
+
     try:
         # Read hook input from stdin
         input_data = json.load(sys.stdin)
@@ -797,11 +813,13 @@ def main():
 
         if not file_path:
             # No file path, skip
+            print(json.dumps({'continue': True}))
             sys.exit(0)
 
         # Only process supported file types
         ext = Path(file_path).suffix
         if ext not in ['.py', '.js', '.jsx', '.ts', '.tsx']:
+            print(json.dumps({'continue': True}))
             sys.exit(0)
 
         print(f"🔄 ACE: Starting reflection cycle for {file_path}", file=sys.stderr)
@@ -828,10 +846,12 @@ def main():
         # Check if patterns were discovered
         discovered = reflection.get('discovered_patterns', [])
         if not discovered:
-            print("⏭️  No patterns discovered (agent invocation required)", file=sys.stderr)
-            sys.exit(0)
-
-        print(f"🔍 Discovered {len(discovered)} pattern(s): {', '.join(p['id'] for p in discovered)}", file=sys.stderr)
+            print("⏭️  No patterns discovered (graceful degradation - Curator can still process existing patterns)", file=sys.stderr)
+            # Continue to Curator even without new patterns (ACE paper: graceful degradation)
+            # Curator can still merge/prune existing patterns based on feedback
+            # This respects ACE paper's acknowledged limitation (Appendix B)
+        else:
+            print(f"🔍 Discovered {len(discovered)} pattern(s): {', '.join(p['id'] for p in discovered)}", file=sys.stderr)
 
         # STEP 3: Curate each discovered pattern
         patterns_processed = 0
@@ -963,7 +983,6 @@ def main():
 
         # Output success to Claude Code
         print(json.dumps({'continue': True}))
-        sys.exit(0)
 
     except Exception as e:
         print(f"❌ ACE cycle failed: {e}", file=sys.stderr)
@@ -971,7 +990,17 @@ def main():
         traceback.print_exc(file=sys.stderr)
         # Continue anyway (don't block user's workflow)
         print(json.dumps({'continue': True}))
-        sys.exit(0)
+
+    finally:
+        # Release lock
+        try:
+            fcntl.flock(lock_fd.fileno(), fcntl.LOCK_UN)
+            lock_fd.close()
+            lock_file.unlink(missing_ok=True)
+        except:
+            pass  # Lock cleanup failure is non-critical
+
+    sys.exit(0)
 
 if __name__ == '__main__':
     main()
