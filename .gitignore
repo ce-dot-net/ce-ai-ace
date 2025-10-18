@@ -7,6 +7,7 @@ package-lock.json
 
 # ACE Runtime (local learning state, not committed)
 .ace-memory/
+.ace-memory.backup*/
 
 # ACE Plugin Config (generated based on detected MCP servers)
 plugins/ace-orchestration/.ace-config
