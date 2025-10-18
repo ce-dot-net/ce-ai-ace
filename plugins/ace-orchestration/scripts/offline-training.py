@@ -21,22 +21,8 @@ from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Optional
 
-# Try to import Claude Agent SDK for automatic agent invocation
-# NOTE: SDK only works for EXTERNAL automation, not when running from within Claude Code
-try:
-    from claude_agent_sdk import query, ClaudeAgentOptions
-    # Check if running from within Claude Code (via slash command)
-    # If so, disable SDK to avoid trying to spawn nested Claude processes
-    import os
-    if os.environ.get('CLAUDECODE') or os.environ.get('CLAUDE_CODE_ENTRYPOINT'):
-        SDK_AVAILABLE = False
-        print("ℹ️  Running from within Claude Code - using manual agent invocation", file=sys.stderr)
-    else:
-        SDK_AVAILABLE = True
-except ImportError:
-    SDK_AVAILABLE = False
-    print("⚠️  Claude Agent SDK not available. Install with: pip install claude-agent-sdk", file=sys.stderr)
-    print("    Falling back to manual agent invocation workflow.", file=sys.stderr)
+# Note: Offline training uses manual agent invocation via Task tool
+# SDK is NOT used when running from within Claude Code slash commands
 
 # Add scripts to path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -270,91 +256,15 @@ def batch_reflect_via_agent(code: str, file_path: str, language: str) -> List[Di
         with open(request_file, 'w') as f:
             json.dump(request, f, indent=2)
 
-        # Try to invoke agent automatically using Claude Agent SDK
-        if SDK_AVAILABLE:
-            try:
-                print(f"""
-🔬 ACE Domain Discovery Request
-
-File: {file_path} ({len(code)} chars, language: {language})
-Request ID: {request_id}
-
-Invoking domain-discoverer agent via Claude Agent SDK...
-""", file=sys.stderr)
-
-                # Use SDK to invoke the agent
-                agent_response = asyncio.run(invoke_agent_via_sdk(request_file, response_file, file_path, code, language))
-
-                if agent_response:
-                    print(f"✅ Agent response received and saved", file=sys.stderr)
-                    # Response was saved, recursive call will read it
-                    return batch_reflect_via_agent(code, file_path, language)
-                else:
-                    print(f"⚠️  Agent invocation failed, request saved for manual processing", file=sys.stderr)
-            except Exception as e:
-                print(f"⚠️  SDK agent invocation error: {e}", file=sys.stderr)
-                print(f"    Falling back to manual workflow", file=sys.stderr)
-
-        # Fallback: Output request to stderr for manual Claude processing
-        if not SDK_AVAILABLE or True:  # Always show this for now
-            print(f"""
+        # Output request for manual agent invocation
+        print(f"""
 📝 Request saved to: {request_file}
 💡 Invoke manually: Use Task tool with ace-orchestration:domain-discoverer
-   Or install SDK: pip install claude-agent-sdk
 """, file=sys.stderr)
 
     # No response yet - return empty (will be filled on subsequent run after Claude processes)
     return []
 
-async def invoke_agent_via_sdk(request_file: Path, response_file: Path, file_path: str, code: str, language: str) -> bool:
-    """
-    Invoke domain-discoverer agent using Claude Agent SDK.
-
-    Uses the Task tool to invoke the domain-discoverer agent programmatically.
-
-    Returns True if successful, False otherwise.
-    """
-    try:
-        # Build the agent invocation prompt
-        # Note: This uses the Task tool to invoke the domain-discoverer agent
-        agent_prompt = f"""Use the Task tool to invoke the domain-discoverer agent with the following task:
-
-Read the request file at {request_file} and discover coding patterns.
-
-The file contains {language} code from {file_path} ({len(code)} characters).
-
-Analyze the code and discover:
-1. Concrete domains (specific APIs, imports, patterns)
-2. Abstract patterns (architectural approaches)
-3. Principles (best practices)
-
-Save your JSON response to: {response_file}
-
-The response must follow this format:
-{{
-  "concrete": {{"domain-id": {{"description": "...", "confidence": 0.9}}}},
-  "abstract": {{"pattern-id": {{"description": "...", "confidence": 0.8}}}},
-  "principles": {{"principle-id": {{"description": "...", "confidence": 0.7}}}}
-}}"""
-
-        # Configure SDK options - allow Task tool for agent invocation
-        options = ClaudeAgentOptions(
-            allowed_tools=["Task", "Read", "Write"],
-            permission_mode="acceptEdits",
-            cwd=str(PROJECT_ROOT)
-        )
-
-        # Invoke via SDK streaming mode (recommended per docs)
-        async for message in query(prompt=agent_prompt, options=options):
-            # Messages stream back - wait for completion
-            pass
-
-        # Check if response file was created
-        return response_file.exists()
-
-    except Exception as e:
-        print(f"SDK invocation failed: {e}", file=sys.stderr)
-        return False
 
 def run_offline_training(epochs: int = MAX_EPOCHS, source: str = 'all', verbose: bool = True):
     """
