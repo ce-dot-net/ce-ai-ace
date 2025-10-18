@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.0] - 2025-10-18
+
+### Added
+- **Complete pytest testing framework** with 33 comprehensive tests
+  - ACE research paper compliance tests (11 tests validating arXiv:2510.04618v1)
+  - Hook execution tests (PostToolUse, AgentStart, SessionEnd)
+  - Script execution tests (ace-cycle, generate-playbook, generate-speckit)
+  - Playbook generation tests (CLAUDE.md, spec-kit structure)
+  - Full integration tests (Edit → patterns → playbooks workflow)
+- **ACETestHelper** class for Claude Code CLI simulation
+  - Simulates Edit/Write tool triggers
+  - Mocks agent responses (reflector, domain-discoverer)
+  - Database validation utilities
+  - Hook JSON stdin simulation
+- **Research paper validation**
+  - Generator → Reflector → Curator architecture tests
+  - 85% similarity threshold validation
+  - 30% prune threshold validation
+  - Confidence formula verification (successes/observations)
+  - Deterministic Curator validation (no LLM in curation)
+  - Graceful degradation tests
+  - Pattern merge behavior tests
+- **Test fixtures and helpers**
+  - `conftest.py` with reusable fixtures
+  - `ace_test_helper.py` for CLI simulation
+  - Sample code fixtures for pattern discovery
+  - Mock agent response fixtures
+  - Temporary project and database fixtures
+
+### Changed
+- Testing approach: pytest-based instead of manual shell execution
+- All tests run in isolated temporary environments
+- Fast unit tests with mocked dependencies
+- Slower integration tests with real components
+
+### Fixed
+- Test coverage now validates theory → implementation gap
+- Tests ensure no deviation from ACE research paper architecture
+
 ## [2.3.28] - 2025-10-17
 
 ### Fixed

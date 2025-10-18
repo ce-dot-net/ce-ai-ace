@@ -1,6 +1,6 @@
 {
   "name": "ace-orchestration",
-  "version": "2.3.28",
+  "version": "2.4.0",
   "description": "ACE (Agentic Context Engineering) - TRUE research paper implementation with agent-based pattern discovery, Generator feedback loop, and pattern self-improvement. Based on Stanford/SambaNova/UC Berkeley research (arXiv:2510.04618v1)",
   "author": {
     "name": "ACE Team",
@@ -29,14 +29,6 @@
       "args": ["chroma-mcp"],
       "env": {
         "CHROMA_DB_PATH": "${CLAUDE_PLUGIN_ROOT}/.ace-memory/chromadb"
-      }
-    },
-    "serena-ace": {
-      "command": "uvx",
-      "args": ["--from", "mcp-serena", "mcp-serena"],
-      "env": {
-        "SERENA_PROJECT_ROOT": "${CLAUDE_PLUGIN_ROOT}/../..",
-        "SERENA_CONFIG_PATH": "${CLAUDE_PLUGIN_ROOT}/../../.serena/project.yml"
       }
     }
   }
