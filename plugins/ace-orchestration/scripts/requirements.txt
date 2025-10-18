@@ -1,0 +1,64 @@
+# ACE (Agentic Context Engineering) Plugin Dependencies
+# Based on Stanford/SambaNova/UC Berkeley research (arXiv:2510.04618v1)
+#
+# Installation:
+#   pip install -r requirements.txt
+#
+# Or install via uv (faster):
+#   uv pip install -r requirements.txt
+
+# ============================================================================
+# REQUIRED DEPENDENCIES
+# ============================================================================
+
+# Semantic Embeddings (ACE Paper Section 3.2: "semantic embeddings with 0.85 similarity threshold")
+# Used by embeddings_engine.py for pattern similarity calculation
+sentence-transformers>=2.2.2
+scikit-learn>=1.0.0  # For cosine_similarity in embeddings_engine.py
+
+# Vector Database for Embedding Caching (ACE Paper: persistent storage)
+# ChromaDB MCP server configured in plugin.json
+chromadb>=0.4.0
+numpy>=1.21.0  # Required by sentence-transformers and ChromaDB
+
+# ============================================================================
+# STANDARD LIBRARY DEPENDENCIES (No Installation Required)
+# ============================================================================
+# These are used throughout the codebase but are part of Python's stdlib:
+# - sqlite3: Pattern database (patterns.db)
+# - json: Configuration and data serialization
+# - subprocess: Git operations, command execution
+# - pathlib: File path operations
+# - datetime: Timestamps
+# - hashlib: Deterministic ID generation
+# - typing: Type hints
+# - collections: defaultdict for aggregations
+# - re: Pattern matching
+# - sys: System operations
+# - os: Environment variables
+# - fcntl: File locking (concurrency control)
+# - importlib.util: Dynamic module loading
+# - asyncio: Async operations (offline-training.py - NOT USED YET)
+
+# ============================================================================
+# OPTIONAL DEPENDENCIES (Enhanced Features)
+# ============================================================================
+# These packages enable additional functionality but are not required for core operation.
+# The code gracefully falls back to manual workflows if not installed.
+
+# Claude Agent SDK (AVAILABLE - v0.1.3)
+# Enables programmatic agent invocation in offline-training.py line 26-31
+# Supports both streaming (query) and single-request (complete) modes
+# Installation: pip install claude-agent-sdk==0.1.3
+# Requirements: Python 3.10+, Node.js
+# Docs: https://docs.claude.com/en/api/agent-sdk/python
+# Note: Falls back to manual Task tool workflow if not installed
+claude-agent-sdk>=0.1.3
+
+# ============================================================================
+# DEVELOPMENT DEPENDENCIES (Testing)
+# ============================================================================
+# Uncomment for development:
+
+# pytest>=7.0.0
+# pytest-asyncio>=0.21.0

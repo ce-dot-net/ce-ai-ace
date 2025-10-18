@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.2] - 2025-10-18
+
+### Added
+- **Claude Agent SDK support** - Optional programmatic agent invocation for offline training
+  - Installed `claude-agent-sdk==0.1.3` (latest stable release)
+  - Enhanced `offline-training.py` with SDK integration
+  - Graceful fallback to manual Task tool if SDK unavailable
+  - Enables fully automated multi-epoch training without user interaction
+- **Comprehensive requirements.txt** - Complete dependency documentation
+  - All dependencies linked to ACE research paper sections
+  - Clear separation: Required vs Optional vs Development dependencies
+  - Installation instructions with pip and uvx
+  - Standard library dependencies documented (no install needed)
+
+### Fixed
+- **SDK implementation** - Corrected agent invocation pattern in offline-training.py
+  - Before: Incorrectly used `agents` parameter (for defining agents)
+  - After: Properly uses Task tool for agent invocation via SDK
+  - Added proper `cwd` configuration for SDK calls
+  - Streaming mode (query function) as recommended by docs
+- **SDK version** - Corrected to v0.1.3 (latest stable on PyPI)
+  - Documentation showed v0.1.4 but not yet released
+  - Updated requirements.txt to use available version
+
+### Changed
+- **Agent invocation architecture** - Validated dual-pattern approach
+  - ace-cycle.py: Task tool via stderr (hooks + interactive)
+  - domain_discovery.py: Task tool via stderr (hooks + interactive)
+  - offline-training.py: SDK optional (automation + batch)
+  - Both patterns validated against Claude Code documentation
+  - Documented in Serena memory: `Agent_Invocation_Architecture`
+
+### Documentation
+- **Dependencies audit complete** - All dependencies audited and documented
+  - ACE research paper compliance verified
+  - Installation status tracked in Serena memory
+  - Agent SDK integration patterns documented
+  - Two invocation patterns explained with use cases
+
 ## [2.4.1] - 2025-10-18
 
 ### Fixed
