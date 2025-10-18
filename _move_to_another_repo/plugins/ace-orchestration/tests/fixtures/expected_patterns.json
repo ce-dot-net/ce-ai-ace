@@ -1,0 +1,42 @@
+{
+  "subprocess_pattern": {
+    "id": "discovered-subprocess-usage",
+    "name": "subprocess module usage",
+    "domain": "python-stdlib",
+    "type": "helpful",
+    "language": "python",
+    "description": "Uses Python subprocess.run() to execute external commands",
+    "expected_confidence_range": [0.7, 1.0],
+    "expected_observations_min": 1
+  },
+  "pathlib_pattern": {
+    "id": "discovered-pathlib-operations",
+    "name": "pathlib for file path operations",
+    "domain": "python-stdlib",
+    "type": "helpful",
+    "language": "python",
+    "description": "Uses pathlib.Path for cross-platform file path handling",
+    "expected_confidence_range": [0.7, 1.0],
+    "expected_observations_min": 1
+  },
+  "sqlite_pattern": {
+    "id": "discovered-sqlite-row-factory",
+    "name": "SQLite with row_factory for dict access",
+    "domain": "python-database",
+    "type": "helpful",
+    "language": "python",
+    "description": "Uses sqlite3.Row factory for dictionary-like result access",
+    "expected_confidence_range": [0.7, 1.0],
+    "expected_observations_min": 1
+  },
+  "json_pattern": {
+    "id": "discovered-json-handling",
+    "name": "JSON serialization and deserialization",
+    "domain": "python-stdlib",
+    "type": "helpful",
+    "language": "python",
+    "description": "Uses json.dump() and json.load() for configuration persistence",
+    "expected_confidence_range": [0.7, 1.0],
+    "expected_observations_min": 1
+  }
+}

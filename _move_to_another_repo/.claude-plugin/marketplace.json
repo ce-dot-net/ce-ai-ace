@@ -1,0 +1,15 @@
+{
+  "name": "ace-plugin-marketplace",
+  "owner": {
+    "name": "ACE Team"
+  },
+  "description": "Marketplace for ACE (Agentic Context Engineering) plugin",
+  "plugins": [
+    {
+      "name": "ace-orchestration",
+      "source": "./plugins/ace-orchestration",
+      "description": "TypeScript MCP server with TRUE LLM-based pattern & domain discovery (no hardcoded rules!) - Based on Stanford/SambaNova/UC Berkeley research",
+      "version": "2.5.0"
+    }
+  ]
+}

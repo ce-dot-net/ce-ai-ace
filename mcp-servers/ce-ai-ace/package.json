@@ -1,0 +1,70 @@
+{
+  "name": "@ce-dot-net/ce-ai-ace",
+  "version": "1.0.0",
+  "description": "ACE (Agentic Context Engineering) MCP Server - Self-improving LLM contexts via Reflector, Curator, and evolving playbooks. Works with Claude Code, Cursor, Cline, Claude Desktop, and any MCP-compatible editor. Research: arXiv:2510.04618",
+  "main": "dist/index.js",
+  "type": "module",
+  "bin": {
+    "ce-ai-ace": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc && chmod +x dist/index.js",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ace",
+    "agentic-context-engineering",
+    "pattern-learning",
+    "llm",
+    "context-optimization",
+    "claude-code",
+    "cursor",
+    "cline",
+    "self-improving",
+    "reflector",
+    "curator",
+    "playbook",
+    "stanford-research"
+  ],
+  "author": {
+    "name": "CE.NET",
+    "email": "ace@ce-dot-net.com",
+    "url": "https://github.com/ce-dot-net"
+  },
+  "homepage": "https://github.com/ce-dot-net/ce-ai-ace#readme",
+  "bugs": {
+    "url": "https://github.com/ce-dot-net/ce-ai-ace/issues"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "@xenova/transformers": "^2.17.2",
+    "better-sqlite3": "^11.7.0",
+    "hnswlib-node": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ce-dot-net/ce-ai-ace.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE",
+    "package.json"
+  ]
+}

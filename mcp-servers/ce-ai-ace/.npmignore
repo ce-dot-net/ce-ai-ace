@@ -1,0 +1,41 @@
+# Source files (only ship dist/)
+src/
+tsconfig.json
+*.ts
+!*.d.ts
+
+# Development
+node_modules/
+.vscode/
+.idea/
+
+# Tests
+test/
+tests/
+*.test.js
+*.spec.js
+
+# Documentation (keep README.md)
+docs/
+examples/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Build artifacts
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+.env
+.env.*
+coverage/
+.nyc_output/
