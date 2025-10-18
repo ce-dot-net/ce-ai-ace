@@ -22,9 +22,17 @@ from datetime import datetime
 from typing import List, Dict, Optional
 
 # Try to import Claude Agent SDK for automatic agent invocation
+# NOTE: SDK only works for EXTERNAL automation, not when running from within Claude Code
 try:
     from claude_agent_sdk import query, ClaudeAgentOptions
-    SDK_AVAILABLE = True
+    # Check if running from within Claude Code (via slash command)
+    # If so, disable SDK to avoid trying to spawn nested Claude processes
+    import os
+    if os.environ.get('CLAUDECODE') or os.environ.get('CLAUDE_CODE_ENTRYPOINT'):
+        SDK_AVAILABLE = False
+        print("ℹ️  Running from within Claude Code - using manual agent invocation", file=sys.stderr)
+    else:
+        SDK_AVAILABLE = True
 except ImportError:
     SDK_AVAILABLE = False
     print("⚠️  Claude Agent SDK not available. Install with: pip install claude-agent-sdk", file=sys.stderr)
