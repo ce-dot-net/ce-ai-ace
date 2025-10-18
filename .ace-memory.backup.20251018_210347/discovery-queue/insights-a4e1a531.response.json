@@ -1,0 +1,123 @@
+{
+  "concrete": {
+    "ace-reflector-insights": {
+      "description": "ACE Reflector agent insight generation system for pattern analysis and meta-learning",
+      "evidence": [
+        "specs/playbooks/001-temp/insights.md",
+        "pattern_id field in YAML frontmatter",
+        "type: reflector_insights",
+        "Reflector Agent workflow"
+      ],
+      "patterns": [
+        "YAML frontmatter in markdown files",
+        "Auto-generated documentation pattern",
+        "Insight history tracking",
+        "Pattern effectiveness analysis"
+      ],
+      "confidence": 0.95
+    },
+    "playbook-structure": {
+      "description": "ACE playbook directory structure with insights.md files for pattern documentation",
+      "evidence": [
+        "specs/playbooks/001-temp/insights.md",
+        "Directory pattern: specs/playbooks/{id}-{name}/insights.md"
+      ],
+      "patterns": [
+        "Numeric ID prefixing (001-)",
+        "Kebab-case naming convention",
+        "Insights file per playbook"
+      ],
+      "confidence": 0.9
+    },
+    "yaml-frontmatter-metadata": {
+      "description": "YAML frontmatter for structured metadata in markdown documentation",
+      "evidence": [
+        "pattern_id: temp-001",
+        "type: reflector_insights",
+        "insight_count: 0",
+        "updated: 2025-10-16T14:52:54.471279"
+      ],
+      "patterns": [
+        "ISO 8601 timestamp format",
+        "Typed pattern classification",
+        "Counter fields for tracking",
+        "Unique pattern identifiers"
+      ],
+      "confidence": 0.95
+    }
+  },
+  "abstract": {
+    "meta-learning-architecture": {
+      "description": "Self-improving system that learns from pattern usage to enhance definitions and detect edge cases",
+      "instances": [
+        "ace-reflector-insights",
+        "playbook-structure"
+      ],
+      "confidence": 0.9
+    },
+    "evolutionary-documentation": {
+      "description": "Documentation that evolves through automated agent analysis rather than static manual updates",
+      "instances": [
+        "ace-reflector-insights",
+        "yaml-frontmatter-metadata"
+      ],
+      "confidence": 0.85
+    },
+    "structured-content-generation": {
+      "description": "Machine-generated content with consistent structure, metadata, and human-readable format",
+      "instances": [
+        "yaml-frontmatter-metadata",
+        "ace-reflector-insights"
+      ],
+      "confidence": 0.9
+    },
+    "evidence-based-learning": {
+      "description": "Pattern analysis based on actual codebase usage rather than theoretical definitions",
+      "instances": [
+        "ace-reflector-insights"
+      ],
+      "confidence": 0.85
+    }
+  },
+  "principles": {
+    "machine-generated-with-human-readability": {
+      "description": "Auto-generated files maintain human-readable markdown format with clear sections and explanations",
+      "applied_in": [
+        "structured-content-generation",
+        "evolutionary-documentation"
+      ],
+      "confidence": 0.9
+    },
+    "metadata-driven-documentation": {
+      "description": "Use structured metadata (YAML frontmatter) to enable programmatic processing while preserving readability",
+      "applied_in": [
+        "structured-content-generation",
+        "evolutionary-documentation"
+      ],
+      "confidence": 0.95
+    },
+    "confidence-based-learning": {
+      "description": "Track observation counts and confidence metrics to distinguish proven patterns from experimental ones",
+      "applied_in": [
+        "meta-learning-architecture",
+        "evidence-based-learning"
+      ],
+      "confidence": 0.85
+    },
+    "separation-of-concerns": {
+      "description": "Separate pattern definition (spec.md) from usage insights (insights.md) from implementation plans (plan.md)",
+      "applied_in": [
+        "playbook-structure",
+        "meta-learning-architecture"
+      ],
+      "confidence": 0.8
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and YAML frontmatter content",
+    "discovered_at": "2025-10-18T15:57:15Z",
+    "input_file": "specs/playbooks/001-temp/insights.md",
+    "analysis_notes": "Analyzed auto-generated Reflector insight file with YAML frontmatter metadata. Discovered ACE's meta-learning architecture through evidence of insight tracking, pattern effectiveness analysis, and evolutionary documentation system."
+  }
+}

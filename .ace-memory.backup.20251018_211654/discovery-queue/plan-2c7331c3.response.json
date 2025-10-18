@@ -1,0 +1,35 @@
+{
+  "concrete": {
+    "temp-pattern-plan": {
+      "description": "Technical plan for temporary test pattern with 100% confidence",
+      "evidence": ["specs/playbooks/001-temp/plan.md"],
+      "patterns": ["test-pattern-planning", "high-confidence-validation"],
+      "confidence": 0.7
+    },
+    "generic-plan-template": {
+      "description": "Reusable plan template with placeholder language-specific guidance",
+      "evidence": ["specs/playbooks/001-temp/plan.md"],
+      "patterns": ["template-variables", "language-agnostic-approach", "standard-success-criteria"],
+      "confidence": 0.85
+    }
+  },
+  "abstract": {
+    "template-driven-generation": {
+      "description": "Auto-generation of documentation from templates with variable substitution",
+      "instances": ["generic-plan-template"],
+      "confidence": 0.8
+    }
+  },
+  "principles": {
+    "language-agnostic-templates": {
+      "description": "Documentation templates adapt to different programming languages",
+      "applied_in": ["template-driven-generation"],
+      "confidence": 0.75
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and descriptions",
+    "discovered_at": "2025-10-18T21:11:00Z"
+  }
+}

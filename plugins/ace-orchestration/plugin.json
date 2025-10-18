@@ -1,7 +1,7 @@
 {
   "name": "ace-orchestration",
-  "version": "2.4.2",
-  "description": "ACE (Agentic Context Engineering) - TRUE research paper implementation with agent-based pattern discovery, Generator feedback loop, and pattern self-improvement. Based on Stanford/SambaNova/UC Berkeley research (arXiv:2510.04618v1)",
+  "version": "2.5.0",
+  "description": "ACE (Agentic Context Engineering) - TypeScript MCP server with TRUE LLM-based pattern discovery (no hardcoded rules!). Pure JavaScript embeddings, native Claude Code integration. Based on Stanford/SambaNova/UC Berkeley research (arXiv:2510.04618v1)",
   "author": {
     "name": "ACE Team",
     "email": "ace@ce-dot-net.com"
@@ -24,11 +24,14 @@
   "commands": "./commands",
   "agents": "./agents",
   "mcpServers": {
-    "chromadb-ace": {
-      "command": "uvx",
-      "args": ["chroma-mcp"],
+    "ace-pattern-learning": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/../../mcp-servers/ace-pattern-learning/dist/index.js"],
       "env": {
-        "CHROMA_DB_PATH": "${CLAUDE_PLUGIN_ROOT}/.ace-memory/chromadb"
+        "ACE_STORAGE_PATH": "${CLAUDE_PLUGIN_ROOT}/.ace-memory/patterns.db",
+        "ACE_SIMILARITY_THRESHOLD": "0.85",
+        "ACE_CONFIDENCE_HIGH": "0.70",
+        "ACE_CONFIDENCE_MEDIUM": "0.30"
       }
     }
   }

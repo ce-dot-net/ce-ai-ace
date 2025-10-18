@@ -1,0 +1,160 @@
+{
+  "concrete": {
+    "ace-plugin-testing": {
+      "description": "Testing infrastructure for ACE orchestration plugin hooks and lifecycle events",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_hooks.py",
+        "ace_test_helper.py",
+        "PostToolUse hook",
+        "AgentStart event"
+      ],
+      "patterns": [
+        "Use pytest fixtures for test setup",
+        "Create test helper classes for plugin testing",
+        "Mock agent responses to avoid external dependencies",
+        "Simulate tool invocations (Edit, Write) for hook testing",
+        "Verify hook execution via exit codes and stderr logs",
+        "Check JSON responses from hooks for continuation signals"
+      ],
+      "confidence": 0.95
+    },
+    "claude-code-plugin-hooks": {
+      "description": "Claude Code CLI plugin lifecycle hooks (PostToolUse, AgentStart) for triggering ACE cycles",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_hooks.py",
+        "PostToolUse hook",
+        "ace-cycle.py",
+        "Edit tool",
+        "Write tool"
+      ],
+      "patterns": [
+        "PostToolUse hook triggers on Edit/Write tool usage",
+        "Hooks execute ace-cycle.py for reflection",
+        "Hooks return JSON with 'continue' flag",
+        "Hooks log to stderr for debugging",
+        "Hooks integrate with Claude Code tool lifecycle"
+      ],
+      "confidence": 0.92
+    },
+    "pytest-testing-patterns": {
+      "description": "Pytest-based testing patterns with fixtures, markers, and assertions",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_hooks.py",
+        "@pytest.fixture",
+        "@pytest.mark.unit",
+        "ace_helper fixture",
+        "temp_db fixture",
+        "sample_code fixture"
+      ],
+      "patterns": [
+        "Use @pytest.fixture for reusable test components",
+        "Use @pytest.mark.unit for test categorization",
+        "Chain fixtures for complex test setup",
+        "Use pathlib.Path for file operations",
+        "Assert on exit codes and stderr output",
+        "Use descriptive test function names with underscores"
+      ],
+      "confidence": 0.90
+    },
+    "test-isolation-patterns": {
+      "description": "Test isolation through temporary databases, project roots, and environment mocking",
+      "evidence": [
+        "temp_db fixture",
+        "temp_project fixture",
+        "claude_env fixture",
+        "plugin_root parameter",
+        "mock_agent_response function"
+      ],
+      "patterns": [
+        "Use temporary databases for test isolation",
+        "Create temporary project directories per test",
+        "Mock environment variables for test reproducibility",
+        "Mock agent responses to prevent external calls",
+        "Clean up resources after tests"
+      ],
+      "confidence": 0.88
+    }
+  },
+  "abstract": {
+    "plugin-testing-architecture": {
+      "description": "Architectural pattern for testing plugin hooks with helpers, fixtures, and simulators",
+      "instances": [
+        "ace-plugin-testing",
+        "pytest-testing-patterns",
+        "test-isolation-patterns"
+      ],
+      "confidence": 0.91
+    },
+    "event-driven-testing": {
+      "description": "Testing event-driven systems by simulating triggers and verifying side effects",
+      "instances": [
+        "claude-code-plugin-hooks",
+        "ace-plugin-testing"
+      ],
+      "confidence": 0.87
+    },
+    "mock-based-isolation": {
+      "description": "Using mocks and stubs to isolate units under test from external dependencies",
+      "instances": [
+        "test-isolation-patterns",
+        "ace-plugin-testing"
+      ],
+      "confidence": 0.89
+    },
+    "fixture-composition": {
+      "description": "Composing complex test setups through fixture dependency chains",
+      "instances": [
+        "pytest-testing-patterns",
+        "test-isolation-patterns"
+      ],
+      "confidence": 0.85
+    }
+  },
+  "principles": {
+    "test-determinism": {
+      "description": "Ensure tests produce consistent results by controlling all variables and external factors",
+      "applied_in": [
+        "test-isolation-patterns",
+        "mock-based-isolation"
+      ],
+      "confidence": 0.90
+    },
+    "separation-of-concerns": {
+      "description": "Separate test setup, execution, and verification into distinct phases",
+      "applied_in": [
+        "plugin-testing-architecture",
+        "fixture-composition"
+      ],
+      "confidence": 0.88
+    },
+    "behavior-verification": {
+      "description": "Verify behavior through observable outputs (exit codes, logs, responses) rather than internal state",
+      "applied_in": [
+        "event-driven-testing",
+        "ace-plugin-testing"
+      ],
+      "confidence": 0.86
+    },
+    "test-readability": {
+      "description": "Use descriptive names and clear assertion messages to make test intent obvious",
+      "applied_in": [
+        "pytest-testing-patterns",
+        "plugin-testing-architecture"
+      ],
+      "confidence": 0.84
+    },
+    "dependency-injection": {
+      "description": "Inject dependencies through fixtures/parameters rather than hardcoding them",
+      "applied_in": [
+        "fixture-composition",
+        "mock-based-isolation"
+      ],
+      "confidence": 0.87
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and code analysis",
+    "discovered_at": "2025-10-18T23:00:00Z"
+  }
+}

@@ -1,0 +1,198 @@
+{
+  "concrete": {
+    "pytest-testing": {
+      "description": "Python testing framework using pytest with markers and fixtures",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_playbooks.py"
+      ],
+      "patterns": [
+        "import pytest",
+        "@pytest.mark.unit decorator",
+        "pytest fixtures (plugin_root, temp_project, temp_db)"
+      ],
+      "confidence": 0.95
+    },
+    "subprocess-execution": {
+      "description": "Python subprocess module for external command execution with output capture",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_playbooks.py"
+      ],
+      "patterns": [
+        "subprocess.run with capture_output=True",
+        "text=True for string output",
+        "cwd parameter for working directory",
+        "result.returncode assertion"
+      ],
+      "confidence": 0.9
+    },
+    "pathlib-file-operations": {
+      "description": "Modern Python path handling using pathlib.Path for file system operations",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_playbooks.py"
+      ],
+      "patterns": [
+        "from pathlib import Path",
+        "Path / operator for path joining",
+        "path.exists() for existence checks",
+        "path.read_text() for file reading",
+        "path.write_text() for file writing"
+      ],
+      "confidence": 0.95
+    },
+    "claude-md-plugin-integration": {
+      "description": "CLAUDE.md file generation with ACE plugin marker system for delta updates",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_playbooks.py"
+      ],
+      "patterns": [
+        "<!-- ACE-PLUGIN-START --> and <!-- ACE-PLUGIN-END --> markers",
+        "CLAUDE.md generation via generate-playbook.py",
+        "Pattern database reference (.ace-memory/patterns.db)",
+        "Instructions-only format (not pattern dumps)",
+        "Delta updates preserve user content outside markers"
+      ],
+      "confidence": 0.98
+    },
+    "sqlite-pattern-database": {
+      "description": "SQLite database for pattern storage in .ace-memory directory",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_playbooks.py"
+      ],
+      "patterns": [
+        "import sqlite3",
+        "temp_db fixture",
+        ".ace-memory/patterns.db reference"
+      ],
+      "confidence": 0.85
+    },
+    "ace-playbook-generation": {
+      "description": "ACE orchestration playbook generation via generate-playbook.py script",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_playbooks.py",
+        "plugins/ace-orchestration/scripts/generate-playbook.py"
+      ],
+      "patterns": [
+        "generate-playbook.py execution",
+        "Instructions-only format (~50 lines)",
+        "ACE Plugin Instructions section",
+        "Pattern Database reference section"
+      ],
+      "confidence": 0.92
+    }
+  },
+  "abstract": {
+    "marker-based-content-injection": {
+      "description": "Using HTML-style comment markers to define updatable sections in files while preserving surrounding content",
+      "instances": [
+        "claude-md-plugin-integration"
+      ],
+      "confidence": 0.9
+    },
+    "fixture-based-test-isolation": {
+      "description": "Using test fixtures to provide isolated, temporary resources (filesystem, database) for each test",
+      "instances": [
+        "pytest-testing"
+      ],
+      "confidence": 0.88
+    },
+    "process-output-validation": {
+      "description": "Testing external scripts by running them as subprocesses and validating their output and exit codes",
+      "instances": [
+        "subprocess-execution",
+        "ace-playbook-generation"
+      ],
+      "confidence": 0.87
+    },
+    "content-length-constraints": {
+      "description": "Enforcing file size/line count limits to prevent bloat and ensure concise output",
+      "instances": [
+        "claude-md-plugin-integration",
+        "ace-playbook-generation"
+      ],
+      "confidence": 0.85
+    },
+    "delta-update-pattern": {
+      "description": "Updating specific sections of files while preserving user modifications outside those sections",
+      "instances": [
+        "claude-md-plugin-integration",
+        "marker-based-content-injection"
+      ],
+      "confidence": 0.92
+    },
+    "temporary-workspace-testing": {
+      "description": "Creating isolated temporary project directories for integration testing file generation",
+      "instances": [
+        "pytest-testing",
+        "fixture-based-test-isolation"
+      ],
+      "confidence": 0.86
+    }
+  },
+  "principles": {
+    "test-driven-validation": {
+      "description": "Writing unit tests to validate behavior of code generators and file operations",
+      "applied_in": [
+        "pytest-testing",
+        "process-output-validation"
+      ],
+      "confidence": 0.9
+    },
+    "modern-python-apis": {
+      "description": "Prefer modern Python standard library APIs (pathlib) over legacy alternatives (os.path)",
+      "applied_in": [
+        "pathlib-file-operations"
+      ],
+      "confidence": 0.92
+    },
+    "test-isolation": {
+      "description": "Each test runs in isolated environment without affecting other tests or production data",
+      "applied_in": [
+        "fixture-based-test-isolation",
+        "temporary-workspace-testing"
+      ],
+      "confidence": 0.91
+    },
+    "content-preservation": {
+      "description": "Automated tools should preserve user-created content when updating generated sections",
+      "applied_in": [
+        "delta-update-pattern",
+        "marker-based-content-injection"
+      ],
+      "confidence": 0.93
+    },
+    "fail-fast-assertions": {
+      "description": "Test critical conditions early (returncode, file existence) before proceeding to content validation",
+      "applied_in": [
+        "test-driven-validation",
+        "process-output-validation"
+      ],
+      "confidence": 0.87
+    },
+    "separation-of-concerns": {
+      "description": "Separate pattern storage (database) from presentation (CLAUDE.md) from generation logic (scripts)",
+      "applied_in": [
+        "sqlite-pattern-database",
+        "claude-md-plugin-integration",
+        "ace-playbook-generation"
+      ],
+      "confidence": 0.89
+    },
+    "instructions-over-data-dumps": {
+      "description": "Generate concise instructions pointing to data sources rather than embedding large data dumps",
+      "applied_in": [
+        "claude-md-plugin-integration",
+        "content-length-constraints"
+      ],
+      "confidence": 0.88
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and code analysis",
+    "discovered_at": "2025-10-18T00:00:00Z",
+    "code_file": "plugins/ace-orchestration/tests/test_playbooks.py",
+    "code_length": 7681,
+    "language": "python",
+    "training_mode": "offline"
+  }
+}

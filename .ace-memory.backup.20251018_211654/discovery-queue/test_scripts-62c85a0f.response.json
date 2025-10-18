@@ -1,0 +1,66 @@
+{
+  "concrete": {
+    "script-behavior-testing": {
+      "description": "Testing ACE Python scripts (generate-playbook, ace-cycle) with various inputs",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_scripts.py"
+      ],
+      "patterns": [
+        "Test with empty database (no patterns)",
+        "Test with populated database (existing patterns)",
+        "Direct SQLite INSERT for test data setup",
+        "subprocess.run for script execution",
+        "Content validation of generated files",
+        "returncode assertion for success/failure"
+      ],
+      "confidence": 0.9
+    },
+    "sqlite-test-data-setup": {
+      "description": "Direct SQLite INSERTs to create test fixtures for database-dependent code",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_scripts.py"
+      ],
+      "patterns": [
+        "sqlite3.connect to temp_db",
+        "cursor.execute with INSERT statements",
+        "Tuple-based parameter binding",
+        "Explicit column listing in INSERT"
+      ],
+      "confidence": 0.85
+    }
+  },
+  "abstract": {
+    "edge-case-testing": {
+      "description": "Testing both empty/no-data cases and populated/with-data cases",
+      "instances": ["script-behavior-testing"],
+      "confidence": 0.9
+    },
+    "direct-database-fixture": {
+      "description": "Using direct database manipulation to create test fixtures",
+      "instances": ["sqlite-test-data-setup"],
+      "confidence": 0.85
+    }
+  },
+  "principles": {
+    "test-empty-state": {
+      "description": "Always test behavior with empty/no data to verify graceful degradation",
+      "applied_in": ["edge-case-testing"],
+      "confidence": 0.9
+    },
+    "test-populated-state": {
+      "description": "Test with representative data to verify normal operation",
+      "applied_in": ["edge-case-testing"],
+      "confidence": 0.9
+    },
+    "fixture-via-sql": {
+      "description": "Creating test fixtures by inserting data directly into database",
+      "applied_in": ["direct-database-fixture"],
+      "confidence": 0.8
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and descriptions",
+    "discovered_at": "2025-10-18T21:10:00Z"
+  }
+}

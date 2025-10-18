@@ -1,0 +1,258 @@
+{
+  "concrete": {
+    "ace-research-implementation": {
+      "description": "Implementation of ACE research paper features (Section 4.1 multi-epoch offline training, Table 3 metrics)",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py",
+        "plugins/ace-orchestration/scripts/epoch-manager.py"
+      ],
+      "patterns": [
+        "Multi-epoch training loop with MAX_EPOCHS",
+        "Track pattern evolution across epochs",
+        "Cache training data between epochs",
+        "Measure confidence deltas and improvement percentages",
+        "Reference research paper sections in docstrings"
+      ],
+      "confidence": 0.95
+    },
+    "python-dynamic-module-import": {
+      "description": "Dynamic Python module imports for hyphenated filenames and cross-script integration",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:27-30",
+        "plugins/ace-orchestration/scripts/offline-training.py:289-292",
+        "plugins/ace-orchestration/scripts/offline-training.py:325-327"
+      ],
+      "patterns": [
+        "importlib.util.spec_from_file_location for hyphenated files",
+        "importlib.util.module_from_spec pattern",
+        "Import functions from dynamically loaded modules",
+        "sys.path.insert(0) for local module resolution"
+      ],
+      "confidence": 0.92
+    },
+    "git-history-mining": {
+      "description": "Mining git commit history for training data (commits, changed files, historical content)",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:71-111",
+        "plugins/ace-orchestration/scripts/offline-training.py:113-157"
+      ],
+      "patterns": [
+        "git log --pretty=format:%H --max-count=N",
+        "git show --name-only for changed files per commit",
+        "git show {commit}:{file} for historical file contents",
+        "git diff-tree --no-commit-id --name-only -r for file changes",
+        "subprocess.run with capture_output=True for git commands",
+        "Limit processing scope (max commits, max files per commit)"
+      ],
+      "confidence": 0.93
+    },
+    "agent-coordination-queue": {
+      "description": "Request/response queue system for agent coordination with deterministic IDs",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:161-269",
+        ".ace-memory/discovery-queue/"
+      ],
+      "patterns": [
+        "Create .request.json files for agent invocation",
+        "Check for .response.json files (cached results)",
+        "Deterministic request IDs using hashlib.md5",
+        "Write requests to stderr for human/agent visibility",
+        "Return empty results if response not yet available"
+      ],
+      "confidence": 0.90
+    },
+    "sqlite-pattern-storage": {
+      "description": "SQLite database for storing and querying learned patterns",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:40",
+        "plugins/ace-orchestration/scripts/offline-training.py:451-464",
+        ".ace-memory/patterns.db"
+      ],
+      "patterns": [
+        "sqlite3.connect with str(Path) for database connection",
+        "sqlite3.Row for dict-like row access",
+        "SELECT * FROM patterns for full pattern retrieval",
+        "Check DB_PATH.exists() before operations"
+      ],
+      "confidence": 0.88
+    },
+    "pathlib-modern-python": {
+      "description": "Modern Python path handling using pathlib over os.path",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:19",
+        "plugins/ace-orchestration/scripts/offline-training.py:39-41",
+        "plugins/ace-orchestration/scripts/offline-training.py:177-183"
+      ],
+      "patterns": [
+        "Path(__file__).parent for script directory",
+        "Path.cwd() for current working directory",
+        "Path / operator for joining paths",
+        "Path.glob() for file pattern matching",
+        "Path.relative_to() for relative paths",
+        "Path.stem for filename without extension"
+      ],
+      "confidence": 0.94
+    },
+    "multi-source-training-data": {
+      "description": "Multiple training data sources (test files, git history, specs history) with unified interface",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:43-159",
+        "plugins/ace-orchestration/scripts/offline-training.py:479-483"
+      ],
+      "patterns": [
+        "source parameter with choices=['all', 'git-history', 'test-files', 'specs-history']",
+        "Conditional scanning based on source parameter",
+        "Glob patterns for test file discovery",
+        "Git log filtering by directory (--  specs/)",
+        "Unified training_data list format with source field"
+      ],
+      "confidence": 0.89
+    },
+    "pattern-confidence-evolution": {
+      "description": "Track and evolve pattern confidence scores based on observations and outcomes",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:362-405",
+        "plugins/ace-orchestration/scripts/offline-training.py:417-426"
+      ],
+      "patterns": [
+        "Calculate confidence as successes/observations",
+        "Track confidence_before and confidence_after per epoch",
+        "Store pattern evolution history",
+        "Merge new observations with existing patterns",
+        "Count patterns_refined when confidence delta > 0.01"
+      ],
+      "confidence": 0.91
+    },
+    "argparse-cli-interface": {
+      "description": "Command-line interface using argparse for script configuration",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:466-497"
+      ],
+      "patterns": [
+        "argparse.ArgumentParser with description",
+        "parser.add_argument with type, default, help",
+        "parser.add_argument with choices for validation",
+        "parser.add_argument with action='store_true' for flags",
+        "args = parser.parse_args()",
+        "main() as CLI entry point with if __name__ == '__main__'"
+      ],
+      "confidence": 0.87
+    }
+  },
+  "abstract": {
+    "meta-learning-architecture": {
+      "description": "System learns from its own artifacts (specs, playbooks, patterns) for self-improvement",
+      "instances": [
+        "ace-research-implementation",
+        "multi-source-training-data"
+      ],
+      "confidence": 0.93
+    },
+    "agent-based-discovery": {
+      "description": "Patterns discovered through agent analysis rather than hardcoded detection rules",
+      "instances": [
+        "agent-coordination-queue",
+        "ace-research-implementation"
+      ],
+      "confidence": 0.90
+    },
+    "incremental-knowledge-refinement": {
+      "description": "Knowledge improves over multiple iterations with confidence tracking",
+      "instances": [
+        "pattern-confidence-evolution",
+        "ace-research-implementation"
+      ],
+      "confidence": 0.92
+    },
+    "defensive-programming": {
+      "description": "Extensive error handling with try-except blocks and graceful degradation",
+      "instances": [
+        "git-history-mining",
+        "agent-coordination-queue",
+        "sqlite-pattern-storage"
+      ],
+      "confidence": 0.88
+    },
+    "subprocess-integration": {
+      "description": "Integration with external tools (git) via subprocess with proper error handling",
+      "instances": [
+        "git-history-mining",
+        "ace-research-implementation"
+      ],
+      "confidence": 0.89
+    },
+    "deterministic-identifiers": {
+      "description": "Generate consistent IDs using hashing for reproducible results",
+      "instances": [
+        "agent-coordination-queue",
+        "pattern-confidence-evolution"
+      ],
+      "confidence": 0.86
+    }
+  },
+  "principles": {
+    "research-paper-driven-development": {
+      "description": "Implement features directly from academic research with explicit references to sections and metrics",
+      "applied_in": [
+        "ace-research-implementation",
+        "meta-learning-architecture"
+      ],
+      "confidence": 0.94
+    },
+    "code-as-training-data": {
+      "description": "Treat codebase (including tests, specs, git history) as machine learning training corpus",
+      "applied_in": [
+        "multi-source-training-data",
+        "meta-learning-architecture",
+        "git-history-mining"
+      ],
+      "confidence": 0.92
+    },
+    "cache-first-coordination": {
+      "description": "Check for cached results before requesting new computation to avoid duplicate work",
+      "applied_in": [
+        "agent-coordination-queue",
+        "incremental-knowledge-refinement"
+      ],
+      "confidence": 0.88
+    },
+    "explicit-tradeoffs": {
+      "description": "Document limitations in code (max files, size limits) showing deliberate design choices",
+      "applied_in": [
+        "git-history-mining",
+        "multi-source-training-data"
+      ],
+      "confidence": 0.85
+    },
+    "modern-python-idioms": {
+      "description": "Prefer modern Python stdlib (pathlib, typing) over legacy alternatives (os.path)",
+      "applied_in": [
+        "pathlib-modern-python",
+        "python-dynamic-module-import",
+        "argparse-cli-interface"
+      ],
+      "confidence": 0.90
+    },
+    "observable-training": {
+      "description": "Make training process visible through verbose output, progress indicators, and statistics",
+      "applied_in": [
+        "ace-research-implementation",
+        "pattern-confidence-evolution"
+      ],
+      "confidence": 0.87
+    },
+    "fail-silently-continue": {
+      "description": "Catch exceptions during batch processing without stopping entire workflow",
+      "applied_in": [
+        "git-history-mining",
+        "defensive-programming"
+      ],
+      "confidence": 0.86
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 59,
+    "discovery_method": "bottom-up from file structure, imports, function definitions, and implementation patterns",
+    "discovered_at": "2025-10-18T00:00:00Z"
+  }
+}

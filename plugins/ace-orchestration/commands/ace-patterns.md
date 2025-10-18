@@ -1,58 +1,37 @@
 ---
 description: List learned patterns with filtering options
 argument-hint: [domain] [min-confidence]
-allowed-tools: Bash
+allowed-tools: mcp__ace-pattern-learning__ace_get_patterns
 ---
 
 # ACE Patterns
 
-Display learned patterns with optional filtering.
+Display learned patterns with optional filtering using the MCP server.
 
 ## Usage:
 - `/ace-patterns` - Show all patterns
-- `/ace-patterns python` - Show only Python patterns
-- `/ace-patterns javascript 0.7` - Show JavaScript patterns with ≥70% confidence
+- `/ace-patterns error-handling` - Show only error-handling domain patterns
+- `/ace-patterns api-usage 0.7` - Show api-usage patterns with ≥70% confidence
 
-```bash
-if [ -f .ace-memory/patterns.db ]; then
-  python3 -c "
-import sqlite3
-import sys
-from pathlib import Path
-
-domain = sys.argv[1] if len(sys.argv) > 1 else None
-min_conf = float(sys.argv[2]) if len(sys.argv) > 2 else 0.0
-
-db = Path('.ace-memory/patterns.db')
-conn = sqlite3.connect(str(db))
-cursor = conn.cursor()
-
-query = 'SELECT name, domain, language, confidence, observations FROM patterns WHERE confidence >= ?'
-params = [min_conf]
-
-if domain:
-    query += ' AND (domain LIKE ? OR language LIKE ?)'
-    params.extend([f'%{domain}%', f'%{domain}%'])
-
-query += ' ORDER BY confidence DESC, observations DESC'
-
-cursor.execute(query, params)
-patterns = cursor.fetchall()
-
-if patterns:
-    print('🎯 ACE Learned Patterns')
-    print()
-    for name, dom, lang, conf, obs in patterns:
-        print(f'• {name}')
-        print(f'  Domain: {dom} | Language: {lang}')
-        print(f'  Confidence: {conf*100:.1f}% ({obs} observations)')
-        print()
-else:
-    print('⚠️  No patterns match your filter criteria')
-
-conn.close()
-" "$ARGUMENTS" "$2"
-else
-  echo "⚠️  No patterns learned yet. Start coding to detect patterns!"
-fi
 ```
+Use the mcp__ace-pattern-learning__ace_get_patterns tool to retrieve patterns.
+
+Arguments:
+- domain: Optional domain filter (e.g., "error-handling", "api-usage", "code-snippets")
+- min_confidence: Optional minimum confidence threshold (0.0-1.0)
+
+Examples:
+- All patterns: Call with no arguments
+- Domain filter: { "domain": "error-handling" }
+- Confidence filter: { "min_confidence": 0.7 }
+- Both: { "domain": "api-usage", "min_confidence": 0.5 }
+```
+
+The MCP server will return patterns as JSON with:
+- id: Pattern identifier (e.g., "err-00001")
+- name: Pattern name
+- domain: Category
+- content: Pattern description
+- confidence: Confidence score (0-1)
+- observations: Number of helpful observations
+- harmful: Number of harmful observations

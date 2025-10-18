@@ -1,0 +1,204 @@
+{
+  "concrete": {
+    "ace-offline-training": {
+      "description": "Multi-epoch offline training system for pattern learning via iterative code analysis",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py",
+        "plugins/ace-orchestration/scripts/epoch-manager.py"
+      ],
+      "patterns": [
+        "Import epoch-manager.py using importlib.util for hyphenated filenames",
+        "Run training loop for MAX_EPOCHS iterations",
+        "Track patterns before and patterns after with avg confidence metrics",
+        "Complete epoch with statistics (patterns processed, patterns refined, confidence deltas)",
+        "Print improvement percentages between epochs"
+      ],
+      "confidence": 0.95
+    },
+    "git-history-mining": {
+      "description": "Extract training data from git commit history for pattern discovery",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:73-111",
+        "plugins/ace-orchestration/scripts/offline-training.py:113-157"
+      ],
+      "patterns": [
+        "Execute 'git log --pretty=format:%H --max-count=50' to get commit hashes",
+        "Execute 'git show --name-only' to get changed files per commit",
+        "Execute 'git show {commit}:{file_rel}' to get file contents at specific commit",
+        "Execute 'git diff-tree --no-commit-id --name-only -r' for file change detection",
+        "Filter files by extension (.py, .js, .ts, .jsx, .tsx, .md)",
+        "Limit processing to prevent overwhelming (max 5 files per commit, 20 commits)"
+      ],
+      "confidence": 0.92
+    },
+    "agent-based-pattern-discovery": {
+      "description": "Domain discovery via agent invocation with request/response file queue system",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:161-269",
+        ".ace-memory/discovery-queue/offline-training-53905f21.request.json"
+      ],
+      "patterns": [
+        "Generate deterministic request ID from MD5 hash of file path",
+        "Write discovery requests to .ace-memory/discovery-queue/{id}.request.json",
+        "Read cached responses from .ace-memory/discovery-queue/{id}.response.json",
+        "Convert agent taxonomy (concrete/abstract/principles) to flat pattern list",
+        "Generate deterministic pattern IDs from domain:pattern_name hash",
+        "Prefix pattern IDs by type (abstract-, principle-)",
+        "Output request to stderr for human/agent coordination"
+      ],
+      "confidence": 0.88
+    },
+    "sqlite-pattern-storage": {
+      "description": "SQLite database operations for pattern persistence and retrieval",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:451-464",
+        "plugins/ace-orchestration/scripts/offline-training.py:39-40"
+      ],
+      "patterns": [
+        "Use sqlite3.Row factory for dict-like row access",
+        "Store patterns.db in .ace-memory/ directory",
+        "Return empty list when database doesn't exist (graceful degradation)",
+        "Convert Row objects to dicts for JSON serialization"
+      ],
+      "confidence": 0.85
+    },
+    "dynamic-module-import": {
+      "description": "Import Python modules with non-standard naming (hyphens) using importlib.util",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:26-36",
+        "plugins/ace-orchestration/scripts/offline-training.py:289-292",
+        "plugins/ace-orchestration/scripts/offline-training.py:325-333"
+      ],
+      "patterns": [
+        "Use importlib.util.spec_from_file_location for hyphenated filenames",
+        "Import functions from dynamically loaded modules",
+        "Add parent directory to sys.path for relative imports"
+      ],
+      "confidence": 0.90
+    },
+    "pattern-merge-and-refinement": {
+      "description": "Pattern evolution through merging observations and recalculating confidence",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:356-414"
+      ],
+      "patterns": [
+        "Merge existing patterns with new observations using merge_patterns()",
+        "Recalculate confidence as successes/observations ratio",
+        "Track pattern evolution with before/after confidence",
+        "Count patterns_refined when confidence delta exceeds 0.01 threshold",
+        "Cache training data for future epochs (OUTSIDE pattern loop)"
+      ],
+      "confidence": 0.87
+    },
+    "pathlib-over-os-path": {
+      "description": "Use pathlib.Path for modern Python file path operations",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:39-41",
+        "plugins/ace-orchestration/scripts/offline-training.py:177-183"
+      ],
+      "patterns": [
+        "Use Path.cwd() instead of os.getcwd()",
+        "Use Path / operator for path joining",
+        "Use Path.parent for directory navigation",
+        "Use Path.stem for filename without extension",
+        "Use Path.exists() for existence checks"
+      ],
+      "confidence": 0.93
+    }
+  },
+  "abstract": {
+    "evidence-based-learning": {
+      "description": "Learn patterns from actual code evidence rather than hardcoded rules",
+      "instances": [
+        "agent-based-pattern-discovery",
+        "git-history-mining",
+        "pattern-merge-and-refinement"
+      ],
+      "confidence": 0.91
+    },
+    "meta-learning-architecture": {
+      "description": "System that learns from its own generated artifacts (specs-history source)",
+      "instances": [
+        "ace-offline-training",
+        "git-history-mining"
+      ],
+      "confidence": 0.86
+    },
+    "file-based-agent-coordination": {
+      "description": "Coordinate between agents using filesystem as communication layer",
+      "instances": [
+        "agent-based-pattern-discovery"
+      ],
+      "confidence": 0.89
+    },
+    "confidence-driven-curation": {
+      "description": "Use confidence scores to gate pattern inclusion and track evolution",
+      "instances": [
+        "pattern-merge-and-refinement",
+        "ace-offline-training"
+      ],
+      "confidence": 0.88
+    },
+    "iterative-improvement": {
+      "description": "Multi-epoch training loop with metrics tracking between iterations",
+      "instances": [
+        "ace-offline-training"
+      ],
+      "confidence": 0.92
+    }
+  },
+  "principles": {
+    "graceful-degradation": {
+      "description": "Return empty/default values instead of raising exceptions when resources missing",
+      "applied_in": [
+        "sqlite-pattern-storage",
+        "git-history-mining"
+      ],
+      "confidence": 0.87
+    },
+    "deterministic-hashing": {
+      "description": "Generate IDs from content hashes for reproducibility across runs",
+      "applied_in": [
+        "agent-based-pattern-discovery"
+      ],
+      "confidence": 0.90
+    },
+    "explicit-error-handling": {
+      "description": "Use try/except with pass for non-critical failures (git operations, file reads)",
+      "applied_in": [
+        "git-history-mining",
+        "agent-based-pattern-discovery"
+      ],
+      "confidence": 0.82
+    },
+    "modern-python-stdlib": {
+      "description": "Prefer modern standard library APIs (pathlib, subprocess.run) over legacy (os.path, os.system)",
+      "applied_in": [
+        "pathlib-over-os-path",
+        "git-history-mining"
+      ],
+      "confidence": 0.94
+    },
+    "rate-limiting-safeguards": {
+      "description": "Impose limits to prevent overwhelming systems (max files per commit, max commits, file size limits)",
+      "applied_in": [
+        "git-history-mining"
+      ],
+      "confidence": 0.85
+    },
+    "separation-of-concerns": {
+      "description": "Separate data collection (scan), processing (reflect), persistence (store), and coordination (main loop)",
+      "applied_in": [
+        "ace-offline-training",
+        "git-history-mining",
+        "pattern-merge-and-refinement"
+      ],
+      "confidence": 0.89
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and code structure analysis",
+    "discovered_at": "2025-10-18T21:10:00Z"
+  }
+}

@@ -1,0 +1,227 @@
+{
+  "concrete": {
+    "pytest-test-framework": {
+      "description": "pytest testing framework usage with fixtures, marks, and test organization",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_scripts.py"
+      ],
+      "patterns": [
+        "Import pytest for testing",
+        "Use @pytest.fixture decorator",
+        "Use @pytest.mark.unit for test categorization",
+        "Define fixtures with descriptive names (ace_helper, plugin_root, temp_project, claude_env)"
+      ],
+      "confidence": 0.95
+    },
+    "sqlite3-database-testing": {
+      "description": "SQLite database operations and testing patterns",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_scripts.py"
+      ],
+      "patterns": [
+        "Import sqlite3 module",
+        "Use sqlite3.connect() with str() path conversion",
+        "Execute INSERT INTO patterns with parameterized queries",
+        "Test database initialization with empty database"
+      ],
+      "confidence": 0.92
+    },
+    "subprocess-script-testing": {
+      "description": "Testing Python scripts via subprocess execution",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_scripts.py"
+      ],
+      "patterns": [
+        "Import subprocess module",
+        "Use subprocess.run() with capture_output=True",
+        "Pass text=True for string output",
+        "Set cwd parameter for working directory context",
+        "Check result.returncode for success/failure",
+        "Test script execution: generate-playbook.py"
+      ],
+      "confidence": 0.93
+    },
+    "pathlib-file-operations": {
+      "description": "Modern Python pathlib for file and directory operations",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_scripts.py"
+      ],
+      "patterns": [
+        "Import Path from pathlib",
+        "Use Path object for file paths",
+        "Use .parent.mkdir(parents=True, exist_ok=True)",
+        "Use .exists() method for file existence checks",
+        "Use .read_text() for file content reading",
+        "Use / operator for path joining"
+      ],
+      "confidence": 0.94
+    },
+    "ace-memory-database-schema": {
+      "description": "ACE memory system database schema and pattern storage",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_scripts.py"
+      ],
+      "patterns": [
+        "Database path: .ace-memory/patterns.db",
+        "Table: patterns with columns (id, bullet_id, name, domain, type, description, language, observations, successes, failures, neutrals, helpful_count, harmful_count, confidence, last_seen, created_at)",
+        "Pattern ID format: test-pattern-001",
+        "Bullet ID format: [test-00001]",
+        "Pattern types: helpful, harmful, neutral"
+      ],
+      "confidence": 0.96
+    },
+    "ace-playbook-generation": {
+      "description": "ACE playbook generation from patterns database",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_scripts.py",
+        "plugins/ace-orchestration/scripts/generate-playbook.py"
+      ],
+      "patterns": [
+        "Script: generate-playbook.py",
+        "Output file: CLAUDE.md",
+        "Handles empty database case with 'No patterns learned yet'",
+        "Generates 'ACE Plugin Instructions' content",
+        "Pattern count in output: 'Total patterns'"
+      ],
+      "confidence": 0.91
+    },
+    "ace-test-helper-utility": {
+      "description": "Custom test helper class for ACE plugin testing",
+      "evidence": [
+        "plugins/ace-orchestration/tests/test_scripts.py",
+        "plugins/ace-orchestration/tests/ace_test_helper.py"
+      ],
+      "patterns": [
+        "Import ACETestHelper from ace_test_helper",
+        "Initialize with (plugin_root, temp_project, claude_env)",
+        "Fixture-based helper instantiation"
+      ],
+      "confidence": 0.88
+    }
+  },
+  "abstract": {
+    "test-isolation-pattern": {
+      "description": "Test isolation using temporary directories and databases",
+      "instances": [
+        "pytest-test-framework",
+        "ace-memory-database-schema",
+        "pathlib-file-operations"
+      ],
+      "confidence": 0.90
+    },
+    "fixture-based-test-setup": {
+      "description": "Using pytest fixtures for reusable test setup and dependency injection",
+      "instances": [
+        "pytest-test-framework",
+        "ace-test-helper-utility"
+      ],
+      "confidence": 0.92
+    },
+    "subprocess-integration-testing": {
+      "description": "Testing scripts as external processes with output validation",
+      "instances": [
+        "subprocess-script-testing",
+        "pathlib-file-operations"
+      ],
+      "confidence": 0.89
+    },
+    "database-fixture-pattern": {
+      "description": "Setting up test databases with known data for testing",
+      "instances": [
+        "sqlite3-database-testing",
+        "ace-memory-database-schema"
+      ],
+      "confidence": 0.91
+    },
+    "file-generation-validation": {
+      "description": "Testing file generation by checking existence and content",
+      "instances": [
+        "pathlib-file-operations",
+        "ace-playbook-generation"
+      ],
+      "confidence": 0.88
+    }
+  },
+  "principles": {
+    "modern-python-standard-library": {
+      "description": "Prefer modern standard library modules over legacy alternatives",
+      "applied_in": [
+        "pathlib-file-operations",
+        "subprocess-integration-testing"
+      ],
+      "confidence": 0.93
+    },
+    "test-driven-development": {
+      "description": "Write comprehensive tests covering both happy path and edge cases",
+      "applied_in": [
+        "pytest-test-framework",
+        "subprocess-integration-testing",
+        "database-fixture-pattern"
+      ],
+      "confidence": 0.90
+    },
+    "explicit-test-categorization": {
+      "description": "Use test markers to categorize and organize tests (unit, integration, etc.)",
+      "applied_in": [
+        "pytest-test-framework"
+      ],
+      "confidence": 0.87
+    },
+    "parameterized-sql-queries": {
+      "description": "Use parameterized queries to prevent SQL injection and improve security",
+      "applied_in": [
+        "sqlite3-database-testing"
+      ],
+      "confidence": 0.94
+    },
+    "test-helper-abstraction": {
+      "description": "Create helper classes to reduce test boilerplate and improve maintainability",
+      "applied_in": [
+        "ace-test-helper-utility",
+        "fixture-based-test-setup"
+      ],
+      "confidence": 0.86
+    },
+    "defensive-directory-creation": {
+      "description": "Use parents=True and exist_ok=True when creating directories to handle edge cases",
+      "applied_in": [
+        "pathlib-file-operations"
+      ],
+      "confidence": 0.92
+    },
+    "process-exit-code-validation": {
+      "description": "Always check subprocess return codes to verify script execution success",
+      "applied_in": [
+        "subprocess-integration-testing"
+      ],
+      "confidence": 0.91
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and descriptions",
+    "discovered_at": "2025-10-18T15:57:30Z",
+    "source_file": "plugins/ace-orchestration/tests/test_scripts.py",
+    "code_analysis": {
+      "language": "python",
+      "imports_detected": [
+        "pytest",
+        "subprocess",
+        "sqlite3",
+        "pathlib.Path",
+        "ace_test_helper.ACETestHelper"
+      ],
+      "test_functions": [
+        "test_generate_playbook_with_no_patterns",
+        "test_generate_playbook_with_patterns"
+      ],
+      "fixtures": [
+        "ace_helper",
+        "plugin_root",
+        "temp_project",
+        "claude_env",
+        "temp_db"
+      ]
+    }
+  }
+}

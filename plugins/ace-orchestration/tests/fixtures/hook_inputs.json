@@ -1,0 +1,48 @@
+{
+  "post_tool_use_edit": {
+    "session_id": "test-session-123",
+    "transcript_path": "/tmp/test-transcript.jsonl",
+    "cwd": "/tmp/test-project",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "test.py",
+      "old_string": "def old_function():\n    pass",
+      "new_string": "def new_function():\n    return True"
+    },
+    "tool_response": {
+      "filePath": "test.py",
+      "success": true
+    }
+  },
+  "post_tool_use_write": {
+    "session_id": "test-session-456",
+    "transcript_path": "/tmp/test-transcript.jsonl",
+    "cwd": "/tmp/test-project",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Write",
+    "tool_input": {
+      "file_path": "app.py",
+      "content": "#!/usr/bin/env python3\n\ndef main():\n    print('Hello, World!')\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    "tool_response": {
+      "filePath": "app.py",
+      "success": true
+    }
+  },
+  "agent_start": {
+    "session_id": "test-session-789",
+    "transcript_path": "/tmp/test-transcript.jsonl",
+    "cwd": "/tmp/test-project",
+    "hook_event_name": "AgentStart",
+    "agent_name": "reflector",
+    "agent_prompt": "Discover patterns from code"
+  },
+  "session_end": {
+    "session_id": "test-session-complete",
+    "transcript_path": "/tmp/test-transcript.jsonl",
+    "cwd": "/tmp/test-project",
+    "hook_event_name": "SessionEnd",
+    "session_duration": 300
+  }
+}

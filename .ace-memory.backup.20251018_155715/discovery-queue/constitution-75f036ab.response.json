@@ -1,0 +1,83 @@
+{
+  "concrete": {
+    "ace-constitution-documentation": {
+      "description": "ACE system's auto-generated constitution documenting high-confidence coding principles",
+      "evidence": ["specs/memory/constitution.md", "../playbooks/*/spec.md"],
+      "patterns": [
+        "Auto-generated documentation from patterns",
+        "Confidence-based principle evolution",
+        "Playbook cross-references"
+      ],
+      "confidence": 0.95
+    },
+    "pattern-metadata-tracking": {
+      "description": "Systematic tracking of pattern statistics and evolution over time",
+      "evidence": ["specs/memory/constitution.md"],
+      "patterns": [
+        "70% confidence threshold for inclusion",
+        "Observation counting",
+        "Success rate tracking"
+      ],
+      "confidence": 0.9
+    },
+    "playbook-reference-system": {
+      "description": "Cross-referencing system linking principles to detailed playbook specifications",
+      "evidence": ["../playbooks/003-avoid-bare-except/spec.md", "../playbooks/001-temp/spec.md"],
+      "patterns": [
+        "Playbook ID references",
+        "Spec.md linking",
+        "Pattern-to-playbook mapping"
+      ],
+      "confidence": 0.85
+    }
+  },
+  "abstract": {
+    "documentation-generation": {
+      "description": "Automated generation of documentation from learned patterns and evidence",
+      "instances": ["ace-constitution-documentation", "pattern-metadata-tracking"],
+      "confidence": 0.92
+    },
+    "confidence-based-learning": {
+      "description": "Machine learning system that uses confidence scores to gate pattern inclusion and evolution",
+      "instances": ["ace-constitution-documentation", "pattern-metadata-tracking"],
+      "confidence": 0.9
+    },
+    "evolutionary-documentation": {
+      "description": "Living documentation that automatically evolves through pattern addition, updates, and removal",
+      "instances": ["ace-constitution-documentation"],
+      "confidence": 0.88
+    }
+  },
+  "principles": {
+    "evidence-based-guidelines": {
+      "description": "Generate guidelines only from patterns validated through repeated observation and testing",
+      "applied_in": ["confidence-based-learning", "documentation-generation"],
+      "confidence": 0.93
+    },
+    "confidence-threshold-gating": {
+      "description": "Use quantitative confidence thresholds to control quality of patterns (70% for inclusion, 30% for removal)",
+      "applied_in": ["confidence-based-learning"],
+      "confidence": 0.91
+    },
+    "living-documentation": {
+      "description": "Documentation should evolve automatically with the codebase rather than requiring manual updates",
+      "applied_in": ["evolutionary-documentation"],
+      "confidence": 0.89
+    },
+    "cross-referencing": {
+      "description": "Link related documentation elements (principles to playbooks) for easy navigation and context",
+      "applied_in": ["documentation-generation"],
+      "confidence": 0.87
+    },
+    "metadata-driven-documentation": {
+      "description": "Include timestamps, counts, and statistics to provide transparency about pattern reliability",
+      "applied_in": ["documentation-generation"],
+      "confidence": 0.85
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and descriptions",
+    "discovered_at": "2025-10-17T23:00:00Z"
+  }
+}

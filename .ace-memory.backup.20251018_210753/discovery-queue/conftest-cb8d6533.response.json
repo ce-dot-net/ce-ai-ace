@@ -1,0 +1,228 @@
+{
+  "concrete": {
+    "pytest-fixture-composition": {
+      "description": "Using pytest fixtures with dependency injection - fixtures accepting other fixtures as parameters (e.g., claude_env depends on plugin_root and tmp_path)",
+      "evidence": [
+        "plugins/ace-orchestration/tests/conftest.py:24-31",
+        "plugins/ace-orchestration/tests/conftest.py:52-112"
+      ],
+      "patterns": [
+        "Fixture dependency injection pattern",
+        "Composable test fixtures"
+      ],
+      "confidence": 0.95
+    },
+    "pathlib-navigation": {
+      "description": "Using pathlib Path with parent navigation to compute directory locations relative to current file",
+      "evidence": [
+        "plugins/ace-orchestration/tests/conftest.py:14",
+        "plugins/ace-orchestration/tests/conftest.py:20",
+        "plugins/ace-orchestration/tests/conftest.py:38",
+        "plugins/ace-orchestration/tests/conftest.py:54"
+      ],
+      "patterns": [
+        "Path(__file__).parent.parent for directory navigation",
+        "Path division operator for path concatenation"
+      ],
+      "confidence": 0.92
+    },
+    "sqlite3-schema-initialization": {
+      "description": "Creating SQLite database schema with CREATE TABLE IF NOT EXISTS using multi-line strings and foreign key constraints",
+      "evidence": [
+        "plugins/ace-orchestration/tests/conftest.py:56-112"
+      ],
+      "patterns": [
+        "Triple-quoted SQL DDL statements",
+        "FOREIGN KEY constraints for referential integrity",
+        "Default values in column definitions",
+        "INTEGER PRIMARY KEY AUTOINCREMENT pattern"
+      ],
+      "confidence": 0.93
+    },
+    "pytest-tmp-path-fixture": {
+      "description": "Using pytest's built-in tmp_path fixture to create isolated temporary directories for test isolation",
+      "evidence": [
+        "plugins/ace-orchestration/tests/conftest.py:24",
+        "plugins/ace-orchestration/tests/conftest.py:35-48"
+      ],
+      "patterns": [
+        "tmp_path fixture for test isolation",
+        "Creating directory structures within tmp_path"
+      ],
+      "confidence": 0.91
+    },
+    "pathlib-mkdir-exist-ok": {
+      "description": "Using Path.mkdir() with parents=True and exist_ok=True to safely create directory hierarchies without errors if they exist",
+      "evidence": [
+        "plugins/ace-orchestration/tests/conftest.py:39",
+        "plugins/ace-orchestration/tests/conftest.py:45-46"
+      ],
+      "patterns": [
+        "mkdir(parents=True, exist_ok=True) idiom"
+      ],
+      "confidence": 0.89
+    },
+    "pytest-custom-markers": {
+      "description": "Using pytest_configure hook to register custom markers for test categorization",
+      "evidence": [
+        "plugins/ace-orchestration/tests/conftest.py:222-229"
+      ],
+      "patterns": [
+        "pytest_configure(config) hook",
+        "config.addinivalue_line for marker registration",
+        "Integration vs unit test markers"
+      ],
+      "confidence": 0.88
+    },
+    "fixture-based-test-data": {
+      "description": "Providing test data and mock responses through pytest fixtures rather than hardcoding in tests",
+      "evidence": [
+        "plugins/ace-orchestration/tests/conftest.py:116-133",
+        "plugins/ace-orchestration/tests/conftest.py:137-165",
+        "plugins/ace-orchestration/tests/conftest.py:169-196",
+        "plugins/ace-orchestration/tests/conftest.py:200-219"
+      ],
+      "patterns": [
+        "sample_hook_input fixture with Claude Code hook schema",
+        "sample_code fixture with Python code strings",
+        "expected_patterns fixture with validation data",
+        "mock_agent_response fixture for agent output"
+      ],
+      "confidence": 0.87
+    },
+    "claude-code-environment-simulation": {
+      "description": "Creating environment variable dictionaries to simulate Claude Code CLI runtime environment for testing",
+      "evidence": [
+        "plugins/ace-orchestration/tests/conftest.py:24-31"
+      ],
+      "patterns": [
+        "CLAUDE_PLUGIN_ROOT environment variable",
+        "CLAUDE_PROJECT_DIR environment variable",
+        "CLAUDECODE=1 flag for Claude Code detection",
+        "CLAUDE_CODE_ENTRYPOINT for entry point tracking"
+      ],
+      "confidence": 0.86
+    },
+    "ace-memory-directory-structure": {
+      "description": "Creating ACE plugin directory structure with .ace-memory for database and specs/playbooks and specs/memory for documentation",
+      "evidence": [
+        "plugins/ace-orchestration/tests/conftest.py:37-46"
+      ],
+      "patterns": [
+        ".ace-memory directory for SQLite database",
+        "specs/playbooks directory structure",
+        "specs/memory directory structure"
+      ],
+      "confidence": 0.85
+    },
+    "sqlite3-connection-lifecycle": {
+      "description": "Opening SQLite connection, executing DDL statements, committing changes, and explicitly closing connection",
+      "evidence": [
+        "plugins/ace-orchestration/tests/conftest.py:56-112"
+      ],
+      "patterns": [
+        "sqlite3.connect(str(path)) with explicit path string conversion",
+        "conn.commit() before conn.close()",
+        "cursor.execute() for DDL execution"
+      ],
+      "confidence": 0.84
+    }
+  },
+  "abstract": {
+    "test-isolation-architecture": {
+      "description": "Designing test fixtures to create fully isolated test environments with temporary directories and databases",
+      "instances": [
+        "pytest-tmp-path-fixture",
+        "pytest-fixture-composition",
+        "fixture-based-test-data"
+      ],
+      "confidence": 0.91
+    },
+    "declarative-schema-management": {
+      "description": "Using declarative SQL DDL with CREATE TABLE IF NOT EXISTS for idempotent schema initialization",
+      "instances": [
+        "sqlite3-schema-initialization"
+      ],
+      "confidence": 0.88
+    },
+    "environment-simulation-pattern": {
+      "description": "Creating fixture-based environment simulations to test plugin behavior in controlled contexts",
+      "instances": [
+        "claude-code-environment-simulation",
+        "ace-memory-directory-structure"
+      ],
+      "confidence": 0.85
+    },
+    "safe-filesystem-operations": {
+      "description": "Using modern pathlib APIs with defensive parameters to prevent errors during filesystem operations",
+      "instances": [
+        "pathlib-navigation",
+        "pathlib-mkdir-exist-ok"
+      ],
+      "confidence": 0.87
+    },
+    "fixture-dependency-injection": {
+      "description": "Leveraging pytest's fixture dependency injection to compose complex test setups from simpler components",
+      "instances": [
+        "pytest-fixture-composition",
+        "fixture-based-test-data"
+      ],
+      "confidence": 0.89
+    }
+  },
+  "principles": {
+    "test-data-as-fixtures": {
+      "description": "Centralize test data in reusable fixtures rather than duplicating across test files",
+      "applied_in": [
+        "test-isolation-architecture",
+        "fixture-dependency-injection"
+      ],
+      "confidence": 0.86
+    },
+    "explicit-resource-cleanup": {
+      "description": "Explicitly close resources (database connections) after use rather than relying on garbage collection",
+      "applied_in": [
+        "declarative-schema-management"
+      ],
+      "confidence": 0.83
+    },
+    "idempotent-initialization": {
+      "description": "Design initialization code to be safely re-runnable using IF NOT EXISTS and exist_ok patterns",
+      "applied_in": [
+        "declarative-schema-management",
+        "safe-filesystem-operations"
+      ],
+      "confidence": 0.88
+    },
+    "type-conversion-at-boundaries": {
+      "description": "Convert Path objects to strings at API boundaries (e.g., sqlite3.connect expects string not Path)",
+      "applied_in": [
+        "safe-filesystem-operations"
+      ],
+      "confidence": 0.81
+    },
+    "documentation-driven-fixtures": {
+      "description": "Use descriptive docstrings in fixtures to document their purpose and return values",
+      "applied_in": [
+        "test-isolation-architecture"
+      ],
+      "confidence": 0.79
+    },
+    "test-categorization": {
+      "description": "Use custom pytest markers to categorize tests by type (unit vs integration) for selective test execution",
+      "applied_in": [
+        "test-isolation-architecture"
+      ],
+      "confidence": 0.82
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and code structure analysis",
+    "discovered_at": "2025-10-18T00:00:00Z",
+    "file_analyzed": "plugins/ace-orchestration/tests/conftest.py",
+    "language": "python",
+    "framework": "pytest",
+    "lines_of_code": 230
+  }
+}

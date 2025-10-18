@@ -1,0 +1,71 @@
+{
+  "concrete": {
+    "spec-kit-documentation": {
+      "description": "Documentation architecture using spec-kit format with YAML frontmatter and structured markdown files",
+      "evidence": ["specs/README.md", "specs/playbooks/*/spec.md", "specs/playbooks/*/plan.md", "specs/playbooks/*/insights.md"],
+      "patterns": ["Three-file playbook pattern", "YAML frontmatter metadata", "Directory structure documentation", "File type explanations"],
+      "confidence": 0.95
+    },
+    "ace-pattern-learning": {
+      "description": "Agentic Context Engineering pattern detection, validation, and evolution system",
+      "evidence": ["specs/README.md", "specs/playbooks/", "specs/memory/constitution.md"],
+      "patterns": ["Pattern detection from code", "Test-based validation", "Research-proven curation algorithms", "Multi-epoch training and refinement"],
+      "confidence": 0.9
+    },
+    "playbook-structure": {
+      "description": "Organized playbook directory structure with numbered domains and three-file format",
+      "evidence": ["specs/playbooks/001-python-io/", "specs/playbooks/002-python-strings/", "specs/playbooks/003-typescript-typing/"],
+      "patterns": ["Numbered playbook directories", "Three-file pattern (spec/plan/insights)", "Domain-specific subdirectories"],
+      "confidence": 0.85
+    }
+  },
+  "abstract": {
+    "version-controlled-learning": {
+      "description": "Git-based version control for learned patterns and playbooks with historical tracking",
+      "instances": ["ace-pattern-learning", "spec-kit-documentation"],
+      "confidence": 0.9
+    },
+    "metadata-driven-documentation": {
+      "description": "Use of YAML frontmatter and structured metadata to organize and query documentation",
+      "instances": ["spec-kit-documentation", "playbook-structure"],
+      "confidence": 0.85
+    },
+    "separation-of-documentation-concerns": {
+      "description": "Split documentation into distinct files for pattern definition, implementation approach, and reflective analysis",
+      "instances": ["playbook-structure"],
+      "confidence": 0.9
+    },
+    "confidence-based-curation": {
+      "description": "Filter and organize patterns based on confidence thresholds (e.g., 70% for constitution)",
+      "instances": ["ace-pattern-learning"],
+      "confidence": 0.85
+    }
+  },
+  "principles": {
+    "automated-knowledge-extraction": {
+      "description": "Automatically detect and document coding patterns from actual codebase analysis rather than manual documentation",
+      "applied_in": ["version-controlled-learning", "confidence-based-curation"],
+      "confidence": 0.9
+    },
+    "evidence-based-learning": {
+      "description": "Validate patterns through test results and execution feedback before inclusion in playbooks",
+      "applied_in": ["version-controlled-learning", "confidence-based-curation"],
+      "confidence": 0.9
+    },
+    "human-readable-automation": {
+      "description": "Generate documentation that is both machine-processable and human-friendly with emoji section headers and clear structure",
+      "applied_in": ["metadata-driven-documentation", "separation-of-documentation-concerns"],
+      "confidence": 0.8
+    },
+    "iterative-refinement": {
+      "description": "Continuously evolve patterns through multi-epoch training and reflector analysis",
+      "applied_in": ["version-controlled-learning"],
+      "confidence": 0.85
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and descriptions",
+    "discovered_at": "2025-10-17T22:59:00Z"
+  }
+}

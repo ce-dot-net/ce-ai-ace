@@ -1,0 +1,243 @@
+{
+  "concrete": {
+    "multi-epoch-training": {
+      "description": "Multi-epoch offline training system for machine learning pattern refinement over 5 epochs",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py",
+        "plugins/ace-orchestration/scripts/epoch-manager.py"
+      ],
+      "patterns": [
+        "Import epoch-manager functions (start_epoch, complete_epoch, track_pattern_evolution)",
+        "Run training loop for MAX_EPOCHS iterations",
+        "Track patterns_before and patterns_after with avg_confidence metrics",
+        "Complete epoch with statistics (patterns_processed, patterns_refined, confidence deltas)",
+        "Print improvement percentages between epochs"
+      ],
+      "confidence": 0.95
+    },
+    "git-based-training-corpus": {
+      "description": "Extract training data from git commit history using subprocess git commands",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:74-111",
+        "plugins/ace-orchestration/scripts/offline-training.py:113-158"
+      ],
+      "patterns": [
+        "Execute 'git log --pretty=format:%H --max-count=50' to get commit hashes",
+        "Execute 'git show --name-only' to get changed files per commit",
+        "Execute 'git show {commit}:{file_rel}' to get file contents at specific commit",
+        "Execute 'git diff-tree --no-commit-id --name-only -r' for file change detection",
+        "Filter commits by directory using 'git log -- specs/'",
+        "Limit file size check (< 50000 or 100000 chars) to skip huge files"
+      ],
+      "confidence": 0.92
+    },
+    "agent-based-pattern-discovery": {
+      "description": "Filesystem-based agent coordination using request/response queue with deterministic hashing",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:161-265",
+        "plugins/ace-orchestration/agents/domain-discoverer.md"
+      ],
+      "patterns": [
+        "Create unique request_id from MD5 hash of file_path",
+        "Write request JSON to .ace-memory/discovery-queue/{request_id}.request.json",
+        "Check for cached response at {request_id}.response.json",
+        "Output request to stderr for Claude to process via agent invocation",
+        "Return empty list if no response cached (lazy evaluation)",
+        "Convert agent response format: {concrete, abstract, principles} to pattern list",
+        "Parse concrete domains into patterns with domain_id prefix",
+        "Parse abstract patterns with 'abstract-' prefix",
+        "Parse principles with 'principle-' prefix"
+      ],
+      "confidence": 0.93
+    },
+    "dynamic-python-module-loading": {
+      "description": "Import Python modules with hyphens in filenames using importlib.util",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:26-36",
+        "plugins/ace-orchestration/scripts/offline-training.py:285-288",
+        "plugins/ace-orchestration/scripts/offline-training.py:321-329"
+      ],
+      "patterns": [
+        "Use importlib.util.spec_from_file_location() for hyphenated filenames",
+        "Create module with importlib.util.module_from_spec()",
+        "Execute module with spec.loader.exec_module()",
+        "Import specific functions from dynamically loaded module",
+        "Pattern used for 'epoch-manager.py' and 'ace-cycle.py' imports"
+      ],
+      "confidence": 0.88
+    },
+    "sqlite-pattern-storage": {
+      "description": "SQLite database operations for pattern storage with Row factory for dict access",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:447-460",
+        "plugins/ace-orchestration/scripts/offline-training.py:40"
+      ],
+      "patterns": [
+        "Set conn.row_factory = sqlite3.Row for dictionary-like row access",
+        "Store patterns with fields: id, name, domain, type, description, confidence, language",
+        "Track observations, successes, failures, neutrals for each pattern",
+        "Calculate confidence = successes / max(observations, 1)",
+        "Merge patterns using merge_patterns() function",
+        "Track pattern evolution with epoch_number, confidence_before, confidence_after"
+      ],
+      "confidence": 0.90
+    },
+    "subprocess-git-operations": {
+      "description": "Execute git commands via subprocess with text output and error handling",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:74-158"
+      ],
+      "patterns": [
+        "Use subprocess.run() with capture_output=True",
+        "Set text=True for string output instead of bytes",
+        "Specify cwd=PROJECT_ROOT for git commands",
+        "Parse result.stdout.strip().split('\\n') for line-based output",
+        "Wrap subprocess calls in try/except for graceful failure",
+        "Print warning to stderr on git operation failures"
+      ],
+      "confidence": 0.85
+    },
+    "pathlib-path-operations": {
+      "description": "Modern Python path handling using pathlib.Path with division operator",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:39-41",
+        "plugins/ace-orchestration/scripts/offline-training.py:177-183"
+      ],
+      "patterns": [
+        "Use Path.cwd() for current directory",
+        "Use Path(__file__).parent for script directory",
+        "Use division operator (/) for path joining",
+        "Use Path.glob() for file pattern matching",
+        "Use Path.stem for filename without extension",
+        "Use Path.relative_to() for relative paths",
+        "Use Path.exists() for file/directory checks",
+        "Use Path.mkdir(parents=True, exist_ok=True) for directory creation"
+      ],
+      "confidence": 0.87
+    },
+    "training-data-caching": {
+      "description": "Cache training data and patterns for future epoch reuse",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/offline-training.py:403-410"
+      ],
+      "patterns": [
+        "Call cache_training_data() with file_path, code, patterns_detected, test_status",
+        "Cache placed OUTSIDE pattern processing loop",
+        "Store discovered pattern IDs in list for caching",
+        "Include test_status in cache metadata"
+      ],
+      "confidence": 0.80
+    }
+  },
+  "abstract": {
+    "iterative-refinement-architecture": {
+      "description": "Multi-round processing with convergence tracking and metrics-driven refinement",
+      "instances": [
+        "multi-epoch-training",
+        "agent-based-pattern-discovery"
+      ],
+      "confidence": 0.91
+    },
+    "filesystem-based-agent-coordination": {
+      "description": "Queue-based agent communication using filesystem as message broker with request/response pattern",
+      "instances": [
+        "agent-based-pattern-discovery"
+      ],
+      "confidence": 0.88
+    },
+    "deterministic-identifier-generation": {
+      "description": "Generate consistent IDs using hashing for deduplication and caching",
+      "instances": [
+        "agent-based-pattern-discovery"
+      ],
+      "confidence": 0.85
+    },
+    "lazy-evaluation-with-caching": {
+      "description": "Check cache first, return empty if not ready, defer computation to external process",
+      "instances": [
+        "agent-based-pattern-discovery",
+        "training-data-caching"
+      ],
+      "confidence": 0.83
+    },
+    "pattern-merge-and-evolution": {
+      "description": "Combine observations from multiple sources while tracking confidence changes over time",
+      "instances": [
+        "sqlite-pattern-storage",
+        "multi-epoch-training"
+      ],
+      "confidence": 0.89
+    },
+    "graceful-degradation": {
+      "description": "Continue execution with warnings when optional components fail",
+      "instances": [
+        "subprocess-git-operations",
+        "git-based-training-corpus"
+      ],
+      "confidence": 0.86
+    }
+  },
+  "principles": {
+    "evidence-based-confidence": {
+      "description": "Calculate confidence scores from success/failure ratios rather than hardcoded values",
+      "applied_in": [
+        "pattern-merge-and-evolution",
+        "iterative-refinement-architecture"
+      ],
+      "confidence": 0.90
+    },
+    "modern-python-stdlib": {
+      "description": "Prefer modern standard library APIs (pathlib, importlib) over legacy alternatives (os.path, __import__)",
+      "applied_in": [
+        "pathlib-path-operations",
+        "dynamic-python-module-loading"
+      ],
+      "confidence": 0.88
+    },
+    "explicit-error-handling": {
+      "description": "Use try/except blocks with specific error handling and user feedback rather than bare except",
+      "applied_in": [
+        "graceful-degradation",
+        "subprocess-git-operations"
+      ],
+      "confidence": 0.84
+    },
+    "separation-of-concerns": {
+      "description": "Separate data collection, processing, and storage into distinct modules/functions",
+      "applied_in": [
+        "multi-epoch-training",
+        "git-based-training-corpus",
+        "agent-based-pattern-discovery"
+      ],
+      "confidence": 0.87
+    },
+    "deterministic-computation": {
+      "description": "Use hashing and deterministic algorithms for reproducible results across runs",
+      "applied_in": [
+        "deterministic-identifier-generation"
+      ],
+      "confidence": 0.82
+    },
+    "metrics-driven-learning": {
+      "description": "Track quantitative metrics (confidence deltas, pattern counts) to measure improvement",
+      "applied_in": [
+        "iterative-refinement-architecture",
+        "pattern-merge-and-evolution"
+      ],
+      "confidence": 0.89
+    },
+    "progressive-refinement": {
+      "description": "Improve results through multiple passes rather than single-shot processing",
+      "applied_in": [
+        "iterative-refinement-architecture",
+        "multi-epoch-training"
+      ],
+      "confidence": 0.91
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 44,
+    "discovery_method": "bottom-up from file paths and descriptions",
+    "discovered_at": "2025-10-17T00:00:00Z"
+  }
+}

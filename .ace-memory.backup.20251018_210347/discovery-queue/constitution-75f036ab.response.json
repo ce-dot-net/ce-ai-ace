@@ -1,0 +1,85 @@
+{
+  "concrete": {
+    "ace-constitution-generation": {
+      "description": "Auto-generated constitution documents from high-confidence coding patterns with confidence thresholds and observation tracking",
+      "evidence": ["specs/memory/constitution.md"],
+      "patterns": [
+        "70% confidence threshold for pattern inclusion",
+        "30% confidence threshold for lazy pruning",
+        "Auto-generated documentation from patterns",
+        "Observation counting for pattern validation",
+        "ISO timestamp tracking",
+        "Playbook cross-references"
+      ],
+      "confidence": 0.95
+    },
+    "python-error-handling-patterns": {
+      "description": "Python exception handling best practices and anti-patterns",
+      "evidence": ["specs/memory/constitution.md"],
+      "patterns": [
+        "Avoid bare except",
+        "Explicit exception specificity"
+      ],
+      "confidence": 0.82
+    },
+    "ace-playbook-system": {
+      "description": "Structured playbook system with ID-based references and markdown specification files",
+      "evidence": ["../playbooks/003-avoid-bare-except/spec.md", "../playbooks/001-temp/spec.md"],
+      "patterns": [
+        "Playbook ID references (py-003, temp-001)",
+        "Spec.md linking",
+        "Pattern to playbook mapping"
+      ],
+      "confidence": 0.90
+    }
+  },
+  "abstract": {
+    "confidence-based-learning": {
+      "description": "Machine learning pattern where confidence scores drive curation, inclusion, and pruning decisions",
+      "instances": ["ace-constitution-generation", "python-error-handling-patterns"],
+      "confidence": 0.95
+    },
+    "evidence-based-guidelines": {
+      "description": "Documentation generation based on empirical observation counts rather than assumptions",
+      "instances": ["ace-constitution-generation"],
+      "confidence": 0.93
+    },
+    "evolutionary-documentation": {
+      "description": "Living documentation that automatically updates based on pattern confidence evolution",
+      "instances": ["ace-constitution-generation", "ace-playbook-system"],
+      "confidence": 0.92
+    },
+    "cross-referencing": {
+      "description": "Linking related documentation through structured references (playbooks, specs)",
+      "instances": ["ace-playbook-system", "ace-constitution-generation"],
+      "confidence": 0.88
+    }
+  },
+  "principles": {
+    "confidence-threshold-gating": {
+      "description": "Use numerical thresholds to control when patterns are included (70%) or removed (30%)",
+      "applied_in": ["confidence-based-learning", "evidence-based-guidelines"],
+      "confidence": 0.95
+    },
+    "observation-counting": {
+      "description": "Track empirical observation counts to validate pattern confidence over time",
+      "applied_in": ["evidence-based-guidelines", "confidence-based-learning"],
+      "confidence": 0.93
+    },
+    "machine-generated-with-human-readability": {
+      "description": "Auto-generate documentation while maintaining human-readable structure with explanations and context",
+      "applied_in": ["evolutionary-documentation", "evidence-based-guidelines"],
+      "confidence": 0.90
+    },
+    "metadata-driven-documentation": {
+      "description": "Include metadata (timestamps, observation counts, confidence scores) in generated documentation for transparency",
+      "applied_in": ["evolutionary-documentation"],
+      "confidence": 0.88
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 6,
+    "discovery_method": "bottom-up from file paths and descriptions",
+    "discovered_at": "2025-10-18T15:57:15Z"
+  }
+}

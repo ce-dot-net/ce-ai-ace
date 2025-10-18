@@ -1,0 +1,51 @@
+{
+  "concrete": {
+    "ace-reflector-system": {
+      "description": "ACE Reflector agent for analyzing pattern effectiveness and usage",
+      "evidence": ["specs/playbooks/**/insights.md"],
+      "patterns": ["reflector-analysis-tracking", "meta-learning-insights", "pattern-effectiveness-monitoring"],
+      "confidence": 0.9
+    },
+    "multi-epoch-training": {
+      "description": "Multi-epoch offline training for pattern refinement with statistics tracking",
+      "evidence": ["specs/playbooks/015-complete-epoch-with-statistics-(patterns-processed,-patterns-refined,-confidence-deltas)/insights.md"],
+      "patterns": ["epoch-statistics", "pattern-refinement-tracking", "confidence-delta-monitoring"],
+      "confidence": 0.85
+    },
+    "insights-documentation-format": {
+      "description": "YAML frontmatter + markdown format for tracking pattern insights",
+      "evidence": ["specs/playbooks/**/insights.md"],
+      "patterns": ["yaml-frontmatter-metadata", "insight-history-tracking", "zero-state-documentation"],
+      "confidence": 0.9
+    }
+  },
+  "abstract": {
+    "meta-learning-architecture": {
+      "description": "Self-reflective system for understanding pattern effectiveness and evolution",
+      "instances": ["ace-reflector-system", "multi-epoch-training"],
+      "confidence": 0.85
+    },
+    "progressive-insight-accumulation": {
+      "description": "Incremental collection and documentation of pattern usage insights over time",
+      "instances": ["ace-reflector-system", "insights-documentation-format"],
+      "confidence": 0.8
+    }
+  },
+  "principles": {
+    "empty-state-documentation": {
+      "description": "Create documentation structure before content exists to establish intent",
+      "applied_in": ["progressive-insight-accumulation"],
+      "confidence": 0.75
+    },
+    "explicit-meta-learning-purpose": {
+      "description": "Document what insights teach the system about pattern effectiveness",
+      "applied_in": ["meta-learning-architecture"],
+      "confidence": 0.8
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and descriptions",
+    "discovered_at": "2025-10-18T21:11:00Z"
+  }
+}

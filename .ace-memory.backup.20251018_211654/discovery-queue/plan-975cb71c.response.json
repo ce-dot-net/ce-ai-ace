@@ -1,0 +1,51 @@
+{
+  "concrete": {
+    "multi-epoch-training-planning": {
+      "description": "Technical planning for multi-epoch training with pattern statistics tracking",
+      "evidence": ["specs/playbooks/015-complete-epoch-with-statistics-(patterns-processed,-patterns-refined,-confidence-deltas)/plan.md"],
+      "patterns": ["epoch-statistics-tracking", "pattern-refinement-monitoring", "confidence-delta-calculation"],
+      "confidence": 0.85
+    },
+    "technical-plan-format": {
+      "description": "Standardized technical plan documentation with YAML frontmatter",
+      "evidence": ["specs/playbooks/**/plan.md"],
+      "patterns": ["yaml-metadata", "implementation-approach", "success-criteria-definition"],
+      "confidence": 0.9
+    },
+    "pattern-application-guidance": {
+      "description": "Step-by-step guidance for applying patterns in code with verification steps",
+      "evidence": ["specs/playbooks/**/plan.md"],
+      "patterns": ["four-step-implementation", "test-verification", "ace-feedback-monitoring"],
+      "confidence": 0.85
+    }
+  },
+  "abstract": {
+    "structured-implementation-planning": {
+      "description": "Systematic approach to pattern implementation with clear success criteria",
+      "instances": ["technical-plan-format", "pattern-application-guidance"],
+      "confidence": 0.85
+    },
+    "feedback-driven-improvement": {
+      "description": "Monitoring pattern effectiveness through ACE feedback and test results",
+      "instances": ["pattern-application-guidance", "multi-epoch-training-planning"],
+      "confidence": 0.8
+    }
+  },
+  "principles": {
+    "verification-based-implementation": {
+      "description": "Every pattern application includes explicit verification steps",
+      "applied_in": ["structured-implementation-planning"],
+      "confidence": 0.85
+    },
+    "incremental-confidence-building": {
+      "description": "Pattern confidence increases through successful application and monitoring",
+      "applied_in": ["feedback-driven-improvement"],
+      "confidence": 0.8
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and descriptions",
+    "discovered_at": "2025-10-18T21:11:00Z"
+  }
+}

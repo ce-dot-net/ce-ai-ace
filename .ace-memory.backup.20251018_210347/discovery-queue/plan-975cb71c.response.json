@@ -1,0 +1,131 @@
+{
+  "concrete": {
+    "ace-playbook-generation": {
+      "description": "Auto-generated technical plan documents for ACE pattern implementation with frontmatter metadata",
+      "evidence": [
+        "specs/playbooks/015-complete-epoch-with-statistics-(patterns-processed,-patterns-refined,-confidence-deltas)/plan.md"
+      ],
+      "patterns": [
+        "YAML frontmatter with pattern_id, type, updated timestamp",
+        "Structured markdown sections: Summary, Technical Context, Implementation Approach, Success Criteria, Examples",
+        "Auto-generated footer attribution"
+      ],
+      "confidence": 0.95
+    },
+    "ace-pattern-tracking": {
+      "description": "Pattern metadata system tracking pattern IDs, types, domains, and confidence scores",
+      "evidence": [
+        "pattern_id: multi-epoch-training-00003",
+        "type: technical_plan",
+        "domain: multi-epoch-training",
+        "confidence: 0.0%"
+      ],
+      "patterns": [
+        "Hyphenated pattern ID format with domain prefix and numeric suffix",
+        "Pattern type classification (technical_plan)",
+        "ISO timestamp tracking (2025-10-17T23:07:58.451830)",
+        "Confidence percentage scoring"
+      ],
+      "confidence": 0.9
+    },
+    "ace-training-pipeline": {
+      "description": "Offline training system for pattern discovery and refinement through epoch-based learning",
+      "evidence": [
+        "training_mode: offline",
+        ".ace-memory/discovery-queue/ directory structure",
+        "request_id: plan-975cb71c",
+        "multi-epoch-training domain"
+      ],
+      "patterns": [
+        "Discovery queue request/response pattern",
+        "Request ID generation with hash suffix",
+        "Training mode specification (offline)",
+        "Epoch-based statistics tracking (patterns_processed, patterns_refined, confidence deltas)"
+      ],
+      "confidence": 0.9
+    },
+    "playbook-directory-structure": {
+      "description": "Numbered playbook organization with descriptive directory names and multi-file documentation",
+      "evidence": [
+        "specs/playbooks/015-complete-epoch-with-statistics-(patterns-processed,-patterns-refined,-confidence-deltas)/"
+      ],
+      "patterns": [
+        "Three-digit numeric prefix (015-)",
+        "Kebab-case descriptive names with parenthetical parameter lists",
+        "Multiple documentation files per playbook (plan.md, insights.md implied)"
+      ],
+      "confidence": 0.85
+    }
+  },
+  "abstract": {
+    "metadata-driven-documentation": {
+      "description": "Documentation generation with structured frontmatter and standardized sections for machine readability",
+      "instances": [
+        "ace-playbook-generation",
+        "ace-pattern-tracking"
+      ],
+      "confidence": 0.9
+    },
+    "evolutionary-learning-system": {
+      "description": "Self-improving pattern recognition through confidence tracking and iterative refinement",
+      "instances": [
+        "ace-pattern-tracking",
+        "ace-training-pipeline"
+      ],
+      "confidence": 0.85
+    },
+    "request-response-queue": {
+      "description": "Asynchronous processing pattern with unique request identifiers and paired request/response files",
+      "instances": [
+        "ace-training-pipeline"
+      ],
+      "confidence": 0.8
+    },
+    "hierarchical-documentation": {
+      "description": "Multi-level documentation structure organizing content by numbering and descriptive categorization",
+      "instances": [
+        "playbook-directory-structure"
+      ],
+      "confidence": 0.75
+    }
+  },
+  "principles": {
+    "machine-readable-human-friendly": {
+      "description": "Generate documentation that is both parseable by machines (YAML frontmatter, JSON) and readable by humans (markdown, descriptive names)",
+      "applied_in": [
+        "metadata-driven-documentation"
+      ],
+      "confidence": 0.9
+    },
+    "evidence-based-improvement": {
+      "description": "Track confidence metrics and statistics to measure pattern effectiveness and guide refinement",
+      "applied_in": [
+        "evolutionary-learning-system"
+      ],
+      "confidence": 0.85
+    },
+    "self-documenting-identifiers": {
+      "description": "Use descriptive naming conventions that convey purpose without requiring external documentation",
+      "applied_in": [
+        "hierarchical-documentation",
+        "metadata-driven-documentation"
+      ],
+      "confidence": 0.8
+    },
+    "temporal-versioning": {
+      "description": "Include timestamps and version indicators to track evolution and enable temporal analysis",
+      "applied_in": [
+        "metadata-driven-documentation",
+        "evolutionary-learning-system"
+      ],
+      "confidence": 0.85
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths, frontmatter metadata, and document structure",
+    "discovered_at": "2025-10-18T15:57:30Z",
+    "input_source": ".ace-memory/discovery-queue/plan-975cb71c.request.json",
+    "analysis_notes": "Single document analysis revealing ACE playbook generation system with multi-epoch training, confidence tracking, and structured markdown documentation patterns"
+  }
+}

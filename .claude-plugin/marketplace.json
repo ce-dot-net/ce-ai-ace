@@ -8,8 +8,8 @@
     {
       "name": "ace-orchestration",
       "source": "./plugins/ace-orchestration",
-      "description": "TRUE ACE architecture with agent-based discovery and self-improving patterns - Based on Stanford/SambaNova/UC Berkeley research",
-      "version": "2.4.2"
+      "description": "TypeScript MCP server with TRUE LLM-based pattern & domain discovery (no hardcoded rules!) - Based on Stanford/SambaNova/UC Berkeley research",
+      "version": "2.5.0"
     }
   ]
 }

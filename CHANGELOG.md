@@ -7,6 +7,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.0] - 2025-10-18
+
+### 🚀 Major: TypeScript MCP Server Architecture
+
+**BREAKING CHANGE**: Migrated from Python scripts + ChromaDB to native TypeScript MCP server.
+
+### Added
+- **TypeScript MCP Server** (`mcp-servers/ace-pattern-learning/`)
+  - Native MCP protocol support with STDIO transport
+  - Pure JavaScript embeddings using `@xenova/transformers` (no Python!)
+  - SQLite storage with `better-sqlite3` (no ChromaDB server needed)
+  - MCP Sampling for Claude invocation (uses Claude Code's Claude API)
+  - 6 MCP Tools: `ace_reflect`, `ace_train_offline`, `ace_get_patterns`, `ace_get_playbook`, `ace_status`, `ace_clear`
+  - Dynamic MCP Resources: `ace://patterns/all`, `ace://playbook`, `ace://stats`, etc.
+- **LLM-Based Domain Discovery** - Domains discovered by Claude analyzing code, not hardcoded keywords
+- **100% Research Paper Compliance** - All ACE paper requirements implemented (85%/70%/30% thresholds)
+
+### Changed
+- **Slash Commands** - All commands now use MCP tools instead of Python scripts
+  - `/ace-status` → `mcp__ace-pattern-learning__ace_status`
+  - `/ace-patterns` → `mcp__ace-pattern-learning__ace_get_patterns`
+  - `/ace-train-offline` → `mcp__ace-pattern-learning__ace_train_offline`
+  - `/ace-clear` → `mcp__ace-pattern-learning__ace_clear`
+  - `/ace-force-reflect` → `mcp__ace-pattern-learning__ace_reflect`
+- **Hooks** - Simplified to prompt-based reflection (removed Python script calls)
+- **Plugin Description** - Updated to reflect TypeScript MCP architecture
+
+### Removed
+- ❌ **Deprecated Python Scripts** - All 22 Python scripts removed
+  - `ace-cycle.py`, `offline-training.py`, `domain_discovery.py`, etc.
+  - `requirements.txt` (no Python dependencies needed!)
+  - `ace-clear.sh` (replaced by MCP tool)
+- ❌ **ChromaDB Dependency** - No longer needed (pure JS embeddings)
+- ❌ **Claude Agent SDK** - Not needed (MCP sampling handles it)
+- ❌ **uvx Overhead** - No more complex script orchestration
+
+### Performance
+- ⚡ **Faster Startup** - Instant via STDIO (vs ~5 seconds for uvx + ChromaDB)
+- 📦 **Smaller Footprint** - 4 npm packages vs 10+ Python packages
+- 🔄 **Single Process** - MCP server only (vs Python + ChromaDB + uvx)
+
+### Architecture Benefits
+- ✅ Native Claude Code integration
+- ✅ Zero configuration (auto-starts with plugin)
+- ✅ No external dependencies or servers
+- ✅ Type-safe TypeScript implementation
+- ✅ Same embedding models as Python (all-MiniLM-L6-v2)
+- ✅ TRUE ACE: LLM discovers patterns AND domains from raw code
+
+### Migration Notes
+- Old `.ace-memory/` data remains compatible (SQLite schema unchanged)
+- MCP server registered in `plugin.json` mcpServers section
+- No user action required - works automatically on plugin load
+
 ## [2.4.2] - 2025-10-18
 
 ### Added

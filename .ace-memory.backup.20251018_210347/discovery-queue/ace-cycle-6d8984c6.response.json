@@ -1,0 +1,215 @@
+{
+  "concrete": {
+    "ace-orchestration-python": {
+      "description": "ACE cycle orchestration implementation in Python - main coordination script for Evidence gathering, Pattern discovery, Curation, Domain discovery, and Playbook updates",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/ace-cycle.py"
+      ],
+      "patterns": [
+        "#!/usr/bin/env python3 shebang for executable scripts",
+        "Multi-line docstring documentation at module level",
+        "Import organization: stdlib first (json, sys, os, re, sqlite3, subprocess, pathlib, datetime, typing)",
+        "Configuration constants with UPPER_CASE naming (SIMILARITY_THRESHOLD, PRUNE_THRESHOLD, MIN_OBSERVATIONS)",
+        "Environment variable fallback pattern: os.environ.get('VAR', default_value)",
+        "Path composition using pathlib.Path and / operator",
+        "Type hints from typing module (Dict, List, Any, Optional)"
+      ],
+      "confidence": 0.95
+    },
+    "ace-research-paper-implementation": {
+      "description": "Implementation of ACE (Agentic Context Engineering) research paper architecture - Section 3, Figure 4 workflow: Generator → Trajectory → Reflector → Curator",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/ace-cycle.py"
+      ],
+      "patterns": [
+        "Evidence-based pattern discovery (not hardcoded)",
+        "Agent-based Reflector for pattern discovery (LLM-based code analysis)",
+        "Deterministic curation algorithm: merge at 85% similarity, prune at 30% confidence",
+        "Domain taxonomy learning (periodic, agent-based)",
+        "Delta-based documentation updates (CLAUDE.md generation)",
+        "Multi-epoch offline training mode",
+        "Bottom-up domain taxonomy discovery"
+      ],
+      "confidence": 0.92
+    },
+    "sqlite-pattern-storage": {
+      "description": "SQLite database for pattern persistence and management",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/ace-cycle.py",
+        ".ace-memory/patterns.db"
+      ],
+      "patterns": [
+        "Import sqlite3 for database operations",
+        "Database path in .ace-memory directory",
+        "Pattern persistence in local SQLite database"
+      ],
+      "confidence": 0.88
+    },
+    "claude-plugin-integration": {
+      "description": "Integration with Claude Code CLI plugin system",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/ace-cycle.py",
+        "CLAUDE_PLUGIN_ROOT environment variable"
+      ],
+      "patterns": [
+        "PostToolUse hook integration (called after Edit/Write operations)",
+        "Plugin root directory resolution via CLAUDE_PLUGIN_ROOT env var",
+        "Plugin-relative path computation"
+      ],
+      "confidence": 0.87
+    },
+    "semantic-embedding-similarity": {
+      "description": "Semantic similarity computation using embeddings and vector storage",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/ace-cycle.py"
+      ],
+      "patterns": [
+        "Claude → ChromaDB → Jaccard fallback chain for semantic similarity",
+        "85% similarity threshold for pattern merging",
+        "Embedding-based pattern comparison"
+      ],
+      "confidence": 0.83
+    }
+  },
+  "abstract": {
+    "agentic-workflow-orchestration": {
+      "description": "Multi-stage agent-based workflow coordination with distinct phases (evidence gathering, discovery, curation, domain learning, documentation)",
+      "instances": [
+        "ace-research-paper-implementation",
+        "ace-orchestration-python"
+      ],
+      "confidence": 0.91
+    },
+    "plugin-hook-lifecycle": {
+      "description": "Event-driven plugin architecture using lifecycle hooks (PostToolUse) triggered by specific operations",
+      "instances": [
+        "claude-plugin-integration"
+      ],
+      "confidence": 0.86
+    },
+    "confidence-based-knowledge-curation": {
+      "description": "Probabilistic knowledge management using confidence scores, thresholds for merging/pruning, and observation counting",
+      "instances": [
+        "ace-research-paper-implementation",
+        "sqlite-pattern-storage"
+      ],
+      "confidence": 0.89
+    },
+    "fallback-chain-pattern": {
+      "description": "Graceful degradation through chained fallback mechanisms (primary → secondary → tertiary approaches)",
+      "instances": [
+        "semantic-embedding-similarity"
+      ],
+      "confidence": 0.84
+    },
+    "delta-based-documentation": {
+      "description": "Incremental documentation updates that prevent context collapse by applying only changes rather than full rewrites",
+      "instances": [
+        "ace-research-paper-implementation"
+      ],
+      "confidence": 0.82
+    },
+    "offline-training-mode": {
+      "description": "Batch processing mode for iterative learning across multiple epochs without live interaction",
+      "instances": [
+        "ace-research-paper-implementation"
+      ],
+      "confidence": 0.81
+    }
+  },
+  "principles": {
+    "evidence-over-heuristics": {
+      "description": "Prefer runtime evidence and empirical data over hardcoded rules or keyword matching - discovered patterns emerge from actual code analysis",
+      "applied_in": [
+        "agentic-workflow-orchestration",
+        "confidence-based-knowledge-curation"
+      ],
+      "confidence": 0.93
+    },
+    "research-driven-architecture": {
+      "description": "Implement systems based on published research papers with explicit citations and adherence to documented architectures (Section 3, Figure 4 references)",
+      "applied_in": [
+        "agentic-workflow-orchestration"
+      ],
+      "confidence": 0.90
+    },
+    "deterministic-curation-over-arbitrary-decisions": {
+      "description": "Use explicit, documented thresholds and algorithms for decision-making (85% merge, 30% prune, 10 min observations) rather than arbitrary choices",
+      "applied_in": [
+        "confidence-based-knowledge-curation"
+      ],
+      "confidence": 0.88
+    },
+    "graceful-degradation": {
+      "description": "Implement fallback chains that degrade gracefully when primary systems fail (Claude → ChromaDB → Jaccard)",
+      "applied_in": [
+        "fallback-chain-pattern"
+      ],
+      "confidence": 0.85
+    },
+    "context-awareness": {
+      "description": "Prevent context collapse through incremental updates and delta-based changes rather than full regeneration",
+      "applied_in": [
+        "delta-based-documentation"
+      ],
+      "confidence": 0.83
+    },
+    "environment-driven-configuration": {
+      "description": "Use environment variables with sensible defaults for configuration, enabling flexible deployment without code changes",
+      "applied_in": [
+        "plugin-hook-lifecycle"
+      ],
+      "confidence": 0.82
+    },
+    "explicit-documentation": {
+      "description": "Comprehensive docstrings and inline comments that explain not just what code does but WHY architectural decisions were made (including version notes and research references)",
+      "applied_in": [
+        "agentic-workflow-orchestration"
+      ],
+      "confidence": 0.87
+    },
+    "pathlib-over-string-paths": {
+      "description": "Use pathlib.Path for path operations instead of string manipulation - provides OS-independent path handling and cleaner composition",
+      "applied_in": [
+        "agentic-workflow-orchestration"
+      ],
+      "confidence": 0.79
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths, imports, configuration constants, docstrings, and architectural descriptions",
+    "discovered_at": "2025-10-18T15:57:30Z",
+    "analysis_details": {
+      "code_snippet_length": 1467,
+      "full_code_length": 38397,
+      "file_analyzed": "plugins/ace-orchestration/scripts/ace-cycle.py",
+      "language": "python",
+      "training_mode": "offline",
+      "request_id": "ace-cycle-6d8984c6",
+      "key_imports_identified": [
+        "json",
+        "sys",
+        "os",
+        "re",
+        "sqlite3",
+        "subprocess",
+        "pathlib.Path",
+        "datetime",
+        "typing"
+      ],
+      "configuration_constants_found": [
+        "SIMILARITY_THRESHOLD = 0.85",
+        "PRUNE_THRESHOLD = 0.30",
+        "MIN_OBSERVATIONS = 10"
+      ],
+      "architectural_phases_identified": [
+        "Evidence Gathering",
+        "Pattern Discovery via Reflector Agent",
+        "Curation",
+        "Domain Discovery",
+        "Playbook Update"
+      ]
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "concrete": {
+    "pytest-test-infrastructure": {
+      "description": "Pytest testing infrastructure with fixtures, test helpers, and Claude Code CLI simulation",
+      "evidence": [
+        "plugins/ace-orchestration/tests/ace_test_helper.py",
+        "plugins/ace-orchestration/tests/conftest.py"
+      ],
+      "patterns": [
+        "ACETestHelper class for simulating Claude Code CLI",
+        "HookResult dataclass for hook execution results",
+        "Environment variable simulation via env dict",
+        "JSON stdin/stdout simulation for hooks"
+      ],
+      "confidence": 0.95
+    },
+    "claude-code-hook-testing": {
+      "description": "Testing Claude Code CLI plugin hooks without interactive shell",
+      "evidence": [
+        "plugins/ace-orchestration/tests/ace_test_helper.py"
+      ],
+      "patterns": [
+        "run_hook method simulating hook execution",
+        "Piping JSON input via stdin to hook scripts",
+        "Capturing stdout/stderr from hook execution",
+        "Parsing JSON responses from hooks"
+      ],
+      "confidence": 0.9
+    },
+    "subprocess-wrapper-pattern": {
+      "description": "Python subprocess management for external script execution",
+      "evidence": [
+        "plugins/ace-orchestration/tests/ace_test_helper.py"
+      ],
+      "patterns": [
+        "subprocess.run with timeout parameter",
+        "stdin=subprocess.PIPE for JSON input",
+        "capture_output for stdout/stderr",
+        "env parameter for environment variables"
+      ],
+      "confidence": 0.85
+    }
+  },
+  "abstract": {
+    "test-helper-abstraction": {
+      "description": "Test helper classes that encapsulate complex test setup and execution logic",
+      "instances": ["pytest-test-infrastructure", "claude-code-hook-testing"],
+      "confidence": 0.9
+    },
+    "simulation-testing": {
+      "description": "Simulating external system behavior (CLI, hooks) in isolated test environments",
+      "instances": ["claude-code-hook-testing"],
+      "confidence": 0.85
+    }
+  },
+  "principles": {
+    "dataclass-for-results": {
+      "description": "Using Python dataclasses to structure function return values for clarity",
+      "applied_in": ["test-helper-abstraction"],
+      "confidence": 0.8
+    },
+    "environment-isolation": {
+      "description": "Isolating test environments via temp directories and environment variable copies",
+      "applied_in": ["simulation-testing"],
+      "confidence": 0.85
+    },
+    "docstring-driven-documentation": {
+      "description": "Comprehensive docstrings explaining purpose, args, and return values",
+      "applied_in": ["test-helper-abstraction"],
+      "confidence": 0.9
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and descriptions",
+    "discovered_at": "2025-10-18T21:10:00Z"
+  }
+}

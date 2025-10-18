@@ -1,0 +1,45 @@
+{
+  "concrete": {
+    "ace-offline-training-system": {
+      "description": "Batch reflection pattern via agent invocation for offline training",
+      "evidence": ["specs/playbooks/028-batch-reflect-via-agent-invocation-pattern/insights.md"],
+      "patterns": ["batch-agent-invocation", "offline-pattern-analysis", "agent-based-reflection"],
+      "confidence": 0.85
+    },
+    "reflector-insights-format": {
+      "description": "Structured insights documentation with YAML metadata and markdown content",
+      "evidence": ["specs/playbooks/028-batch-reflect-via-agent-invocation-pattern/insights.md"],
+      "patterns": ["yaml-frontmatter", "insight-count-tracking", "timestamp-versioning"],
+      "confidence": 0.9
+    }
+  },
+  "abstract": {
+    "agent-based-analysis": {
+      "description": "Using autonomous agents for pattern discovery and effectiveness analysis",
+      "instances": ["ace-offline-training-system"],
+      "confidence": 0.8
+    },
+    "batch-processing-architecture": {
+      "description": "Processing multiple patterns or insights in batch operations for efficiency",
+      "instances": ["ace-offline-training-system"],
+      "confidence": 0.75
+    }
+  },
+  "principles": {
+    "agent-driven-learning": {
+      "description": "Delegating analysis and learning tasks to specialized autonomous agents",
+      "applied_in": ["agent-based-analysis"],
+      "confidence": 0.8
+    },
+    "structured-metadata-tracking": {
+      "description": "Consistent YAML frontmatter for tracking pattern lifecycle and statistics",
+      "applied_in": ["batch-processing-architecture"],
+      "confidence": 0.85
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and descriptions",
+    "discovered_at": "2025-10-18T21:11:00Z"
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "concrete": {
+    "pytest-fixture-architecture": {
+      "description": "pytest test configuration using fixtures for setup/teardown and dependency injection",
+      "evidence": [
+        "plugins/ace-orchestration/tests/conftest.py"
+      ],
+      "patterns": [
+        "Use @pytest.fixture decorators for test setup",
+        "Create isolated test environments with tmp_path fixture",
+        "Provide reusable test fixtures for plugin_root and project_root",
+        "Configure environment variables via fixtures (claude_env)"
+      ],
+      "confidence": 0.95
+    },
+    "ace-memory-management": {
+      "description": "ACE plugin memory system using SQLite for pattern storage and directory structure",
+      "evidence": [
+        "plugins/ace-orchestration/tests/conftest.py",
+        ".ace-memory/patterns.db",
+        "specs/playbooks/",
+        "specs/memory/"
+      ],
+      "patterns": [
+        "Initialize .ace-memory directory structure",
+        "Create patterns.db SQLite database",
+        "Define patterns table schema with metrics (observations, successes, failures)",
+        "Setup specs/playbooks and specs/memory directories"
+      ],
+      "confidence": 0.92
+    },
+    "claude-code-plugin-testing": {
+      "description": "Testing infrastructure for Claude Code CLI plugins with environment simulation",
+      "evidence": [
+        "plugins/ace-orchestration/tests/conftest.py"
+      ],
+      "patterns": [
+        "Provide CLAUDE_PLUGIN_ROOT environment variable",
+        "Set CLAUDECODE=1 flag for plugin detection",
+        "Configure CLAUDE_CODE_ENTRYPOINT",
+        "Use tmp_path for isolated test projects"
+      ],
+      "confidence": 0.90
+    },
+    "python-sqlite-testing": {
+      "description": "Python SQLite database testing with temporary databases and schema initialization",
+      "evidence": [
+        "plugins/ace-orchestration/tests/conftest.py"
+      ],
+      "patterns": [
+        "Create temporary SQLite databases for testing",
+        "Initialize database schema in test fixtures",
+        "Use sqlite3.connect with string paths",
+        "Define table schemas with CREATE TABLE IF NOT EXISTS"
+      ],
+      "confidence": 0.88
+    }
+  },
+  "abstract": {
+    "test-isolation-pattern": {
+      "description": "Ensure test independence through isolated environments and fresh state",
+      "instances": [
+        "pytest-fixture-architecture",
+        "ace-memory-management",
+        "claude-code-plugin-testing",
+        "python-sqlite-testing"
+      ],
+      "confidence": 0.93
+    },
+    "fixture-based-dependency-injection": {
+      "description": "Use pytest fixtures to inject dependencies and manage test lifecycle",
+      "instances": [
+        "pytest-fixture-architecture",
+        "claude-code-plugin-testing"
+      ],
+      "confidence": 0.91
+    },
+    "path-based-configuration": {
+      "description": "Derive configuration from filesystem paths using pathlib for cross-platform compatibility",
+      "instances": [
+        "pytest-fixture-architecture",
+        "ace-memory-management"
+      ],
+      "confidence": 0.87
+    },
+    "database-initialization-in-tests": {
+      "description": "Create and initialize database schemas within test fixtures for isolated testing",
+      "instances": [
+        "python-sqlite-testing",
+        "ace-memory-management"
+      ],
+      "confidence": 0.89
+    }
+  },
+  "principles": {
+    "test-environment-isolation": {
+      "description": "Each test runs in a clean, isolated environment to prevent state pollution",
+      "applied_in": [
+        "test-isolation-pattern",
+        "fixture-based-dependency-injection"
+      ],
+      "confidence": 0.94
+    },
+    "modern-python-stdlib-usage": {
+      "description": "Prefer modern standard library APIs like pathlib over legacy os.path",
+      "applied_in": [
+        "path-based-configuration"
+      ],
+      "confidence": 0.85
+    },
+    "declarative-test-configuration": {
+      "description": "Define test setup declaratively through fixtures rather than imperative setup/teardown",
+      "applied_in": [
+        "fixture-based-dependency-injection",
+        "database-initialization-in-tests"
+      ],
+      "confidence": 0.86
+    },
+    "temporary-state-management": {
+      "description": "Use temporary directories and databases for test state that auto-cleanup",
+      "applied_in": [
+        "test-isolation-pattern",
+        "database-initialization-in-tests"
+      ],
+      "confidence": 0.90
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and descriptions",
+    "discovered_at": "2025-10-18T00:00:00Z",
+    "source_file": "plugins/ace-orchestration/tests/conftest.py",
+    "code_length": 6665,
+    "language": "python"
+  }
+}

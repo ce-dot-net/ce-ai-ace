@@ -1,7 +1,7 @@
 ---
 description: Clear ACE pattern database (reset learning)
 argument-hint: [--confirm]
-allowed-tools: Bash
+allowed-tools: mcp__ace-pattern-learning__ace_clear
 ---
 
 # ACE Clear
@@ -10,8 +10,20 @@ Reset the ACE pattern learning database.
 
 ⚠️ **WARNING**: This will delete ALL learned patterns and insights!
 
-**User provided**: $ARGUMENTS
+```
+Use the mcp__ace-pattern-learning__ace_clear tool to reset the pattern database.
 
-Find and run the `ace-clear.sh` script from the ace-orchestration plugin with the provided arguments.
+IMPORTANT: You must pass { "confirm": true } to execute the clear operation.
 
-The script is located at: `plugins/ace-orchestration/scripts/ace-clear.sh`
+Without confirmation, the tool will return an error.
+
+Example:
+{ "confirm": true }
+```
+
+This will:
+- Delete all patterns from `.ace-memory/patterns.db`
+- Clear all embeddings from the vector cache
+- Reset all statistics to zero
+
+After clearing, ACE will start learning patterns from scratch as you code.

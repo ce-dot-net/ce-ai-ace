@@ -1,0 +1,162 @@
+{
+  "concrete": {
+    "ace-playbook-system": {
+      "description": "ACE playbook generation and organization using spec-kit format with spec.md, plan.md, and insights.md structure",
+      "evidence": [
+        "specs/playbooks/001-python-io/",
+        "specs/playbooks/002-python-strings/",
+        "specs/playbooks/003-typescript-typing/",
+        "specs/memory/constitution.md"
+      ],
+      "patterns": [
+        "spec.md with YAML frontmatter for pattern definitions",
+        "plan.md for technical implementation approach",
+        "insights.md for Reflector agent analysis",
+        "constitution.md for high-confidence principles (>=70%)"
+      ],
+      "confidence": 0.95
+    },
+    "ace-agent-roles": {
+      "description": "Multi-agent system with specialized roles: Detector, Validator, Curator, Reflector agents",
+      "evidence": [
+        "specs/README.md references to Reflector agent",
+        "Pattern detection through AST + regex analysis",
+        "Curator merging logic",
+        "Test validation feedback loops"
+      ],
+      "patterns": [
+        "Detector analyzes code for patterns",
+        "Validator uses test results and execution feedback",
+        "Curator merges with 85% similarity threshold",
+        "Reflector generates insights on effectiveness"
+      ],
+      "confidence": 0.90
+    },
+    "git-versioned-learning": {
+      "description": "Version-controlled pattern evolution through git commits with historical tracking",
+      "evidence": [
+        "specs/ directory structure",
+        "Git commits preserve history",
+        "Human-readable, version-controlled playbooks"
+      ],
+      "patterns": [
+        "Playbooks stored in git repository",
+        "Historical analysis through insights.md",
+        "Evolution tracking across commits"
+      ],
+      "confidence": 0.85
+    },
+    "markdown-documentation-standard": {
+      "description": "Structured markdown documentation with YAML frontmatter for metadata-driven content",
+      "evidence": [
+        "specs/README.md",
+        "spec.md files with YAML frontmatter",
+        "plan.md, insights.md standardized format"
+      ],
+      "patterns": [
+        "YAML frontmatter for metadata (pattern ID, confidence, observations)",
+        "Markdown body for human-readable content",
+        "Standardized file naming conventions"
+      ],
+      "confidence": 0.92
+    },
+    "confidence-based-curation": {
+      "description": "Statistical confidence thresholds for pattern filtering and evolution (70% minimum, 85% similarity)",
+      "evidence": [
+        "constitution.md requires >=70% confidence",
+        "85% similarity threshold for curator merging",
+        "Confidence scores tracked in spec.md frontmatter"
+      ],
+      "patterns": [
+        "70% confidence minimum for constitution inclusion",
+        "85% similarity threshold for pattern merging",
+        "Observation counting for statistical validation"
+      ],
+      "confidence": 0.93
+    }
+  },
+  "abstract": {
+    "meta-learning-architecture": {
+      "description": "Self-improving system that learns coding patterns from codebase analysis and test feedback",
+      "instances": [
+        "ace-playbook-system",
+        "ace-agent-roles",
+        "confidence-based-curation"
+      ],
+      "confidence": 0.91
+    },
+    "triple-file-documentation-pattern": {
+      "description": "Three-file documentation structure separating specification, implementation plan, and analysis",
+      "instances": [
+        "ace-playbook-system",
+        "markdown-documentation-standard"
+      ],
+      "confidence": 0.88
+    },
+    "evidence-driven-refinement": {
+      "description": "Iterative improvement cycle using real-world execution data and statistical validation",
+      "instances": [
+        "ace-agent-roles",
+        "confidence-based-curation",
+        "git-versioned-learning"
+      ],
+      "confidence": 0.89
+    },
+    "hierarchical-knowledge-organization": {
+      "description": "Layered structure from specific playbooks to high-level constitution principles",
+      "instances": [
+        "ace-playbook-system",
+        "confidence-based-curation"
+      ],
+      "confidence": 0.87
+    }
+  },
+  "principles": {
+    "human-readable-machine-generated": {
+      "description": "Generate documentation that serves both human understanding and machine processing",
+      "applied_in": [
+        "triple-file-documentation-pattern",
+        "markdown-documentation-standard"
+      ],
+      "confidence": 0.90
+    },
+    "version-everything": {
+      "description": "Track all changes through version control for complete historical context",
+      "applied_in": [
+        "git-versioned-learning",
+        "evidence-driven-refinement"
+      ],
+      "confidence": 0.86
+    },
+    "confidence-gated-promotion": {
+      "description": "Only promote patterns to higher levels when statistical confidence thresholds are met",
+      "applied_in": [
+        "confidence-based-curation",
+        "meta-learning-architecture"
+      ],
+      "confidence": 0.92
+    },
+    "separation-of-concerns-documentation": {
+      "description": "Separate what (spec), how (plan), and why/effectiveness (insights) into distinct files",
+      "applied_in": [
+        "triple-file-documentation-pattern",
+        "hierarchical-knowledge-organization"
+      ],
+      "confidence": 0.88
+    },
+    "test-driven-validation": {
+      "description": "Use actual test results and execution feedback to validate pattern effectiveness",
+      "applied_in": [
+        "evidence-driven-refinement",
+        "meta-learning-architecture"
+      ],
+      "confidence": 0.85
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "source_file": "specs/README.md",
+    "discovery_method": "bottom-up from file structure, terminology, and confidence thresholds mentioned in documentation",
+    "discovered_at": "2025-10-18T15:57:15Z"
+  }
+}

@@ -1,0 +1,224 @@
+{
+  "concrete": {
+    "sqlite-database-operations": {
+      "description": "SQLite database operations for pattern storage with schema management, CRUD operations, and connection handling",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/ace-cycle.py:84",
+        "plugins/ace-orchestration/scripts/ace-cycle.py:142",
+        "plugins/ace-orchestration/scripts/ace-cycle.py:182"
+      ],
+      "patterns": [
+        "init_database function with CREATE TABLE IF NOT EXISTS",
+        "sqlite3.connect with row_factory for dict conversion",
+        "cursor.execute with parameterized queries",
+        "conn.commit and conn.close pattern"
+      ],
+      "confidence": 0.95
+    },
+    "subprocess-execution": {
+      "description": "Python subprocess module for external command execution with timeout and error handling",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/ace-cycle.py:314",
+        "plugins/ace-orchestration/scripts/ace-cycle.py:976"
+      ],
+      "patterns": [
+        "subprocess.run with capture_output=True",
+        "timeout parameter for command execution",
+        "returncode checking for success/failure",
+        "FileNotFoundError handling for missing executables"
+      ],
+      "confidence": 0.9
+    },
+    "pathlib-file-operations": {
+      "description": "Modern Python pathlib for file path manipulation and filesystem operations",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/ace-cycle.py:36",
+        "plugins/ace-orchestration/scripts/ace-cycle.py:48",
+        "plugins/ace-orchestration/scripts/ace-cycle.py:294"
+      ],
+      "patterns": [
+        "Path(__file__).parent for relative paths",
+        "Path.cwd() for current directory",
+        "Path.suffix for file extension extraction",
+        "Path.mkdir(parents=True, exist_ok=True)"
+      ],
+      "confidence": 0.95
+    },
+    "json-file-io": {
+      "description": "JSON serialization/deserialization for configuration and data exchange",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/ace-cycle.py:380",
+        "plugins/ace-orchestration/scripts/ace-cycle.py:810",
+        "plugins/ace-orchestration/scripts/ace-cycle.py:966"
+      ],
+      "patterns": [
+        "json.load(file_handle) for reading",
+        "json.dump(data, file_handle, indent=2) for writing",
+        "json.dumps(dict) for serialization",
+        "try/except for JSON parsing errors"
+      ],
+      "confidence": 0.9
+    },
+    "agent-orchestration-pattern": {
+      "description": "Agent coordination via filesystem queue for asynchronous LLM invocation with request/response files",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/ace-cycle.py:370",
+        "plugins/ace-orchestration/scripts/ace-cycle.py:401",
+        "plugins/ace-orchestration/scripts/ace-cycle.py:584"
+      ],
+      "patterns": [
+        "Check for response file existence before invoking agent",
+        "Write request to reflections_dir for agent pickup",
+        "Return cached response if available",
+        "Print agent invocation instructions to stderr"
+      ],
+      "confidence": 0.85
+    },
+    "fcntl-file-locking": {
+      "description": "File-based concurrency lock using fcntl to prevent parallel execution",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/ace-cycle.py:34",
+        "plugins/ace-orchestration/scripts/ace-cycle.py:800",
+        "plugins/ace-orchestration/scripts/ace-cycle.py:997"
+      ],
+      "patterns": [
+        "fcntl.flock with LOCK_EX | LOCK_NB for non-blocking lock",
+        "IOError/OSError handling for lock acquisition failure",
+        "Lock release in finally block with fcntl.LOCK_UN",
+        "Lock file cleanup with unlink(missing_ok=True)"
+      ],
+      "confidence": 0.9
+    },
+    "embeddings-similarity-engine": {
+      "description": "Hybrid semantic similarity calculation with fallback chain (Claude → ChromaDB → Jaccard)",
+      "evidence": [
+        "plugins/ace-orchestration/scripts/ace-cycle.py:693",
+        "plugins/ace-orchestration/scripts/ace-cycle.py:704",
+        "plugins/ace-orchestration/scripts/ace-cycle.py:722"
+      ],
+      "patterns": [
+        "Dynamic import of SemanticSimilarityEngine",
+        "Combine name and description for semantic comparison",
+        "try/except with fallback to Jaccard similarity",
+        "Weighted similarity (name 60%, description 40%)"
+      ],
+      "confidence": 0.85
+    }
+  },
+  "abstract": {
+    "ace-research-architecture": {
+      "description": "Implementation of ACE (Agentic Context Engineering) research paper architecture with Generator → Reflector → Curator pipeline",
+      "instances": [
+        "agent-orchestration-pattern",
+        "embeddings-similarity-engine",
+        "sqlite-database-operations"
+      ],
+      "confidence": 0.95
+    },
+    "graceful-degradation": {
+      "description": "Continue execution with reduced functionality when components fail, never blocking user workflow",
+      "instances": [
+        "agent-orchestration-pattern",
+        "embeddings-similarity-engine",
+        "subprocess-execution"
+      ],
+      "confidence": 0.9
+    },
+    "deterministic-curation": {
+      "description": "Rule-based pattern merging and pruning with configurable thresholds (85% similarity, 30% confidence)",
+      "instances": [
+        "embeddings-similarity-engine",
+        "sqlite-database-operations"
+      ],
+      "confidence": 0.9
+    },
+    "evidence-based-learning": {
+      "description": "Pattern confidence derived from test outcomes and observations, not hardcoded assumptions",
+      "instances": [
+        "subprocess-execution",
+        "sqlite-database-operations",
+        "agent-orchestration-pattern"
+      ],
+      "confidence": 0.85
+    },
+    "iterative-refinement": {
+      "description": "Multi-round pattern analysis with convergence detection (max 5 rounds, 5% improvement threshold)",
+      "instances": [
+        "agent-orchestration-pattern"
+      ],
+      "confidence": 0.85
+    },
+    "filesystem-queue-coordination": {
+      "description": "Asynchronous agent coordination using filesystem as message queue with request/response pattern",
+      "instances": [
+        "agent-orchestration-pattern",
+        "json-file-io",
+        "pathlib-file-operations"
+      ],
+      "confidence": 0.9
+    }
+  },
+  "principles": {
+    "no-hardcoded-patterns": {
+      "description": "Discover patterns dynamically via LLM analysis instead of keyword matching",
+      "applied_in": [
+        "ace-research-architecture",
+        "agent-orchestration-pattern"
+      ],
+      "confidence": 0.95
+    },
+    "modern-python-stdlib": {
+      "description": "Prefer modern standard library APIs (pathlib over os.path, subprocess over os.system)",
+      "applied_in": [
+        "pathlib-file-operations",
+        "subprocess-execution"
+      ],
+      "confidence": 0.95
+    },
+    "explicit-error-handling": {
+      "description": "Catch specific exceptions and provide graceful degradation with informative messages",
+      "applied_in": [
+        "graceful-degradation",
+        "json-file-io",
+        "subprocess-execution"
+      ],
+      "confidence": 0.9
+    },
+    "concurrency-safety": {
+      "description": "Prevent race conditions in parallel execution with file locks and atomic operations",
+      "applied_in": [
+        "fcntl-file-locking"
+      ],
+      "confidence": 0.9
+    },
+    "semantic-over-syntactic": {
+      "description": "Use semantic embeddings for similarity instead of simple string matching",
+      "applied_in": [
+        "embeddings-similarity-engine",
+        "deterministic-curation"
+      ],
+      "confidence": 0.85
+    },
+    "configuration-constants": {
+      "description": "Define thresholds and configuration as module-level constants with research-backed values",
+      "applied_in": [
+        "deterministic-curation",
+        "iterative-refinement"
+      ],
+      "confidence": 0.85
+    },
+    "structured-data-storage": {
+      "description": "Use SQLite for structured data with proper schema, transactions, and parameterized queries",
+      "applied_in": [
+        "sqlite-database-operations",
+        "evidence-based-learning"
+      ],
+      "confidence": 0.9
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 13,
+    "discovery_method": "bottom-up from file paths and code analysis",
+    "discovered_at": "2025-10-18T21:30:00Z"
+  }
+}

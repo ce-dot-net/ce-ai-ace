@@ -1,0 +1,99 @@
+{
+  "concrete": {
+    "ace-playbook-generation": {
+      "description": "Auto-generated playbook documentation for ACE (Agentic Context Engineering) patterns in specs/playbooks directory",
+      "evidence": [
+        "specs/playbooks/028-batch-reflect-via-agent-invocation-pattern/plan.md"
+      ],
+      "patterns": [
+        "Batch reflect via agent invocation pattern"
+      ],
+      "confidence": 0.85
+    },
+    "markdown-frontmatter": {
+      "description": "YAML frontmatter metadata in markdown documentation (pattern_id, type, updated timestamp)",
+      "evidence": [
+        "specs/playbooks/028-batch-reflect-via-agent-invocation-pattern/plan.md"
+      ],
+      "patterns": [
+        "pattern_id: ace-offline-training-00004",
+        "type: technical_plan",
+        "updated: 2025-10-17T22:58:52.051504"
+      ],
+      "confidence": 0.9
+    },
+    "ace-offline-training": {
+      "description": "ACE offline training system for pattern discovery and refinement",
+      "evidence": [
+        "specs/playbooks/028-batch-reflect-via-agent-invocation-pattern/plan.md",
+        "Domain: ace-offline-training in frontmatter"
+      ],
+      "patterns": [
+        "Batch reflect via agent invocation pattern"
+      ],
+      "confidence": 0.8
+    }
+  },
+  "abstract": {
+    "structured-documentation": {
+      "description": "Standardized documentation format with consistent sections (Summary, Technical Context, Implementation Approach, Success Criteria, Examples)",
+      "instances": [
+        "ace-playbook-generation",
+        "markdown-frontmatter"
+      ],
+      "confidence": 0.85
+    },
+    "pattern-driven-development": {
+      "description": "Codifying reusable patterns with confidence scores, language-specific guidance, and automated monitoring",
+      "instances": [
+        "ace-playbook-generation",
+        "ace-offline-training"
+      ],
+      "confidence": 0.8
+    },
+    "auto-generated-documentation": {
+      "description": "Machine-generated technical documentation with metadata tracking and versioning",
+      "instances": [
+        "ace-playbook-generation",
+        "markdown-frontmatter"
+      ],
+      "confidence": 0.9
+    }
+  },
+  "principles": {
+    "metadata-driven-content": {
+      "description": "Embed structured metadata (pattern IDs, timestamps, types) in documentation for traceability and automation",
+      "applied_in": [
+        "structured-documentation",
+        "auto-generated-documentation"
+      ],
+      "confidence": 0.85
+    },
+    "iterative-confidence-building": {
+      "description": "Track pattern confidence scores and monitor effectiveness through feedback loops",
+      "applied_in": [
+        "pattern-driven-development"
+      ],
+      "confidence": 0.75
+    },
+    "language-agnostic-patterns": {
+      "description": "Define patterns abstractly with language-specific implementation guidance",
+      "applied_in": [
+        "pattern-driven-development"
+      ],
+      "confidence": 0.8
+    },
+    "testability-as-success-metric": {
+      "description": "Define success criteria including test coverage, linting, and code readability improvements",
+      "applied_in": [
+        "pattern-driven-development"
+      ],
+      "confidence": 0.8
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and descriptions",
+    "discovered_at": "2025-10-18T15:57:30Z"
+  }
+}

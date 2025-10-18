@@ -1,0 +1,45 @@
+{
+  "concrete": {
+    "ace-playbook-infrastructure": {
+      "description": "ACE playbook documentation system with YAML frontmatter and auto-generated insights tracking",
+      "evidence": ["specs/playbooks/001-temp/insights.md"],
+      "patterns": ["YAML frontmatter for pattern metadata", "Auto-generated file markers", "Insight history tracking"],
+      "confidence": 0.85
+    }
+  },
+  "abstract": {
+    "metadata-driven-documentation": {
+      "description": "Documentation system using YAML metadata to track pattern evolution and insights",
+      "instances": ["ace-playbook-infrastructure"],
+      "confidence": 0.80
+    },
+    "incremental-learning-system": {
+      "description": "System that tracks pattern usage over time with insight counts and history",
+      "instances": ["ace-playbook-infrastructure"],
+      "confidence": 0.75
+    }
+  },
+  "principles": {
+    "machine-generated-documentation": {
+      "description": "Auto-generated documentation with clear markers and timestamps",
+      "applied_in": ["metadata-driven-documentation"],
+      "confidence": 0.85
+    },
+    "explicit-empty-state": {
+      "description": "Explicitly document empty states rather than leaving files blank",
+      "applied_in": ["incremental-learning-system"],
+      "confidence": 0.80
+    },
+    "structured-metadata": {
+      "description": "Use structured metadata formats (YAML frontmatter) for machine and human readability",
+      "applied_in": ["metadata-driven-documentation"],
+      "confidence": 0.90
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file structure and metadata patterns",
+    "discovered_at": "2025-10-17T22:58:52Z",
+    "note": "File is a template with no actual patterns yet (insight_count: 0). Analysis focuses on infrastructure patterns visible in template structure."
+  }
+}

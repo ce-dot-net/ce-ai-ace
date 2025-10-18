@@ -1,0 +1,60 @@
+{
+  "concrete": {
+    "ace-playbook-documentation": {
+      "description": "ACE system playbook documentation in specs/playbooks/ with YAML frontmatter and markdown structure",
+      "evidence": ["specs/playbooks/003-avoid-bare-except/insights.md"],
+      "patterns": ["YAML frontmatter metadata", "Reflector insights tracking", "Auto-generated documentation markers"],
+      "confidence": 0.85
+    },
+    "python-exception-handling": {
+      "description": "Python exception handling patterns focusing on avoiding bare except clauses",
+      "evidence": ["specs/playbooks/003-avoid-bare-except/insights.md"],
+      "patterns": ["Pattern py-003: Avoid bare except", "KeyboardInterrupt awareness"],
+      "confidence": 0.8
+    }
+  },
+  "abstract": {
+    "reflector-insight-system": {
+      "description": "Automated pattern reflection system that tracks pattern application correctness and confidence",
+      "instances": ["ace-playbook-documentation"],
+      "confidence": 0.9
+    },
+    "meta-learning-architecture": {
+      "description": "System for documenting when patterns are effective, common mistakes, and edge cases",
+      "instances": ["ace-playbook-documentation"],
+      "confidence": 0.85
+    },
+    "structured-documentation-generation": {
+      "description": "Automated documentation generation with frontmatter metadata and versioned insights",
+      "instances": ["ace-playbook-documentation"],
+      "confidence": 0.9
+    }
+  },
+  "principles": {
+    "evidence-based-pattern-learning": {
+      "description": "Track pattern effectiveness through real usage with confidence scores and correctness indicators",
+      "applied_in": ["reflector-insight-system", "meta-learning-architecture"],
+      "confidence": 0.9
+    },
+    "machine-generated-with-human-readability": {
+      "description": "Auto-generated content marked explicitly while maintaining readable markdown format",
+      "applied_in": ["structured-documentation-generation"],
+      "confidence": 0.85
+    },
+    "explicit-exception-specificity": {
+      "description": "Avoid catching all exceptions to prevent masking critical errors like KeyboardInterrupt",
+      "applied_in": ["python-exception-handling"],
+      "confidence": 0.8
+    },
+    "confidence-driven-curation": {
+      "description": "Use confidence scores (e.g., 50.0%) to guide pattern evolution and refinement",
+      "applied_in": ["reflector-insight-system"],
+      "confidence": 0.85
+    }
+  },
+  "metadata": {
+    "total_patterns_analyzed": 1,
+    "discovery_method": "bottom-up from file paths and descriptions",
+    "discovered_at": "2025-10-17T22:58:52Z"
+  }
+}

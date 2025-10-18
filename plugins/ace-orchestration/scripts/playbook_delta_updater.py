@@ -1,1 +1,0 @@
-playbook-delta-updater.py
